@@ -35844,6 +35844,11 @@ var getCursosCategory = (cultura, setor) => {
 };
 var STEPS_CONFIG = [
 	{
+		id: "identificacao_inicial",
+		title: "Olá! Sou o assistente de capacitação da ABAPA. Para personalizar sua solicitação, como podemos entrar em contato?",
+		type: "identificacao_inicial"
+	},
+	{
 		id: "funcao",
 		title: "Qual é a sua função principal?",
 		type: "single",
@@ -35966,27 +35971,22 @@ var STEPS_CONFIG = [
 		id: "inovacao",
 		title: "Alguma demanda por nova tecnologia ou inovação não listada?",
 		type: "text"
-	},
-	{
-		id: "identificacao",
-		title: "Quase lá! Como podemos entrar em contato?",
-		type: "identification"
 	}
 ];
 var getNextStep = (current, data) => {
-	if (current === 9 && ![
+	if (current === 10 && ![
 		"Fazenda/Empresa",
 		"EAD",
 		"Híbrido (EAD + Presencial)"
-	].includes(data.modalidade)) return 11;
+	].includes(data.modalidade)) return 12;
 	return current + 1;
 };
 var getPrevStep = (current, data) => {
-	if (current === 11 && ![
+	if (current === 12 && ![
 		"Fazenda/Empresa",
 		"EAD",
 		"Híbrido (EAD + Presencial)"
-	].includes(data.modalidade)) return 9;
+	].includes(data.modalidade)) return 10;
 	return current - 1;
 };
 //#endregion
@@ -39393,6 +39393,7 @@ function SurveyContainer() {
 	const [stepIndex, setStepIndex] = (0, import_react.useState)(0);
 	const [isSubmitting, setIsSubmitting] = (0, import_react.useState)(false);
 	const [isSuccess, setIsSuccess] = (0, import_react.useState)(false);
+	const leadSavedRef = (0, import_react.useRef)(false);
 	const { addSurveys } = useMainStore();
 	const { toast } = useToast();
 	const form = useForm({ defaultValues: {
@@ -39419,7 +39420,27 @@ function SurveyContainer() {
 		whatsapp: "",
 		email: ""
 	} });
-	const handleNext = () => setStepIndex((prev) => getNextStep(prev, form.getValues()));
+	const watchNome = form.watch("nome");
+	const handleNext = async () => {
+		const values = form.getValues();
+		if (stepIndex === 0 && (values.nome || values.whatsapp) && !leadSavedRef.current) try {
+			await supabase$1.from("survey_leads").insert([{
+				nome: values.nome,
+				whatsapp: values.whatsapp,
+				email: values.email || null,
+				fazenda: values.fazenda || null
+			}]);
+			leadSavedRef.current = true;
+		} catch (err) {
+			console.error("Failed to save lead info:", err);
+		}
+		const nextIdx = getNextStep(stepIndex, values);
+		if (nextIdx >= STEPS_CONFIG.length) {
+			form.handleSubmit(onSubmit)();
+			return;
+		}
+		setStepIndex(nextIdx);
+	};
 	const handlePrev = () => setStepIndex((prev) => getPrevStep(prev, form.getValues()));
 	const onSubmit = async (values) => {
 		setIsSubmitting(true);
@@ -39486,29 +39507,29 @@ function SurveyContainer() {
 		}
 	};
 	if (isSuccess) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:125:7",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:155:7",
 		"data-prohibitions": "[]",
 		className: "flex flex-col items-center justify-center h-full text-center space-y-6 animate-in fade-in zoom-in duration-500 p-6",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:126:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:156:9",
 				"data-prohibitions": "[editContent]",
 				className: "w-24 h-24 text-primary"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:127:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:157:9",
 				"data-prohibitions": "[]",
 				className: "text-3xl font-bold text-slate-800",
 				children: "Mapeamento Concluído!"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:128:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:158:9",
 				"data-prohibitions": "[]",
 				className: "text-slate-600 max-w-md text-lg",
 				children: "Agradecemos sua participação. Suas necessidades de treinamento foram registradas com sucesso e ajudarão a ABAPA a preparar as melhores capacitações para sua equipe."
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:132:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:162:9",
 				"data-prohibitions": "[]",
 				onClick: () => window.location.reload(),
 				variant: "outline",
@@ -39521,39 +39542,39 @@ function SurveyContainer() {
 	const step = STEPS_CONFIG[stepIndex];
 	const progress = (stepIndex + 1) / STEPS_CONFIG.length * 100;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:148:5",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:178:5",
 		"data-prohibitions": "[editContent]",
 		className: "flex flex-col h-full max-w-3xl mx-auto w-full p-5 sm:p-8",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyContainer.tsx:149:7",
+			"data-uid": "src/components/survey/SurveyContainer.tsx:179:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex items-center gap-4 mb-8 sm:mb-12 pt-2",
 			children: [
 				stepIndex > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:151:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:181:11",
 					"data-prohibitions": "[]",
 					variant: "ghost",
 					size: "icon",
 					onClick: handlePrev,
 					className: "rounded-full shrink-0 text-slate-500 hover:text-primary",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:157:13",
+						"data-uid": "src/components/survey/SurveyContainer.tsx:187:13",
 						"data-prohibitions": "[editContent]",
 						className: "w-6 h-6"
 					})
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:160:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:190:11",
 					"data-prohibitions": "[editContent]",
 					className: "w-10 h-10 shrink-0"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Progress, {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:162:9",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:192:9",
 					"data-prohibitions": "[editContent]",
 					value: progress,
 					className: "h-2.5 flex-1 bg-slate-200"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:163:9",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:193:9",
 					"data-prohibitions": "[editContent]",
 					className: "text-sm text-slate-400 font-bold shrink-0",
 					children: [
@@ -39564,20 +39585,80 @@ function SurveyContainer() {
 				})
 			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/survey/SurveyContainer.tsx:168:7",
+			"data-uid": "src/components/survey/SurveyContainer.tsx:198:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex-1 overflow-y-auto no-scrollbar relative",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:169:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:199:9",
 				"data-prohibitions": "[editContent]",
 				className: "animate-in fade-in slide-in-from-bottom-8 duration-500 h-full",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:173:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:203:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-800 mb-8 sm:mb-10 leading-tight",
 					children: step.title
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyInputs, {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:176:11",
+				}), step.id === "identificacao_inicial" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/survey/SurveyContainer.tsx:208:13",
+					"data-prohibitions": "[]",
+					className: "animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col h-full pb-10",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/survey/SurveyContainer.tsx:209:15",
+						"data-prohibitions": "[]",
+						className: "flex-1 space-y-6",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/components/survey/SurveyContainer.tsx:210:17",
+							"data-prohibitions": "[]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+									"data-uid": "src/components/survey/SurveyContainer.tsx:211:19",
+									"data-prohibitions": "[]",
+									className: "text-sm font-semibold text-slate-700 mb-2 block",
+									children: "Seu nome e WhatsApp"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+									"data-uid": "src/components/survey/SurveyContainer.tsx:214:19",
+									"data-prohibitions": "[editContent]",
+									type: "text",
+									placeholder: "Ex: João Silva — (77) 99999-0000",
+									className: "flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+									...form.register("nome"),
+									onChange: (e) => {
+										form.setValue("nome", e.target.value);
+										form.setValue("whatsapp", e.target.value);
+									}
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/survey/SurveyContainer.tsx:224:19",
+									"data-prohibitions": "[]",
+									className: "mt-4 bg-blue-50/50 border border-blue-100 rounded-lg p-3 text-sm text-blue-700 flex items-start gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										"data-uid": "src/components/survey/SurveyContainer.tsx:225:21",
+										"data-prohibitions": "[]",
+										className: "shrink-0 mt-0.5",
+										children: "💡"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/components/survey/SurveyContainer.tsx:226:21",
+										"data-prohibitions": "[]",
+										children: "Nome + contato no início cria comprometimento e otimiza seu tempo eliminando etapas no final."
+									})]
+								})
+							]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/survey/SurveyContainer.tsx:233:15",
+						"data-prohibitions": "[]",
+						className: "pt-6 mt-8",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/components/survey/SurveyContainer.tsx:234:17",
+							"data-prohibitions": "[]",
+							onClick: handleNext,
+							className: "w-full h-12 text-base font-semibold",
+							disabled: !watchNome,
+							children: "Continuar"
+						})
+					})]
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyInputs, {
+					"data-uid": "src/components/survey/SurveyContainer.tsx:244:13",
 					"data-prohibitions": "[editContent]",
 					step,
 					form,
@@ -75380,4 +75461,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-Dm-THKg-.js.map
+//# sourceMappingURL=index-Doa7IYJ1.js.map
