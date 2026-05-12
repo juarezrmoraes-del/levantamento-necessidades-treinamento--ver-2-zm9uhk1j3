@@ -1,0 +1,8 @@
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS funcao TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS localizacao TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS tamanho TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS cultura TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS sistema TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS gargalo TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS infraestrutura TEXT;
+ALTER TABLE public.surveys ADD COLUMN IF NOT EXISTS inovacao TEXT;
