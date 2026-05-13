@@ -1738,6 +1738,10 @@ body{
   overflow-wrap: break-word;
 }
 
+.break-all{
+  word-break: break-all;
+}
+
 .rounded{
   border-radius: 0.25rem;
 }
@@ -2129,9 +2133,18 @@ body{
   background-color: rgb(250 245 255 / var(--tw-bg-opacity, 1));
 }
 
+.bg-red-100{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
+}
+
 .bg-red-50{
   --tw-bg-opacity: 1;
   background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
+}
+
+.bg-red-50\/50{
+  background-color: rgb(254 242 242 / 0.5);
 }
 
 .bg-rose-100{
@@ -2806,9 +2819,19 @@ body{
   color: rgb(239 68 68 / var(--tw-text-opacity, 1));
 }
 
+.text-red-600{
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+
 .text-red-700{
   --tw-text-opacity: 1;
   color: rgb(185 28 28 / var(--tw-text-opacity, 1));
+}
+
+.text-red-900{
+  --tw-text-opacity: 1;
+  color: rgb(127 29 29 / var(--tw-text-opacity, 1));
 }
 
 .text-rose-500{

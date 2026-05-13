@@ -10,27 +10,90 @@ import {
   Clock,
   CalendarDays,
   CalendarPlus,
+  Loader2,
 } from 'lucide-react'
-import useMainStore, { SurveyRecord } from '@/stores/main'
+import { type SurveyRecord } from '@/stores/main'
 import { Badge } from '@/components/ui/badge'
 import { getGoogleCalendarLink, getOutlookCalendarLink } from '@/lib/calendar'
+import { supabase } from '@/lib/supabase/client'
 
 export default function ConsultaProtocolo() {
   const [search, setSearch] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
   const [results, setResults] = useState<SurveyRecord[]>([])
-  const { surveys } = useMainStore()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
-    const term = search.trim().toLowerCase()
+    const term = search.trim()
     if (!term) return
 
-    const found = surveys.filter(
-      (s) => (s.protocol && s.protocol.toLowerCase() === term) || s.id.toLowerCase() === term,
-    )
-    setResults(found)
     setHasSearched(true)
+    setLoading(true)
+    setError(null)
+    setResults([])
+
+    try {
+      let foundData: any[] = []
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(term)
+
+      if (isUUID) {
+        // Try RPC first to securely bypass RLS for anonymous users querying their own protocol
+        const { data: rpcData, error: rpcError } = await supabase.rpc('get_survey_by_id', {
+          search_id: term,
+        })
+
+        if (!rpcError && rpcData && rpcData.length > 0) {
+          foundData = rpcData
+        } else {
+          // Fallback to direct select (works for authenticated admins)
+          const { data, error: idError } = await supabase
+            .from('survey_leads')
+            .select('*')
+            .eq('id', term)
+
+          if (!idError && data && data.length > 0) {
+            foundData = data
+          }
+        }
+      }
+
+      // Try searching by a string column if we still have nothing (e.g. legacy protocols)
+      if (foundData.length === 0) {
+        const { data: protoData, error: protoError } = await supabase
+          .from('survey_leads')
+          .select('*')
+          .eq('protocol', term)
+
+        if (!protoError && protoData && protoData.length > 0) {
+          foundData = protoData
+        }
+      }
+
+      if (foundData.length > 0) {
+        const mappedData = foundData.map((item: any) => ({
+          id: item.id,
+          protocol: item.protocol || item.id,
+          status: item.status || 'Em Análise',
+          date: item.created_at || new Date().toISOString(),
+          nome: item.nome || 'Não informado',
+          curso_solicitado: item.curso_solicitado || item.cursos || 'Treinamento Solicitado',
+          area_foco: item.area_foco || item.fazenda || 'Geral',
+          quantidade_colaboradores: item.quantidade_colaboradores || item.vagas || 1,
+          data_agendada: item.data_agendada || null,
+        })) as SurveyRecord[]
+
+        setResults(mappedData)
+      } else {
+        setError('Protocolo não encontrado. Verifique se o número foi digitado corretamente.')
+      }
+    } catch (err) {
+      console.error('Erro na busca de protocolo:', err)
+      setError('Ocorreu um erro ao buscar o protocolo. Tente novamente mais tarde.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const getStatusIcon = (status: string) => {
@@ -59,16 +122,22 @@ export default function ConsultaProtocolo() {
           <CardContent className="p-6">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
               <Input
-                placeholder="Digite o Número do Protocolo (ex: REQ-2024...)"
+                placeholder="Digite o Número do Protocolo (ex: REQ-2024... ou UUID)"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                disabled={loading}
                 className="h-12 text-base bg-zinc-50 border-zinc-200 shadow-none focus-visible:ring-abapa-primary"
               />
               <Button
                 type="submit"
+                disabled={loading || !search.trim()}
                 className="h-12 px-8 bg-abapa-primary hover:bg-abapa-primary/90 text-white shadow-sm font-semibold shrink-0"
               >
-                <Search className="w-4 h-4 mr-2" />
+                {loading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Search className="w-4 h-4 mr-2" />
+                )}
                 Buscar
               </Button>
             </form>
@@ -77,7 +146,25 @@ export default function ConsultaProtocolo() {
 
         {hasSearched && (
           <div className="space-y-4 animate-fade-in-up">
-            {results.length > 0 ? (
+            {loading ? (
+              <Card className="border-zinc-200 bg-white shadow-sm">
+                <CardContent className="flex flex-col items-center justify-center p-12 text-center">
+                  <Loader2 className="w-8 h-8 text-abapa-primary animate-spin mb-4" />
+                  <p className="text-lg font-bold text-zinc-900">Buscando protocolo...</p>
+                  <p className="text-sm text-zinc-500 mt-1">Isso pode levar alguns segundos.</p>
+                </CardContent>
+              </Card>
+            ) : error ? (
+              <Card className="border-dashed border-2 border-red-200 bg-red-50/50 shadow-none">
+                <CardContent className="flex flex-col items-center justify-center p-12 text-center">
+                  <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                    <AlertCircle className="w-8 h-8 text-red-500" />
+                  </div>
+                  <p className="text-lg font-bold text-red-900">Erro na Consulta</p>
+                  <p className="text-sm text-red-600 mt-2 max-w-sm font-medium">{error}</p>
+                </CardContent>
+              </Card>
+            ) : results.length > 0 ? (
               results.map((r) => (
                 <Card key={r.id} className="border-zinc-200 shadow-sm bg-white overflow-hidden">
                   <CardHeader className="bg-zinc-50/80 border-b border-zinc-100 flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 gap-4">
@@ -85,7 +172,7 @@ export default function ConsultaProtocolo() {
                       <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">
                         Número de Protocolo
                       </p>
-                      <p className="font-mono text-lg font-bold text-zinc-900 tracking-tight">
+                      <p className="font-mono text-sm sm:text-lg font-bold text-zinc-900 tracking-tight break-all">
                         {r.protocol || r.id}
                       </p>
                     </div>
@@ -169,19 +256,7 @@ export default function ConsultaProtocolo() {
                   </CardContent>
                 </Card>
               ))
-            ) : (
-              <Card className="border-dashed border-2 border-zinc-200 bg-zinc-50/50 shadow-none">
-                <CardContent className="flex flex-col items-center justify-center p-12 text-center">
-                  <div className="w-16 h-16 rounded-full bg-zinc-100 flex items-center justify-center mb-4">
-                    <AlertCircle className="w-8 h-8 text-zinc-400" />
-                  </div>
-                  <p className="text-lg font-bold text-zinc-900">Protocolo não encontrado</p>
-                  <p className="text-sm text-zinc-500 mt-2 max-w-sm font-medium">
-                    Verifique se o número foi digitado corretamente e tente novamente.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
+            ) : null}
           </div>
         )}
       </div>
