@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle2 } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase/client'
+import { cn } from '@/lib/utils'
 
 export function SurveyContainer() {
   const [stepIndex, setStepIndex] = useState(0)
@@ -46,6 +47,14 @@ export function SurveyContainer() {
   const watchNome = form.watch('nome')
 
   const handleNext = async () => {
+    const step = STEPS_CONFIG[stepIndex]
+
+    const fieldsToValidate =
+      step.id === 'identificacao' ? (['nome', 'whatsapp'] as const) : (step.id as any)
+
+    const isValid = await form.trigger(fieldsToValidate)
+    if (!isValid) return
+
     const values = form.getValues()
 
     const nextIdx = getNextStep(stepIndex, values)
@@ -97,7 +106,9 @@ export function SurveyContainer() {
     })
 
     try {
-      console.log('Final Form Data JSON:', JSON.stringify(values, null, 2))
+      if (import.meta.env.DEV) {
+        console.log('Final Form Data JSON:', JSON.stringify(values, null, 2))
+      }
 
       try {
         await supabase.from('survey_leads').insert([
@@ -207,25 +218,45 @@ export function SurveyContainer() {
               <div className="flex-1 space-y-6">
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                    Nome Completo
+                    Nome Completo <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder="Seu nome"
-                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    {...form.register('nome')}
+                    className={cn(
+                      'flex h-12 w-full rounded-md border bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                      form.formState.errors.nome
+                        ? 'border-red-500 focus-visible:ring-red-500'
+                        : 'border-slate-300',
+                    )}
+                    {...form.register('nome', { required: 'Nome é obrigatório' })}
                   />
+                  {form.formState.errors.nome && (
+                    <span className="text-red-500 text-sm mt-1 block">
+                      {form.formState.errors.nome.message as string}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                    WhatsApp (com DDD)
+                    WhatsApp (com DDD) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder="(00) 00000-0000"
-                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    {...form.register('whatsapp')}
+                    className={cn(
+                      'flex h-12 w-full rounded-md border bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                      form.formState.errors.whatsapp
+                        ? 'border-red-500 focus-visible:ring-red-500'
+                        : 'border-slate-300',
+                    )}
+                    {...form.register('whatsapp', { required: 'WhatsApp é obrigatório' })}
                   />
+                  {form.formState.errors.whatsapp && (
+                    <span className="text-red-500 text-sm mt-1 block">
+                      {form.formState.errors.whatsapp.message as string}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-2 block">E-mail</label>
@@ -252,7 +283,7 @@ export function SurveyContainer() {
                 <Button
                   onClick={handleNext}
                   className="w-full h-12 text-base font-semibold"
-                  disabled={!watchNome || isSubmitting}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Enviando...' : 'Finalizar'}
                 </Button>

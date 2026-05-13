@@ -1920,6 +1920,11 @@ body{
   border-color: rgb(254 202 202 / var(--tw-border-opacity, 1));
 }
 
+.border-red-500{
+  --tw-border-opacity: 1;
+  border-color: rgb(239 68 68 / var(--tw-border-opacity, 1));
+}
+
 .border-rose-200{
   --tw-border-opacity: 1;
   border-color: rgb(254 205 211 / var(--tw-border-opacity, 1));
@@ -3585,6 +3590,11 @@ body{
 
 .focus-visible\:ring-primary\/50:focus-visible{
   --tw-ring-color: hsl(var(--primary) / 0.5);
+}
+
+.focus-visible\:ring-red-500:focus-visible{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity, 1));
 }
 
 .focus-visible\:ring-ring:focus-visible{
