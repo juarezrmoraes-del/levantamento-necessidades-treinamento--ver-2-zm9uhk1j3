@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import useMainStore from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
@@ -14,6 +14,12 @@ export function SurveyContainer() {
   const [stepIndex, setStepIndex] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+
+  useEffect(() => {
+    if (sessionStorage.getItem('abapa_survey_submitted_protocol')) {
+      setIsSuccess(true)
+    }
+  }, [])
   const { addSurveys } = useMainStore()
   const { toast } = useToast()
 
@@ -70,7 +76,7 @@ export function SurveyContainer() {
 
   const onSubmit = async (values: any) => {
     setIsSubmitting(true)
-    const protocolNumber = `TRN-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+    const protocolNumber = `TRN-${new Date().getFullYear()}-${crypto.randomUUID().split('-')[0].toUpperCase()}`
 
     const records = (values.cursos || []).map((curso: string) => {
       const marcas = values.curso_marcas?.[curso] || []
@@ -151,6 +157,7 @@ export function SurveyContainer() {
           console.error('Erro ao enviar e-mail de confirmação:', emailErr)
         }
       }
+      sessionStorage.setItem('abapa_survey_submitted_protocol', protocolNumber)
       setIsSuccess(true)
     } catch (err) {
       toast({ title: 'Erro ao enviar', description: 'Tente novamente.', variant: 'destructive' })
@@ -169,7 +176,10 @@ export function SurveyContainer() {
           sucesso e ajudarão a ABAPA a preparar as melhores capacitações para sua equipe.
         </p>
         <Button
-          onClick={() => window.location.reload()}
+          onClick={() => {
+            sessionStorage.removeItem('abapa_survey_submitted_protocol')
+            window.location.reload()
+          }}
           variant="outline"
           className="mt-4"
           size="lg"
