@@ -291,6 +291,11 @@ export const STEPS_CONFIG = [
     type: 'text',
   },
   {
+    id: 'revisao',
+    title: 'Resumo do Mapeamento',
+    type: 'review',
+  },
+  {
     id: 'identificacao',
     title: 'Para finalizar, como podemos entrar em contato?',
     type: 'identificacao',

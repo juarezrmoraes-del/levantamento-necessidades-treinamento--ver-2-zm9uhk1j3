@@ -14,12 +14,21 @@ export function SurveyContainer() {
   const [stepIndex, setStepIndex] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [hasDraft, setHasDraft] = useState(false)
+  const [draftLoaded, setDraftLoaded] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.getItem('abapa_survey_submitted_protocol')) {
       setIsSuccess(true)
+    } else {
+      const draft = localStorage.getItem('abapa_survey_draft')
+      if (draft) {
+        setHasDraft(true)
+      }
     }
+    setDraftLoaded(true)
   }, [])
+
   const { addSurveys } = useMainStore()
   const { toast } = useToast()
 
@@ -52,13 +61,54 @@ export function SurveyContainer() {
 
   const watchNome = form.watch('nome')
 
+  useEffect(() => {
+    if (!draftLoaded || isSuccess || hasDraft) return
+    const subscription = form.watch((value) => {
+      localStorage.setItem('abapa_survey_draft', JSON.stringify({ values: value, stepIndex }))
+    })
+    return () => subscription.unsubscribe()
+  }, [form, form.watch, stepIndex, draftLoaded, isSuccess, hasDraft])
+
+  useEffect(() => {
+    if (!draftLoaded || isSuccess || hasDraft) return
+    localStorage.setItem(
+      'abapa_survey_draft',
+      JSON.stringify({ values: form.getValues(), stepIndex }),
+    )
+  }, [stepIndex, draftLoaded, isSuccess, form, hasDraft])
+
+  const restoreDraft = () => {
+    const draftStr = localStorage.getItem('abapa_survey_draft')
+    if (draftStr) {
+      try {
+        const draft = JSON.parse(draftStr)
+        form.reset(draft.values)
+        setStepIndex(draft.stepIndex || 0)
+      } catch (e) {
+        console.error('Error parsing draft:', e)
+      }
+    }
+    setHasDraft(false)
+  }
+
+  const discardDraft = () => {
+    localStorage.removeItem('abapa_survey_draft')
+    setHasDraft(false)
+  }
+
   const handleNext = async () => {
+    if (hasDraft) setHasDraft(false)
+
     const step = STEPS_CONFIG[stepIndex]
 
     const fieldsToValidate =
-      step.id === 'identificacao' ? (['nome', 'whatsapp'] as const) : (step.id as any)
+      step.id === 'identificacao'
+        ? (['nome', 'whatsapp'] as const)
+        : step.id === 'revisao'
+          ? []
+          : (step.id as any)
 
-    const isValid = await form.trigger(fieldsToValidate)
+    const isValid = fieldsToValidate.length ? await form.trigger(fieldsToValidate) : true
     if (!isValid) return
 
     const values = form.getValues()
@@ -157,6 +207,7 @@ export function SurveyContainer() {
         }
       }
       sessionStorage.setItem('abapa_survey_submitted_protocol', protocolNumber)
+      localStorage.removeItem('abapa_survey_draft')
       setIsSuccess(true)
     } catch (err) {
       toast({ title: 'Erro ao enviar', description: 'Tente novamente.', variant: 'destructive' })
@@ -194,6 +245,27 @@ export function SurveyContainer() {
 
   return (
     <div className="flex flex-col h-full max-w-3xl mx-auto w-full p-5 sm:p-8">
+      {hasDraft && (
+        <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 shadow-sm">
+          <p className="text-sm text-slate-700 font-medium">
+            Identificamos um mapeamento em andamento. Deseja continuar de onde parou?
+          </p>
+          <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 sm:flex-none border-slate-200"
+              onClick={discardDraft}
+            >
+              Reiniciar
+            </Button>
+            <Button size="sm" className="flex-1 sm:flex-none" onClick={restoreDraft}>
+              Restaurar
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center gap-4 mb-8 sm:mb-12 pt-2">
         {stepIndex > 0 ? (
           <Button

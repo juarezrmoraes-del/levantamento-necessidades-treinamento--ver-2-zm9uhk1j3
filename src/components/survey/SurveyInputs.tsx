@@ -13,6 +13,7 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion'
 import { supabase } from '@/lib/supabase/client'
+import { Card, CardContent } from '@/components/ui/card'
 
 export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any) {
   const { watch, setValue } = form as UseFormReturn<any>
@@ -294,6 +295,67 @@ export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any
           className="w-full sm:w-auto h-14 px-10 text-lg shadow-md"
         >
           Continuar
+        </Button>
+      </div>
+    )
+  }
+
+  if (step.type === 'review') {
+    const cursos = watch('cursos') || []
+    const vagas = watch('curso_vagas') || {}
+    const modalidades = watch('modalidade') || ''
+    const infraestrutura = watch('infraestrutura') || ''
+
+    return (
+      <div className="space-y-8 pb-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div>
+          <h3 className="text-xl font-bold text-slate-800 mb-4">Cursos Selecionados</h3>
+          {cursos.length > 0 ? (
+            <div className="grid gap-3">
+              {cursos.map((c: string) => (
+                <Card key={c} className="border-slate-200 shadow-sm">
+                  <CardContent className="p-4 flex justify-between items-center gap-4">
+                    <span className="font-semibold text-slate-700 leading-tight">{c}</span>
+                    <div className="shrink-0 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">
+                      {vagas[c] || 0} vagas
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <p className="text-slate-500 italic p-4 bg-slate-50 rounded-xl border border-slate-200">
+              Nenhum curso selecionado.
+            </p>
+          )}
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold text-slate-800 mb-4">Modalidade e Local</h3>
+          <Card className="border-slate-200 shadow-sm">
+            <CardContent className="p-4 space-y-2">
+              <div className="flex justify-between items-start gap-4">
+                <span className="text-slate-500">Modalidade:</span>
+                <span className="font-semibold text-slate-700 text-right">
+                  {modalidades || 'Não definida'}
+                </span>
+              </div>
+              {infraestrutura && (
+                <div className="flex justify-between items-start gap-4 pt-2 border-t border-slate-100">
+                  <span className="text-slate-500">Infraestrutura:</span>
+                  <span className="font-semibold text-slate-700 text-right">{infraestrutura}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <Button
+          size="lg"
+          onClick={onNext}
+          className="w-full sm:w-auto mt-2 h-14 px-10 text-lg shadow-md"
+        >
+          Confirmar e Continuar
         </Button>
       </div>
     )

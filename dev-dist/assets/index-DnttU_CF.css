@@ -1942,6 +1942,10 @@ body{
   border-color: hsl(var(--primary));
 }
 
+.border-primary\/20{
+  border-color: hsl(var(--primary) / 0.2);
+}
+
 .border-purple-100{
   --tw-border-opacity: 1;
   border-color: rgb(243 232 255 / var(--tw-border-opacity, 1));
@@ -2650,6 +2654,10 @@ body{
   text-transform: uppercase;
 }
 
+.italic{
+  font-style: italic;
+}
+
 .tabular-nums{
   --tw-numeric-spacing: tabular-nums;
   font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
@@ -3234,6 +3242,10 @@ body{
 
 .slide-in-from-top-2{
   --tw-enter-translate-y: -0.5rem;
+}
+
+.slide-in-from-top-4{
+  --tw-enter-translate-y: -1rem;
 }
 
 .duration-1000{
