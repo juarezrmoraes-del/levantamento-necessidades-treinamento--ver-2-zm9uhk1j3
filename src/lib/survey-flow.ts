@@ -298,19 +298,31 @@ export const STEPS_CONFIG = [
 ]
 
 export const getNextStep = (current: number, data: any): number => {
-  if (
-    current === 9 &&
-    !['Fazenda/Empresa', 'EAD', 'Híbrido (EAD + Presencial)'].includes(data.modalidade)
-  )
-    return 11
-  return current + 1
+  let next = current + 1
+  while (next < STEPS_CONFIG.length) {
+    if (
+      STEPS_CONFIG[next].id === 'infraestrutura' &&
+      !['Fazenda/Empresa', 'EAD', 'Híbrido (EAD + Presencial)'].includes(data.modalidade)
+    ) {
+      next++
+      continue
+    }
+    break
+  }
+  return next
 }
 
 export const getPrevStep = (current: number, data: any): number => {
-  if (
-    current === 11 &&
-    !['Fazenda/Empresa', 'EAD', 'Híbrido (EAD + Presencial)'].includes(data.modalidade)
-  )
-    return 9
-  return current - 1
+  let prev = current - 1
+  while (prev >= 0) {
+    if (
+      STEPS_CONFIG[prev].id === 'infraestrutura' &&
+      !['Fazenda/Empresa', 'EAD', 'Híbrido (EAD + Presencial)'].includes(data.modalidade)
+    ) {
+      prev--
+      continue
+    }
+    break
+  }
+  return prev
 }

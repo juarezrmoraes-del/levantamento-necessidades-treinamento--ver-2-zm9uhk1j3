@@ -99,7 +99,6 @@ export function SurveyContainer() {
         local_realizacao: values.modalidade,
         mes_previsto: values.epoca,
         desafio_roi: values.desafio,
-        sugestao_futura: values.inovacao,
         funcao: values.funcao,
         localizacao: values.localizacao,
         tamanho: values.tamanho,
