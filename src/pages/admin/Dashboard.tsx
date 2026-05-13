@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import useMainStore from '@/stores/main'
 import { FileStack, AlertCircle, BookOpen, Users, User } from 'lucide-react'
+import { extractTopMarcas } from '@/lib/utils'
 import {
   Bar,
   BarChart,
@@ -27,7 +28,6 @@ export default function Dashboard() {
       let vTotal = 0
       let vHomens = 0
       let vMulheres = 0
-      const marcasCount: Record<string, number> = {}
 
       surveys.forEach((s) => {
         if (s.curso_solicitado) {
@@ -40,25 +40,10 @@ export default function Dashboard() {
         vTotal += parseInt(s.quantidade_colaboradores || '0') || 0
         vHomens += parseInt(s.vagas_homens || '0') || 0
         vMulheres += parseInt(s.vagas_mulheres || '0') || 0
-
-        let marcaStr = ''
-        if (s.detalhes_cursos && typeof s.detalhes_cursos === 'object') {
-          const dc = s.detalhes_cursos as any
-          if (dc.marca) marcaStr = dc.marca
-          else if (dc.fabricante) marcaStr = dc.fabricante
-        }
-        if (!marcaStr && s.sistema) marcaStr = s.sistema
-
-        if (marcaStr) {
-          marcasCount[marcaStr] = (marcasCount[marcaStr] || 0) + 1
-        }
       })
 
       const mostReq = Object.entries(coursesCount).sort((a, b) => b[1] - a[1])[0]
-      const sortedMarcas = Object.entries(marcasCount)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 5)
+      const sortedMarcas = extractTopMarcas(surveys)
 
       return {
         total: surveys.length,
