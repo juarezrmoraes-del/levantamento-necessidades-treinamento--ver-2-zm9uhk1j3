@@ -17412,6 +17412,36 @@ var BookOpen = createLucideIcon("book-open", [["path", {
 	d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
 	key: "ruj8y"
 }]]);
+var Bot = createLucideIcon("bot", [
+	["path", {
+		d: "M12 8V4H8",
+		key: "hb8ula"
+	}],
+	["rect", {
+		width: "16",
+		height: "12",
+		x: "4",
+		y: "8",
+		rx: "2",
+		key: "enze0r"
+	}],
+	["path", {
+		d: "M2 14h2",
+		key: "vft8re"
+	}],
+	["path", {
+		d: "M20 14h2",
+		key: "4cs60a"
+	}],
+	["path", {
+		d: "M15 13v2",
+		key: "1xurst"
+	}],
+	["path", {
+		d: "M9 13v2",
+		key: "rq6x2g"
+	}]
+]);
 var Building2 = createLucideIcon("building-2", [
 	["path", {
 		d: "M10 12h4",
@@ -17640,6 +17670,10 @@ var Mail = createLucideIcon("mail", [["path", {
 	height: "16",
 	rx: "2",
 	key: "izxlao"
+}]]);
+var MessageCircle = createLucideIcon("message-circle", [["path", {
+	d: "M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719",
+	key: "1sd12s"
 }]]);
 var PanelLeft = createLucideIcon("panel-left", [["rect", {
 	width: "18",
@@ -37930,18 +37964,18 @@ var Label$3 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Label$3.displayName = NAME$3;
-var Root$8 = Label$3;
+var Root$10 = Label$3;
 //#endregion
 //#region src/components/ui/label.tsx
 var labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
-var Label$2 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
+var Label$2 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$10, {
 	"data-uid": "src/components/ui/label.tsx:16:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn(labelVariants(), className),
 	...props
 }));
-Label$2.displayName = Root$8.displayName;
+Label$2.displayName = Root$10.displayName;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-context@1.1.2_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
 function createContext2(rootComponentName, defaultContext) {
@@ -38297,7 +38331,7 @@ function dispatchDiscreteCustomEvent(target, event) {
 }
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-presence@1.1.5_@types+react-dom@19.2.3_@types+react@19.2.14__@types+rea_c01c26c80b5ab5e3ecefbda6eca51ad1/node_modules/@radix-ui/react-presence/dist/index.mjs
-function useStateMachine(initialState, machine) {
+function useStateMachine$1(initialState, machine) {
 	return import_react.useReducer((state, event) => {
 		return machine[state][event] ?? state;
 	}, initialState);
@@ -38315,7 +38349,7 @@ function usePresence(present) {
 	const stylesRef = import_react.useRef(null);
 	const prevPresentRef = import_react.useRef(present);
 	const prevAnimationNameRef = import_react.useRef("none");
-	const [state, send] = useStateMachine(present ? "mounted" : "unmounted", {
+	const [state, send] = useStateMachine$1(present ? "mounted" : "unmounted", {
 		mounted: {
 			UNMOUNT: "unmounted",
 			ANIMATION_OUT: "unmountSuspended"
@@ -38518,7 +38552,7 @@ var CollapsibleContentImpl = import_react.forwardRef((props, forwardedRef) => {
 function getState$3(open) {
 	return open ? "open" : "closed";
 }
-var Root$7 = Collapsible;
+var Root$9 = Collapsible;
 var Trigger$3 = CollapsibleTrigger;
 var Content$2 = CollapsibleContent;
 //#endregion
@@ -38688,7 +38722,7 @@ var AccordionItem$1 = import_react.forwardRef((props, forwardedRef) => {
 		open,
 		disabled,
 		triggerId,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$9, {
 			"data-orientation": accordionContext.orientation,
 			"data-state": getState$2(open),
 			...collapsibleScope,
@@ -39383,11 +39417,11 @@ function getInvalidValueError(propValue, componentName) {
 
 Defaulting to \`null\`.`;
 }
-var Root$6 = Progress$1;
+var Root$8 = Progress$1;
 var Indicator = ProgressIndicator;
 //#endregion
 //#region src/components/ui/progress.tsx
-var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
+var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
 	"data-uid": "src/components/ui/progress.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
@@ -39400,7 +39434,7 @@ var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => 
 		style: { transform: `translateX(-${100 - (value || 0)}%)` }
 	})
 }));
-Progress.displayName = Root$6.displayName;
+Progress.displayName = Root$8.displayName;
 //#endregion
 //#region src/components/survey/SurveyContainer.tsx
 function SurveyContainer() {
@@ -40164,6 +40198,39 @@ function Login() {
 	});
 }
 //#endregion
+//#region src/components/Layout.tsx
+function Layout() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+		"data-uid": "src/components/Layout.tsx:11:5",
+		"data-prohibitions": "[]",
+		className: "flex flex-col min-h-screen relative",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {
+			"data-uid": "src/components/Layout.tsx:12:7",
+			"data-prohibitions": "[editContent]"
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/Layout.tsx:14:7",
+			"data-prohibitions": "[]",
+			className: "fixed bottom-6 right-6 z-50",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+				"data-uid": "src/components/Layout.tsx:15:9",
+				"data-prohibitions": "[]",
+				to: "/chat",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/Layout.tsx:16:11",
+					"data-prohibitions": "[]",
+					size: "icon",
+					className: "h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-transform hover:-translate-y-1",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MessageCircle, {
+						"data-uid": "src/components/Layout.tsx:20:13",
+						"data-prohibitions": "[editContent]",
+						className: "h-6 w-6"
+					})
+				})
+			})
+		})]
+	});
+}
+//#endregion
 //#region src/hooks/use-mobile.tsx
 var MOBILE_BREAKPOINT = 768;
 function useIsMobile() {
@@ -40203,10 +40270,10 @@ Separator$2.displayName = NAME$2;
 function isValidOrientation(orientation) {
 	return ORIENTATIONS.includes(orientation);
 }
-var Root$5 = Separator$2;
+var Root$7 = Separator$2;
 //#endregion
 //#region src/components/ui/separator.tsx
-var Separator$1 = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
+var Separator$1 = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
 	"data-uid": "src/components/ui/separator.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
@@ -40215,7 +40282,7 @@ var Separator$1 = import_react.forwardRef(({ className, orientation = "horizonta
 	className: cn("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className),
 	...props
 }));
-Separator$1.displayName = Root$5.displayName;
+Separator$1.displayName = Root$7.displayName;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-use-callback-ref@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
 function useCallbackRef$1(callback) {
@@ -40411,7 +40478,7 @@ function handleAndDispatchCustomEvent$1(name, handler, detail, { discrete }) {
 	if (discrete) dispatchDiscreteCustomEvent(target, event);
 	else target.dispatchEvent(event);
 }
-var Root$4 = DismissableLayer;
+var Root$6 = DismissableLayer;
 var Branch = DismissableLayerBranch;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-focus-scope@1.1.7_@types+react-dom@19.2.3_@types+react@19.2.14__@types+_f62f3af4ca2ba305a7aecf04c8534604/node_modules/@radix-ui/react-focus-scope/dist/index.mjs
@@ -41701,7 +41768,7 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
 	]);
 	return null;
 };
-var Root$3 = Dialog$1;
+var Root$5 = Dialog$1;
 var Portal$1 = DialogPortal$1;
 var Overlay = DialogOverlay$1;
 var Content$1 = DialogContent$1;
@@ -41710,7 +41777,7 @@ var Description$1 = DialogDescription$1;
 var Close$1 = DialogClose$1;
 //#endregion
 //#region src/components/ui/sheet.tsx
-var Sheet = Root$3;
+var Sheet = Root$5;
 var SheetPortal = Portal$1;
 var SheetOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
 	"data-uid": "src/components/ui/sheet.tsx:21:3",
@@ -43468,7 +43535,7 @@ var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Arrow$1.displayName = NAME$1;
-var Root$2 = Arrow$1;
+var Root$4 = Arrow$1;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-use-size@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-size/dist/index.mjs
 function useSize(element) {
@@ -43689,7 +43756,7 @@ var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwarded
 			}[contentContext.placedSide],
 			visibility: contentContext.shouldHideArrow ? "hidden" : void 0
 		},
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$2, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
 			...arrowProps,
 			ref: forwardedRef,
 			style: {
@@ -43774,7 +43841,7 @@ var VisuallyHidden = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 VisuallyHidden.displayName = NAME;
-var Root$1 = VisuallyHidden;
+var Root$3 = VisuallyHidden;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-tooltip@1.2.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_9074d9fb06315b089b2bee17c4c65951/node_modules/@radix-ui/react-tooltip/dist/index.mjs
 var [createTooltipContext, createTooltipScope] = createContextScope$1("Tooltip", [createPopperScope]);
@@ -44100,7 +44167,7 @@ var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Slottable, { children }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHiddenContentContextProvider, {
 				scope: __scopeTooltip,
 				isInside: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$1, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
 					id: context.contentId,
 					role: "tooltip",
 					children: ariaLabel || children
@@ -45047,6 +45114,1168 @@ function AdminLayout() {
 				})]
 			})]
 		})
+	});
+}
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+number@1.1.1/node_modules/@radix-ui/number/dist/index.mjs
+function clamp(value, [min, max]) {
+	return Math.min(max, Math.max(min, value));
+}
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-scroll-area@1.2.10_@types+react-dom@19.2.3_@types+react@19.2.14__@types_155614c2fe5222bb9b221068b09efefc/node_modules/@radix-ui/react-scroll-area/dist/index.mjs
+function useStateMachine(initialState, machine) {
+	return import_react.useReducer((state, event) => {
+		return machine[state][event] ?? state;
+	}, initialState);
+}
+var SCROLL_AREA_NAME = "ScrollArea";
+var [createScrollAreaContext, createScrollAreaScope] = createContextScope$1(SCROLL_AREA_NAME);
+var [ScrollAreaProvider, useScrollAreaContext] = createScrollAreaContext(SCROLL_AREA_NAME);
+var ScrollArea$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeScrollArea, type = "hover", dir, scrollHideDelay = 600, ...scrollAreaProps } = props;
+	const [scrollArea, setScrollArea] = import_react.useState(null);
+	const [viewport, setViewport] = import_react.useState(null);
+	const [content, setContent] = import_react.useState(null);
+	const [scrollbarX, setScrollbarX] = import_react.useState(null);
+	const [scrollbarY, setScrollbarY] = import_react.useState(null);
+	const [cornerWidth, setCornerWidth] = import_react.useState(0);
+	const [cornerHeight, setCornerHeight] = import_react.useState(0);
+	const [scrollbarXEnabled, setScrollbarXEnabled] = import_react.useState(false);
+	const [scrollbarYEnabled, setScrollbarYEnabled] = import_react.useState(false);
+	const composedRefs = useComposedRefs(forwardedRef, (node) => setScrollArea(node));
+	const direction = useDirection(dir);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaProvider, {
+		scope: __scopeScrollArea,
+		type,
+		dir: direction,
+		scrollHideDelay,
+		scrollArea,
+		viewport,
+		onViewportChange: setViewport,
+		content,
+		onContentChange: setContent,
+		scrollbarX,
+		onScrollbarXChange: setScrollbarX,
+		scrollbarXEnabled,
+		onScrollbarXEnabledChange: setScrollbarXEnabled,
+		scrollbarY,
+		onScrollbarYChange: setScrollbarY,
+		scrollbarYEnabled,
+		onScrollbarYEnabledChange: setScrollbarYEnabled,
+		onCornerWidthChange: setCornerWidth,
+		onCornerHeightChange: setCornerHeight,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			dir: direction,
+			...scrollAreaProps,
+			ref: composedRefs,
+			style: {
+				position: "relative",
+				["--radix-scroll-area-corner-width"]: cornerWidth + "px",
+				["--radix-scroll-area-corner-height"]: cornerHeight + "px",
+				...props.style
+			}
+		})
+	});
+});
+ScrollArea$1.displayName = SCROLL_AREA_NAME;
+var VIEWPORT_NAME$2 = "ScrollAreaViewport";
+var ScrollAreaViewport = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeScrollArea, children, nonce, ...viewportProps } = props;
+	const context = useScrollAreaContext(VIEWPORT_NAME$2, __scopeScrollArea);
+	const composedRefs = useComposedRefs(forwardedRef, import_react.useRef(null), context.onViewportChange);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("style", {
+		dangerouslySetInnerHTML: { __html: `[data-radix-scroll-area-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-scroll-area-viewport]::-webkit-scrollbar{display:none}` },
+		nonce
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		"data-radix-scroll-area-viewport": "",
+		...viewportProps,
+		ref: composedRefs,
+		style: {
+			overflowX: context.scrollbarXEnabled ? "scroll" : "hidden",
+			overflowY: context.scrollbarYEnabled ? "scroll" : "hidden",
+			...props.style
+		},
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			ref: context.onContentChange,
+			style: {
+				minWidth: "100%",
+				display: "table"
+			},
+			children
+		})
+	})] });
+});
+ScrollAreaViewport.displayName = VIEWPORT_NAME$2;
+var SCROLLBAR_NAME = "ScrollAreaScrollbar";
+var ScrollAreaScrollbar = import_react.forwardRef((props, forwardedRef) => {
+	const { forceMount, ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const { onScrollbarXEnabledChange, onScrollbarYEnabledChange } = context;
+	const isHorizontal = props.orientation === "horizontal";
+	import_react.useEffect(() => {
+		isHorizontal ? onScrollbarXEnabledChange(true) : onScrollbarYEnabledChange(true);
+		return () => {
+			isHorizontal ? onScrollbarXEnabledChange(false) : onScrollbarYEnabledChange(false);
+		};
+	}, [
+		isHorizontal,
+		onScrollbarXEnabledChange,
+		onScrollbarYEnabledChange
+	]);
+	return context.type === "hover" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarHover, {
+		...scrollbarProps,
+		ref: forwardedRef,
+		forceMount
+	}) : context.type === "scroll" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarScroll, {
+		...scrollbarProps,
+		ref: forwardedRef,
+		forceMount
+	}) : context.type === "auto" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarAuto, {
+		...scrollbarProps,
+		ref: forwardedRef,
+		forceMount
+	}) : context.type === "always" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarVisible, {
+		...scrollbarProps,
+		ref: forwardedRef
+	}) : null;
+});
+ScrollAreaScrollbar.displayName = SCROLLBAR_NAME;
+var ScrollAreaScrollbarHover = import_react.forwardRef((props, forwardedRef) => {
+	const { forceMount, ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const [visible, setVisible] = import_react.useState(false);
+	import_react.useEffect(() => {
+		const scrollArea = context.scrollArea;
+		let hideTimer = 0;
+		if (scrollArea) {
+			const handlePointerEnter = () => {
+				window.clearTimeout(hideTimer);
+				setVisible(true);
+			};
+			const handlePointerLeave = () => {
+				hideTimer = window.setTimeout(() => setVisible(false), context.scrollHideDelay);
+			};
+			scrollArea.addEventListener("pointerenter", handlePointerEnter);
+			scrollArea.addEventListener("pointerleave", handlePointerLeave);
+			return () => {
+				window.clearTimeout(hideTimer);
+				scrollArea.removeEventListener("pointerenter", handlePointerEnter);
+				scrollArea.removeEventListener("pointerleave", handlePointerLeave);
+			};
+		}
+	}, [context.scrollArea, context.scrollHideDelay]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || visible,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarAuto, {
+			"data-state": visible ? "visible" : "hidden",
+			...scrollbarProps,
+			ref: forwardedRef
+		})
+	});
+});
+var ScrollAreaScrollbarScroll = import_react.forwardRef((props, forwardedRef) => {
+	const { forceMount, ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const isHorizontal = props.orientation === "horizontal";
+	const debounceScrollEnd = useDebounceCallback(() => send("SCROLL_END"), 100);
+	const [state, send] = useStateMachine("hidden", {
+		hidden: { SCROLL: "scrolling" },
+		scrolling: {
+			SCROLL_END: "idle",
+			POINTER_ENTER: "interacting"
+		},
+		interacting: {
+			SCROLL: "interacting",
+			POINTER_LEAVE: "idle"
+		},
+		idle: {
+			HIDE: "hidden",
+			SCROLL: "scrolling",
+			POINTER_ENTER: "interacting"
+		}
+	});
+	import_react.useEffect(() => {
+		if (state === "idle") {
+			const hideTimer = window.setTimeout(() => send("HIDE"), context.scrollHideDelay);
+			return () => window.clearTimeout(hideTimer);
+		}
+	}, [
+		state,
+		context.scrollHideDelay,
+		send
+	]);
+	import_react.useEffect(() => {
+		const viewport = context.viewport;
+		const scrollDirection = isHorizontal ? "scrollLeft" : "scrollTop";
+		if (viewport) {
+			let prevScrollPos = viewport[scrollDirection];
+			const handleScroll = () => {
+				const scrollPos = viewport[scrollDirection];
+				if (prevScrollPos !== scrollPos) {
+					send("SCROLL");
+					debounceScrollEnd();
+				}
+				prevScrollPos = scrollPos;
+			};
+			viewport.addEventListener("scroll", handleScroll);
+			return () => viewport.removeEventListener("scroll", handleScroll);
+		}
+	}, [
+		context.viewport,
+		isHorizontal,
+		send,
+		debounceScrollEnd
+	]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || state !== "hidden",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarVisible, {
+			"data-state": state === "hidden" ? "hidden" : "visible",
+			...scrollbarProps,
+			ref: forwardedRef,
+			onPointerEnter: composeEventHandlers(props.onPointerEnter, () => send("POINTER_ENTER")),
+			onPointerLeave: composeEventHandlers(props.onPointerLeave, () => send("POINTER_LEAVE"))
+		})
+	});
+});
+var ScrollAreaScrollbarAuto = import_react.forwardRef((props, forwardedRef) => {
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const { forceMount, ...scrollbarProps } = props;
+	const [visible, setVisible] = import_react.useState(false);
+	const isHorizontal = props.orientation === "horizontal";
+	const handleResize = useDebounceCallback(() => {
+		if (context.viewport) {
+			const isOverflowX = context.viewport.offsetWidth < context.viewport.scrollWidth;
+			const isOverflowY = context.viewport.offsetHeight < context.viewport.scrollHeight;
+			setVisible(isHorizontal ? isOverflowX : isOverflowY);
+		}
+	}, 10);
+	useResizeObserver(context.viewport, handleResize);
+	useResizeObserver(context.content, handleResize);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || visible,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarVisible, {
+			"data-state": visible ? "visible" : "hidden",
+			...scrollbarProps,
+			ref: forwardedRef
+		})
+	});
+});
+var ScrollAreaScrollbarVisible = import_react.forwardRef((props, forwardedRef) => {
+	const { orientation = "vertical", ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const thumbRef = import_react.useRef(null);
+	const pointerOffsetRef = import_react.useRef(0);
+	const [sizes, setSizes] = import_react.useState({
+		content: 0,
+		viewport: 0,
+		scrollbar: {
+			size: 0,
+			paddingStart: 0,
+			paddingEnd: 0
+		}
+	});
+	const thumbRatio = getThumbRatio(sizes.viewport, sizes.content);
+	const commonProps = {
+		...scrollbarProps,
+		sizes,
+		onSizesChange: setSizes,
+		hasThumb: Boolean(thumbRatio > 0 && thumbRatio < 1),
+		onThumbChange: (thumb) => thumbRef.current = thumb,
+		onThumbPointerUp: () => pointerOffsetRef.current = 0,
+		onThumbPointerDown: (pointerPos) => pointerOffsetRef.current = pointerPos
+	};
+	function getScrollPosition(pointerPos, dir) {
+		return getScrollPositionFromPointer(pointerPos, pointerOffsetRef.current, sizes, dir);
+	}
+	if (orientation === "horizontal") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarX, {
+		...commonProps,
+		ref: forwardedRef,
+		onThumbPositionChange: () => {
+			if (context.viewport && thumbRef.current) {
+				const scrollPos = context.viewport.scrollLeft;
+				const offset = getThumbOffsetFromScroll(scrollPos, sizes, context.dir);
+				thumbRef.current.style.transform = `translate3d(${offset}px, 0, 0)`;
+			}
+		},
+		onWheelScroll: (scrollPos) => {
+			if (context.viewport) context.viewport.scrollLeft = scrollPos;
+		},
+		onDragScroll: (pointerPos) => {
+			if (context.viewport) context.viewport.scrollLeft = getScrollPosition(pointerPos, context.dir);
+		}
+	});
+	if (orientation === "vertical") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarY, {
+		...commonProps,
+		ref: forwardedRef,
+		onThumbPositionChange: () => {
+			if (context.viewport && thumbRef.current) {
+				const scrollPos = context.viewport.scrollTop;
+				const offset = getThumbOffsetFromScroll(scrollPos, sizes);
+				thumbRef.current.style.transform = `translate3d(0, ${offset}px, 0)`;
+			}
+		},
+		onWheelScroll: (scrollPos) => {
+			if (context.viewport) context.viewport.scrollTop = scrollPos;
+		},
+		onDragScroll: (pointerPos) => {
+			if (context.viewport) context.viewport.scrollTop = getScrollPosition(pointerPos);
+		}
+	});
+	return null;
+});
+var ScrollAreaScrollbarX = import_react.forwardRef((props, forwardedRef) => {
+	const { sizes, onSizesChange, ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const [computedStyle, setComputedStyle] = import_react.useState();
+	const ref = import_react.useRef(null);
+	const composeRefs = useComposedRefs(forwardedRef, ref, context.onScrollbarXChange);
+	import_react.useEffect(() => {
+		if (ref.current) setComputedStyle(getComputedStyle(ref.current));
+	}, [ref]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarImpl, {
+		"data-orientation": "horizontal",
+		...scrollbarProps,
+		ref: composeRefs,
+		sizes,
+		style: {
+			bottom: 0,
+			left: context.dir === "rtl" ? "var(--radix-scroll-area-corner-width)" : 0,
+			right: context.dir === "ltr" ? "var(--radix-scroll-area-corner-width)" : 0,
+			["--radix-scroll-area-thumb-width"]: getThumbSize(sizes) + "px",
+			...props.style
+		},
+		onThumbPointerDown: (pointerPos) => props.onThumbPointerDown(pointerPos.x),
+		onDragScroll: (pointerPos) => props.onDragScroll(pointerPos.x),
+		onWheelScroll: (event, maxScrollPos) => {
+			if (context.viewport) {
+				const scrollPos = context.viewport.scrollLeft + event.deltaX;
+				props.onWheelScroll(scrollPos);
+				if (isScrollingWithinScrollbarBounds(scrollPos, maxScrollPos)) event.preventDefault();
+			}
+		},
+		onResize: () => {
+			if (ref.current && context.viewport && computedStyle) onSizesChange({
+				content: context.viewport.scrollWidth,
+				viewport: context.viewport.offsetWidth,
+				scrollbar: {
+					size: ref.current.clientWidth,
+					paddingStart: toInt(computedStyle.paddingLeft),
+					paddingEnd: toInt(computedStyle.paddingRight)
+				}
+			});
+		}
+	});
+});
+var ScrollAreaScrollbarY = import_react.forwardRef((props, forwardedRef) => {
+	const { sizes, onSizesChange, ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, props.__scopeScrollArea);
+	const [computedStyle, setComputedStyle] = import_react.useState();
+	const ref = import_react.useRef(null);
+	const composeRefs = useComposedRefs(forwardedRef, ref, context.onScrollbarYChange);
+	import_react.useEffect(() => {
+		if (ref.current) setComputedStyle(getComputedStyle(ref.current));
+	}, [ref]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbarImpl, {
+		"data-orientation": "vertical",
+		...scrollbarProps,
+		ref: composeRefs,
+		sizes,
+		style: {
+			top: 0,
+			right: context.dir === "ltr" ? 0 : void 0,
+			left: context.dir === "rtl" ? 0 : void 0,
+			bottom: "var(--radix-scroll-area-corner-height)",
+			["--radix-scroll-area-thumb-height"]: getThumbSize(sizes) + "px",
+			...props.style
+		},
+		onThumbPointerDown: (pointerPos) => props.onThumbPointerDown(pointerPos.y),
+		onDragScroll: (pointerPos) => props.onDragScroll(pointerPos.y),
+		onWheelScroll: (event, maxScrollPos) => {
+			if (context.viewport) {
+				const scrollPos = context.viewport.scrollTop + event.deltaY;
+				props.onWheelScroll(scrollPos);
+				if (isScrollingWithinScrollbarBounds(scrollPos, maxScrollPos)) event.preventDefault();
+			}
+		},
+		onResize: () => {
+			if (ref.current && context.viewport && computedStyle) onSizesChange({
+				content: context.viewport.scrollHeight,
+				viewport: context.viewport.offsetHeight,
+				scrollbar: {
+					size: ref.current.clientHeight,
+					paddingStart: toInt(computedStyle.paddingTop),
+					paddingEnd: toInt(computedStyle.paddingBottom)
+				}
+			});
+		}
+	});
+});
+var [ScrollbarProvider, useScrollbarContext] = createScrollAreaContext(SCROLLBAR_NAME);
+var ScrollAreaScrollbarImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeScrollArea, sizes, hasThumb, onThumbChange, onThumbPointerUp, onThumbPointerDown, onThumbPositionChange, onDragScroll, onWheelScroll, onResize, ...scrollbarProps } = props;
+	const context = useScrollAreaContext(SCROLLBAR_NAME, __scopeScrollArea);
+	const [scrollbar, setScrollbar] = import_react.useState(null);
+	const composeRefs = useComposedRefs(forwardedRef, (node) => setScrollbar(node));
+	const rectRef = import_react.useRef(null);
+	const prevWebkitUserSelectRef = import_react.useRef("");
+	const viewport = context.viewport;
+	const maxScrollPos = sizes.content - sizes.viewport;
+	const handleWheelScroll = useCallbackRef$1(onWheelScroll);
+	const handleThumbPositionChange = useCallbackRef$1(onThumbPositionChange);
+	const handleResize = useDebounceCallback(onResize, 10);
+	function handleDragScroll(event) {
+		if (rectRef.current) onDragScroll({
+			x: event.clientX - rectRef.current.left,
+			y: event.clientY - rectRef.current.top
+		});
+	}
+	import_react.useEffect(() => {
+		const handleWheel = (event) => {
+			const element = event.target;
+			if (scrollbar?.contains(element)) handleWheelScroll(event, maxScrollPos);
+		};
+		document.addEventListener("wheel", handleWheel, { passive: false });
+		return () => document.removeEventListener("wheel", handleWheel, { passive: false });
+	}, [
+		viewport,
+		scrollbar,
+		maxScrollPos,
+		handleWheelScroll
+	]);
+	import_react.useEffect(handleThumbPositionChange, [sizes, handleThumbPositionChange]);
+	useResizeObserver(scrollbar, handleResize);
+	useResizeObserver(context.content, handleResize);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollbarProvider, {
+		scope: __scopeScrollArea,
+		scrollbar,
+		hasThumb,
+		onThumbChange: useCallbackRef$1(onThumbChange),
+		onThumbPointerUp: useCallbackRef$1(onThumbPointerUp),
+		onThumbPositionChange: handleThumbPositionChange,
+		onThumbPointerDown: useCallbackRef$1(onThumbPointerDown),
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			...scrollbarProps,
+			ref: composeRefs,
+			style: {
+				position: "absolute",
+				...scrollbarProps.style
+			},
+			onPointerDown: composeEventHandlers(props.onPointerDown, (event) => {
+				if (event.button === 0) {
+					event.target.setPointerCapture(event.pointerId);
+					rectRef.current = scrollbar.getBoundingClientRect();
+					prevWebkitUserSelectRef.current = document.body.style.webkitUserSelect;
+					document.body.style.webkitUserSelect = "none";
+					if (context.viewport) context.viewport.style.scrollBehavior = "auto";
+					handleDragScroll(event);
+				}
+			}),
+			onPointerMove: composeEventHandlers(props.onPointerMove, handleDragScroll),
+			onPointerUp: composeEventHandlers(props.onPointerUp, (event) => {
+				const element = event.target;
+				if (element.hasPointerCapture(event.pointerId)) element.releasePointerCapture(event.pointerId);
+				document.body.style.webkitUserSelect = prevWebkitUserSelectRef.current;
+				if (context.viewport) context.viewport.style.scrollBehavior = "";
+				rectRef.current = null;
+			})
+		})
+	});
+});
+var THUMB_NAME$1 = "ScrollAreaThumb";
+var ScrollAreaThumb = import_react.forwardRef((props, forwardedRef) => {
+	const { forceMount, ...thumbProps } = props;
+	const scrollbarContext = useScrollbarContext(THUMB_NAME$1, props.__scopeScrollArea);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || scrollbarContext.hasThumb,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaThumbImpl, {
+			ref: forwardedRef,
+			...thumbProps
+		})
+	});
+});
+var ScrollAreaThumbImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeScrollArea, style, ...thumbProps } = props;
+	const scrollAreaContext = useScrollAreaContext(THUMB_NAME$1, __scopeScrollArea);
+	const scrollbarContext = useScrollbarContext(THUMB_NAME$1, __scopeScrollArea);
+	const { onThumbPositionChange } = scrollbarContext;
+	const composedRef = useComposedRefs(forwardedRef, (node) => scrollbarContext.onThumbChange(node));
+	const removeUnlinkedScrollListenerRef = import_react.useRef(void 0);
+	const debounceScrollEnd = useDebounceCallback(() => {
+		if (removeUnlinkedScrollListenerRef.current) {
+			removeUnlinkedScrollListenerRef.current();
+			removeUnlinkedScrollListenerRef.current = void 0;
+		}
+	}, 100);
+	import_react.useEffect(() => {
+		const viewport = scrollAreaContext.viewport;
+		if (viewport) {
+			const handleScroll = () => {
+				debounceScrollEnd();
+				if (!removeUnlinkedScrollListenerRef.current) {
+					removeUnlinkedScrollListenerRef.current = addUnlinkedScrollListener(viewport, onThumbPositionChange);
+					onThumbPositionChange();
+				}
+			};
+			onThumbPositionChange();
+			viewport.addEventListener("scroll", handleScroll);
+			return () => viewport.removeEventListener("scroll", handleScroll);
+		}
+	}, [
+		scrollAreaContext.viewport,
+		debounceScrollEnd,
+		onThumbPositionChange
+	]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		"data-state": scrollbarContext.hasThumb ? "visible" : "hidden",
+		...thumbProps,
+		ref: composedRef,
+		style: {
+			width: "var(--radix-scroll-area-thumb-width)",
+			height: "var(--radix-scroll-area-thumb-height)",
+			...style
+		},
+		onPointerDownCapture: composeEventHandlers(props.onPointerDownCapture, (event) => {
+			const thumbRect = event.target.getBoundingClientRect();
+			const x = event.clientX - thumbRect.left;
+			const y = event.clientY - thumbRect.top;
+			scrollbarContext.onThumbPointerDown({
+				x,
+				y
+			});
+		}),
+		onPointerUp: composeEventHandlers(props.onPointerUp, scrollbarContext.onThumbPointerUp)
+	});
+});
+ScrollAreaThumb.displayName = THUMB_NAME$1;
+var CORNER_NAME = "ScrollAreaCorner";
+var ScrollAreaCorner = import_react.forwardRef((props, forwardedRef) => {
+	const context = useScrollAreaContext(CORNER_NAME, props.__scopeScrollArea);
+	const hasBothScrollbarsVisible = Boolean(context.scrollbarX && context.scrollbarY);
+	return context.type !== "scroll" && hasBothScrollbarsVisible ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaCornerImpl, {
+		...props,
+		ref: forwardedRef
+	}) : null;
+});
+ScrollAreaCorner.displayName = CORNER_NAME;
+var ScrollAreaCornerImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeScrollArea, ...cornerProps } = props;
+	const context = useScrollAreaContext(CORNER_NAME, __scopeScrollArea);
+	const [width, setWidth] = import_react.useState(0);
+	const [height, setHeight] = import_react.useState(0);
+	const hasSize = Boolean(width && height);
+	useResizeObserver(context.scrollbarX, () => {
+		const height2 = context.scrollbarX?.offsetHeight || 0;
+		context.onCornerHeightChange(height2);
+		setHeight(height2);
+	});
+	useResizeObserver(context.scrollbarY, () => {
+		const width2 = context.scrollbarY?.offsetWidth || 0;
+		context.onCornerWidthChange(width2);
+		setWidth(width2);
+	});
+	return hasSize ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		...cornerProps,
+		ref: forwardedRef,
+		style: {
+			width,
+			height,
+			position: "absolute",
+			right: context.dir === "ltr" ? 0 : void 0,
+			left: context.dir === "rtl" ? 0 : void 0,
+			bottom: 0,
+			...props.style
+		}
+	}) : null;
+});
+function toInt(value) {
+	return value ? parseInt(value, 10) : 0;
+}
+function getThumbRatio(viewportSize, contentSize) {
+	const ratio = viewportSize / contentSize;
+	return isNaN(ratio) ? 0 : ratio;
+}
+function getThumbSize(sizes) {
+	const ratio = getThumbRatio(sizes.viewport, sizes.content);
+	const scrollbarPadding = sizes.scrollbar.paddingStart + sizes.scrollbar.paddingEnd;
+	const thumbSize = (sizes.scrollbar.size - scrollbarPadding) * ratio;
+	return Math.max(thumbSize, 18);
+}
+function getScrollPositionFromPointer(pointerPos, pointerOffset, sizes, dir = "ltr") {
+	const thumbSizePx = getThumbSize(sizes);
+	const thumbCenter = thumbSizePx / 2;
+	const offset = pointerOffset || thumbCenter;
+	const thumbOffsetFromEnd = thumbSizePx - offset;
+	const minPointerPos = sizes.scrollbar.paddingStart + offset;
+	const maxPointerPos = sizes.scrollbar.size - sizes.scrollbar.paddingEnd - thumbOffsetFromEnd;
+	const maxScrollPos = sizes.content - sizes.viewport;
+	const scrollRange = dir === "ltr" ? [0, maxScrollPos] : [maxScrollPos * -1, 0];
+	return linearScale([minPointerPos, maxPointerPos], scrollRange)(pointerPos);
+}
+function getThumbOffsetFromScroll(scrollPos, sizes, dir = "ltr") {
+	const thumbSizePx = getThumbSize(sizes);
+	const scrollbarPadding = sizes.scrollbar.paddingStart + sizes.scrollbar.paddingEnd;
+	const scrollbar = sizes.scrollbar.size - scrollbarPadding;
+	const maxScrollPos = sizes.content - sizes.viewport;
+	const maxThumbPos = scrollbar - thumbSizePx;
+	const scrollWithoutMomentum = clamp(scrollPos, dir === "ltr" ? [0, maxScrollPos] : [maxScrollPos * -1, 0]);
+	return linearScale([0, maxScrollPos], [0, maxThumbPos])(scrollWithoutMomentum);
+}
+function linearScale(input, output) {
+	return (value) => {
+		if (input[0] === input[1] || output[0] === output[1]) return output[0];
+		const ratio = (output[1] - output[0]) / (input[1] - input[0]);
+		return output[0] + ratio * (value - input[0]);
+	};
+}
+function isScrollingWithinScrollbarBounds(scrollPos, maxScrollPos) {
+	return scrollPos > 0 && scrollPos < maxScrollPos;
+}
+var addUnlinkedScrollListener = (node, handler = () => {}) => {
+	let prevPosition = {
+		left: node.scrollLeft,
+		top: node.scrollTop
+	};
+	let rAF = 0;
+	(function loop() {
+		const position = {
+			left: node.scrollLeft,
+			top: node.scrollTop
+		};
+		const isHorizontalScroll = prevPosition.left !== position.left;
+		const isVerticalScroll = prevPosition.top !== position.top;
+		if (isHorizontalScroll || isVerticalScroll) handler();
+		prevPosition = position;
+		rAF = window.requestAnimationFrame(loop);
+	})();
+	return () => window.cancelAnimationFrame(rAF);
+};
+function useDebounceCallback(callback, delay) {
+	const handleCallback = useCallbackRef$1(callback);
+	const debounceTimerRef = import_react.useRef(0);
+	import_react.useEffect(() => () => window.clearTimeout(debounceTimerRef.current), []);
+	return import_react.useCallback(() => {
+		window.clearTimeout(debounceTimerRef.current);
+		debounceTimerRef.current = window.setTimeout(handleCallback, delay);
+	}, [handleCallback, delay]);
+}
+function useResizeObserver(element, onResize) {
+	const handleResize = useCallbackRef$1(onResize);
+	useLayoutEffect2(() => {
+		let rAF = 0;
+		if (element) {
+			const resizeObserver = new ResizeObserver(() => {
+				cancelAnimationFrame(rAF);
+				rAF = window.requestAnimationFrame(handleResize);
+			});
+			resizeObserver.observe(element);
+			return () => {
+				window.cancelAnimationFrame(rAF);
+				resizeObserver.unobserve(element);
+			};
+		}
+	}, [element, handleResize]);
+}
+var Root$2 = ScrollArea$1;
+var Viewport$2 = ScrollAreaViewport;
+var Corner = ScrollAreaCorner;
+//#endregion
+//#region src/components/ui/scroll-area.tsx
+var ScrollArea = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Root$2, {
+	"data-uid": "src/components/ui/scroll-area.tsx:11:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("relative overflow-hidden", className),
+	...props,
+	children: [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport$2, {
+			"data-uid": "src/components/ui/scroll-area.tsx:16:5",
+			"data-prohibitions": "[editContent]",
+			className: "h-full w-full rounded-[inherit]",
+			children
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollBar, {
+			"data-uid": "src/components/ui/scroll-area.tsx:19:5",
+			"data-prohibitions": "[editContent]"
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Corner, {
+			"data-uid": "src/components/ui/scroll-area.tsx:20:5",
+			"data-prohibitions": "[editContent]"
+		})
+	]
+}));
+ScrollArea.displayName = Root$2.displayName;
+var ScrollBar = import_react.forwardRef(({ className, orientation = "vertical", ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaScrollbar, {
+	"data-uid": "src/components/ui/scroll-area.tsx:29:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	orientation,
+	className: cn("flex touch-none select-none transition-colors", orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent p-[1px]", orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent p-[1px]", className),
+	...props,
+	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollAreaThumb, {
+		"data-uid": "src/components/ui/scroll-area.tsx:40:5",
+		"data-prohibitions": "[editContent]",
+		className: "relative flex-1 rounded-full bg-border"
+	})
+}));
+ScrollBar.displayName = ScrollAreaScrollbar.displayName;
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/use-sync-external-store@1.6.0_react@19.2.4/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js
+/**
+* @license React
+* use-sync-external-store-shim.development.js
+*
+* Copyright (c) Meta Platforms, Inc. and affiliates.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+var require_use_sync_external_store_shim_development = /* @__PURE__ */ __commonJSMin(((exports) => {
+	(function() {
+		function is(x, y) {
+			return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
+		}
+		function useSyncExternalStore$2(subscribe, getSnapshot) {
+			didWarnOld18Alpha || void 0 === React.startTransition || (didWarnOld18Alpha = !0, console.error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."));
+			var value = getSnapshot();
+			if (!didWarnUncachedGetSnapshot) {
+				var cachedValue = getSnapshot();
+				objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = !0);
+			}
+			cachedValue = useState({ inst: {
+				value,
+				getSnapshot
+			} });
+			var inst = cachedValue[0].inst, forceUpdate = cachedValue[1];
+			useLayoutEffect(function() {
+				inst.value = value;
+				inst.getSnapshot = getSnapshot;
+				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
+			}, [
+				subscribe,
+				value,
+				getSnapshot
+			]);
+			useEffect(function() {
+				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
+				return subscribe(function() {
+					checkIfSnapshotChanged(inst) && forceUpdate({ inst });
+				});
+			}, [subscribe]);
+			useDebugValue(value);
+			return value;
+		}
+		function checkIfSnapshotChanged(inst) {
+			var latestGetSnapshot = inst.getSnapshot;
+			inst = inst.value;
+			try {
+				var nextValue = latestGetSnapshot();
+				return !objectIs(inst, nextValue);
+			} catch (error) {
+				return !0;
+			}
+		}
+		function useSyncExternalStore$1(subscribe, getSnapshot) {
+			return getSnapshot();
+		}
+		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
+		var React = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is, useState = React.useState, useEffect = React.useEffect, useLayoutEffect = React.useLayoutEffect, useDebugValue = React.useDebugValue, didWarnOld18Alpha = !1, didWarnUncachedGetSnapshot = !1, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
+		exports.useSyncExternalStore = void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
+		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+	})();
+}));
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-use-is-hydrated@0.1.0_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-is-hydrated/dist/index.mjs
+var import_shim = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = require_use_sync_external_store_shim_development();
+})))();
+function useIsHydrated() {
+	return (0, import_shim.useSyncExternalStore)(subscribe, () => true, () => false);
+}
+function subscribe() {
+	return () => {};
+}
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-avatar@1.1.11_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_5e99ccf265cbb36ef8e7150da8f5489e/node_modules/@radix-ui/react-avatar/dist/index.mjs
+var AVATAR_NAME = "Avatar";
+var [createAvatarContext, createAvatarScope] = createContextScope(AVATAR_NAME);
+var [AvatarProvider, useAvatarContext] = createAvatarContext(AVATAR_NAME);
+var Avatar$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeAvatar, ...avatarProps } = props;
+	const [imageLoadingStatus, setImageLoadingStatus] = import_react.useState("idle");
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarProvider, {
+		scope: __scopeAvatar,
+		imageLoadingStatus,
+		onImageLoadingStatusChange: setImageLoadingStatus,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+			...avatarProps,
+			ref: forwardedRef
+		})
+	});
+});
+Avatar$1.displayName = AVATAR_NAME;
+var IMAGE_NAME = "AvatarImage";
+var AvatarImage$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeAvatar, src, onLoadingStatusChange = () => {}, ...imageProps } = props;
+	const context = useAvatarContext(IMAGE_NAME, __scopeAvatar);
+	const imageLoadingStatus = useImageLoadingStatus(src, imageProps);
+	const handleLoadingStatusChange = useCallbackRef$1((status) => {
+		onLoadingStatusChange(status);
+		context.onImageLoadingStatusChange(status);
+	});
+	useLayoutEffect2(() => {
+		if (imageLoadingStatus !== "idle") handleLoadingStatusChange(imageLoadingStatus);
+	}, [imageLoadingStatus, handleLoadingStatusChange]);
+	return imageLoadingStatus === "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.img, {
+		...imageProps,
+		ref: forwardedRef,
+		src
+	}) : null;
+});
+AvatarImage$1.displayName = IMAGE_NAME;
+var FALLBACK_NAME = "AvatarFallback";
+var AvatarFallback$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeAvatar, delayMs, ...fallbackProps } = props;
+	const context = useAvatarContext(FALLBACK_NAME, __scopeAvatar);
+	const [canRender, setCanRender] = import_react.useState(delayMs === void 0);
+	import_react.useEffect(() => {
+		if (delayMs !== void 0) {
+			const timerId = window.setTimeout(() => setCanRender(true), delayMs);
+			return () => window.clearTimeout(timerId);
+		}
+	}, [delayMs]);
+	return canRender && context.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+		...fallbackProps,
+		ref: forwardedRef
+	}) : null;
+});
+AvatarFallback$1.displayName = FALLBACK_NAME;
+function resolveLoadingStatus(image, src) {
+	if (!image) return "idle";
+	if (!src) return "error";
+	if (image.src !== src) image.src = src;
+	return image.complete && image.naturalWidth > 0 ? "loaded" : "loading";
+}
+function useImageLoadingStatus(src, { referrerPolicy, crossOrigin }) {
+	const isHydrated = useIsHydrated();
+	const imageRef = import_react.useRef(null);
+	const image = (() => {
+		if (!isHydrated) return null;
+		if (!imageRef.current) imageRef.current = new window.Image();
+		return imageRef.current;
+	})();
+	const [loadingStatus, setLoadingStatus] = import_react.useState(() => resolveLoadingStatus(image, src));
+	useLayoutEffect2(() => {
+		setLoadingStatus(resolveLoadingStatus(image, src));
+	}, [image, src]);
+	useLayoutEffect2(() => {
+		const updateStatus = (status) => () => {
+			setLoadingStatus(status);
+		};
+		if (!image) return;
+		const handleLoad = updateStatus("loaded");
+		const handleError = updateStatus("error");
+		image.addEventListener("load", handleLoad);
+		image.addEventListener("error", handleError);
+		if (referrerPolicy) image.referrerPolicy = referrerPolicy;
+		if (typeof crossOrigin === "string") image.crossOrigin = crossOrigin;
+		return () => {
+			image.removeEventListener("load", handleLoad);
+			image.removeEventListener("error", handleError);
+		};
+	}, [
+		image,
+		crossOrigin,
+		referrerPolicy
+	]);
+	return loadingStatus;
+}
+var Root$1 = Avatar$1;
+var Image = AvatarImage$1;
+var Fallback = AvatarFallback$1;
+//#endregion
+//#region src/components/ui/avatar.tsx
+var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$1, {
+	"data-uid": "src/components/ui/avatar.tsx:11:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
+	...props
+}));
+Avatar.displayName = Root$1.displayName;
+var AvatarImage = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Image, {
+	"data-uid": "src/components/ui/avatar.tsx:23:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("aspect-square h-full w-full", className),
+	...props
+}));
+AvatarImage.displayName = Image.displayName;
+var AvatarFallback = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Fallback, {
+	"data-uid": "src/components/ui/avatar.tsx:35:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className),
+	...props
+}));
+AvatarFallback.displayName = Fallback.displayName;
+//#endregion
+//#region src/lib/chat-machine.ts
+function useChatMachine() {
+	const [state, setState] = (0, import_react.useState)("idle");
+	const [messages, setMessages] = (0, import_react.useState)([{
+		id: "1",
+		role: "assistant",
+		content: "Olá! Sou o assistente de suporte da ABAPA. Como posso ajudar com o seu mapeamento de treinamentos hoje?",
+		timestamp: Date.now()
+	}]);
+	return {
+		state,
+		messages,
+		sendMessage: (0, import_react.useCallback)(async (content) => {
+			if (!content.trim()) return;
+			const userMsg = {
+				id: Date.now().toString(),
+				role: "user",
+				content,
+				timestamp: Date.now()
+			};
+			setMessages((prev) => [...prev, userMsg]);
+			setState("processing");
+			setTimeout(() => {
+				const lowerContent = content.toLowerCase();
+				let responseText = "Entendi. Se houver mais dúvidas, por favor não hesite em perguntar ou consultar o manual de treinamentos da ABAPA.";
+				if (lowerContent.includes("protocolo")) responseText = "Para consultar o seu protocolo, você pode voltar à página inicial e clicar em 'Consulta'. Insira o código que você recebeu ao finalizar o envio.";
+				else if (lowerContent.includes("curso") || lowerContent.includes("treinamento")) responseText = "A ABAPA oferece diversos cursos nas áreas de Operação de Máquinas, NR's, Gestão Agrícola e mais. Ao preencher o formulário, você pode mapear vagas para todos os cursos desejados.";
+				else if (lowerContent.includes("erro") || lowerContent.includes("problema")) responseText = "Se você está enfrentando problemas técnicos, tente recarregar a página ou refazer o envio garantindo que todos os campos obrigatórios estejam preenchidos.";
+				const assistantMsg = {
+					id: (Date.now() + 1).toString(),
+					role: "assistant",
+					content: responseText,
+					timestamp: Date.now()
+				};
+				setMessages((prev) => [...prev, assistantMsg]);
+				setState("idle");
+			}, 1500);
+		}, [])
+	};
+}
+//#endregion
+//#region src/pages/ChatAssistant.tsx
+function ChatAssistant() {
+	const [input, setInput] = (0, import_react.useState)("");
+	const { state, messages, sendMessage } = useChatMachine();
+	const messagesEndRef = (0, import_react.useRef)(null);
+	(0, import_react.useEffect)(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages, state]);
+	const handleSend = (e) => {
+		e.preventDefault();
+		if (!input.trim() || state === "processing") return;
+		sendMessage(input);
+		setInput("");
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/ChatAssistant.tsx:27:5",
+		"data-prohibitions": "[editContent]",
+		className: "flex flex-col h-[100dvh] max-w-3xl mx-auto border-x bg-background",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+				"data-uid": "src/pages/ChatAssistant.tsx:28:7",
+				"data-prohibitions": "[]",
+				className: "flex items-center p-4 border-b shrink-0",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+					"data-uid": "src/pages/ChatAssistant.tsx:29:9",
+					"data-prohibitions": "[]",
+					to: "/",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/pages/ChatAssistant.tsx:30:11",
+						"data-prohibitions": "[]",
+						variant: "ghost",
+						size: "icon",
+						className: "mr-2",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
+							"data-uid": "src/pages/ChatAssistant.tsx:31:13",
+							"data-prohibitions": "[editContent]",
+							className: "w-5 h-5"
+						})
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/ChatAssistant.tsx:34:9",
+					"data-prohibitions": "[]",
+					className: "flex items-center gap-3",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar, {
+						"data-uid": "src/pages/ChatAssistant.tsx:35:11",
+						"data-prohibitions": "[]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
+							"data-uid": "src/pages/ChatAssistant.tsx:36:13",
+							"data-prohibitions": "[]",
+							className: "bg-primary/10 text-primary",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bot, {
+								"data-uid": "src/pages/ChatAssistant.tsx:37:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-5 h-5"
+							})
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/ChatAssistant.tsx:40:11",
+						"data-prohibitions": "[]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+							"data-uid": "src/pages/ChatAssistant.tsx:41:13",
+							"data-prohibitions": "[]",
+							className: "font-semibold text-lg leading-none",
+							children: "Assistente ABAPA"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/ChatAssistant.tsx:42:13",
+							"data-prohibitions": "[]",
+							className: "text-sm text-muted-foreground mt-1",
+							children: "Dúvidas sobre o mapeamento"
+						})]
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollArea, {
+				"data-uid": "src/pages/ChatAssistant.tsx:47:7",
+				"data-prohibitions": "[editContent]",
+				className: "flex-1 p-4",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/ChatAssistant.tsx:48:9",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-4",
+					children: [
+						messages.map((msg) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/ChatAssistant.tsx:50:13",
+							"data-prohibitions": "[editContent]",
+							className: `flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`,
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar, {
+								"data-uid": "src/pages/ChatAssistant.tsx:54:15",
+								"data-prohibitions": "[editContent]",
+								className: "w-8 h-8 shrink-0",
+								children: msg.role === "user" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
+									"data-uid": "src/pages/ChatAssistant.tsx:56:19",
+									"data-prohibitions": "[]",
+									className: "bg-muted",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(User, {
+										"data-uid": "src/pages/ChatAssistant.tsx:57:21",
+										"data-prohibitions": "[editContent]",
+										className: "w-4 h-4"
+									})
+								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
+									"data-uid": "src/pages/ChatAssistant.tsx:60:19",
+									"data-prohibitions": "[]",
+									className: "bg-primary/10 text-primary",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bot, {
+										"data-uid": "src/pages/ChatAssistant.tsx:61:21",
+										"data-prohibitions": "[editContent]",
+										className: "w-4 h-4"
+									})
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/ChatAssistant.tsx:65:15",
+								"data-prohibitions": "[editContent]",
+								className: `px-4 py-2 rounded-lg max-w-[80%] ${msg.role === "user" ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-muted rounded-tl-none"}`,
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/ChatAssistant.tsx:72:17",
+									"data-prohibitions": "[editContent]",
+									className: "text-sm whitespace-pre-wrap",
+									children: msg.content
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+									"data-uid": "src/pages/ChatAssistant.tsx:73:17",
+									"data-prohibitions": "[editContent]",
+									className: "text-[10px] opacity-70 mt-1 block",
+									children: new Date(msg.timestamp).toLocaleTimeString([], {
+										hour: "2-digit",
+										minute: "2-digit"
+									})
+								})]
+							})]
+						}, msg.id)),
+						state === "processing" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/ChatAssistant.tsx:83:13",
+							"data-prohibitions": "[]",
+							className: "flex items-start gap-3",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar, {
+								"data-uid": "src/pages/ChatAssistant.tsx:84:15",
+								"data-prohibitions": "[]",
+								className: "w-8 h-8 shrink-0",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
+									"data-uid": "src/pages/ChatAssistant.tsx:85:17",
+									"data-prohibitions": "[]",
+									className: "bg-primary/10 text-primary",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bot, {
+										"data-uid": "src/pages/ChatAssistant.tsx:86:19",
+										"data-prohibitions": "[editContent]",
+										className: "w-4 h-4"
+									})
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/ChatAssistant.tsx:89:15",
+								"data-prohibitions": "[]",
+								className: "px-4 py-3 rounded-lg bg-muted rounded-tl-none",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/ChatAssistant.tsx:90:17",
+									"data-prohibitions": "[]",
+									className: "flex gap-1",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/ChatAssistant.tsx:91:19",
+											"data-prohibitions": "[editContent]",
+											className: "w-2 h-2 bg-primary/50 rounded-full animate-bounce"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/ChatAssistant.tsx:92:19",
+											"data-prohibitions": "[editContent]",
+											className: "w-2 h-2 bg-primary/50 rounded-full animate-bounce [animation-delay:-.3s]"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											"data-uid": "src/pages/ChatAssistant.tsx:93:19",
+											"data-prohibitions": "[editContent]",
+											className: "w-2 h-2 bg-primary/50 rounded-full animate-bounce [animation-delay:-.5s]"
+										})
+									]
+								})
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/ChatAssistant.tsx:98:11",
+							"data-prohibitions": "[editContent]",
+							ref: messagesEndRef,
+							className: "h-1"
+						})
+					]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/ChatAssistant.tsx:102:7",
+				"data-prohibitions": "[]",
+				className: "p-4 border-t bg-background shrink-0",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
+					"data-uid": "src/pages/ChatAssistant.tsx:103:9",
+					"data-prohibitions": "[]",
+					onSubmit: handleSend,
+					className: "flex gap-2 max-w-3xl mx-auto",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+						"data-uid": "src/pages/ChatAssistant.tsx:104:11",
+						"data-prohibitions": "[editContent]",
+						placeholder: "Digite sua dúvida...",
+						value: input,
+						onChange: (e) => setInput(e.target.value),
+						disabled: state === "processing",
+						className: "flex-1"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/pages/ChatAssistant.tsx:111:11",
+						"data-prohibitions": "[]",
+						type: "submit",
+						size: "icon",
+						disabled: !input.trim() || state === "processing",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Send, {
+							"data-uid": "src/pages/ChatAssistant.tsx:112:13",
+							"data-prohibitions": "[editContent]",
+							className: "w-4 h-4"
+						})
+					})]
+				})
+			})
+		]
 	});
 }
 //#endregion
@@ -71424,11 +72653,6 @@ function Dashboard() {
 	] });
 }
 //#endregion
-//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+number@1.1.1/node_modules/@radix-ui/number/dist/index.mjs
-function clamp(value, [min, max]) {
-	return Math.min(max, Math.max(min, value));
-}
-//#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-use-previous@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-previous/dist/index.mjs
 function usePrevious(value) {
 	const ref = import_react.useRef({
@@ -73259,7 +74483,7 @@ function Badge({ className, variant, ...props }) {
 }
 //#endregion
 //#region src/components/ui/dialog.tsx
-var Dialog = Root$3;
+var Dialog = Root$5;
 var DialogPortal = Portal$1;
 var DialogOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
 	"data-uid": "src/components/ui/dialog.tsx:20:3",
@@ -75066,7 +76290,7 @@ var ToastImpl = import_react.forwardRef((props, forwardedRef) => {
 		onClose: handleClose,
 		children: import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection.ItemSlot, {
 			scope: __scopeToast,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
 				asChild: true,
 				onEscapeKeyDown: composeEventHandlers(onEscapeKeyDown, () => {
 					if (!context.isFocusedToastEscapeKeyDownRef.current) handleClose();
@@ -75411,119 +76635,138 @@ function Toaster() {
 //#region src/App.tsx
 function App() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthProvider, {
-		"data-uid": "src/App.tsx:20:5",
+		"data-uid": "src/App.tsx:22:5",
 		"data-prohibitions": "[]",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuditProvider, {
-			"data-uid": "src/App.tsx:21:7",
+			"data-uid": "src/App.tsx:23:7",
 			"data-prohibitions": "[]",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(UsersProvider, {
-				"data-uid": "src/App.tsx:22:9",
+				"data-uid": "src/App.tsx:24:9",
 				"data-prohibitions": "[]",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MainStoreProvider, {
-					"data-uid": "src/App.tsx:23:11",
+					"data-uid": "src/App.tsx:25:11",
 					"data-prohibitions": "[]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BrowserRouter, {
-						"data-uid": "src/App.tsx:24:13",
+						"data-uid": "src/App.tsx:26:13",
 						"data-prohibitions": "[]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
-							"data-uid": "src/App.tsx:25:15",
+							"data-uid": "src/App.tsx:27:15",
 							"data-prohibitions": "[]",
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-									"data-uid": "src/App.tsx:26:17",
-									"data-prohibitions": "[editContent]",
-									path: "/",
-									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
-										"data-uid": "src/App.tsx:26:42",
-										"data-prohibitions": "[editContent]"
-									})
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-									"data-uid": "src/App.tsx:27:17",
-									"data-prohibitions": "[editContent]",
-									path: "/consulta",
-									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Consulta, {
-										"data-uid": "src/App.tsx:27:50",
-										"data-prohibitions": "[editContent]"
-									})
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-									"data-uid": "src/App.tsx:28:17",
-									"data-prohibitions": "[editContent]",
-									path: "/login",
-									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
-										"data-uid": "src/App.tsx:28:47",
-										"data-prohibitions": "[editContent]"
-									})
-								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-									"data-uid": "src/App.tsx:30:17",
+									"data-uid": "src/App.tsx:28:17",
 									"data-prohibitions": "[]",
-									path: "/dashboard",
-									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AdminLayout, {
-										"data-uid": "src/App.tsx:30:51",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
+										"data-uid": "src/App.tsx:28:33",
 										"data-prohibitions": "[editContent]"
 									}),
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:29:19",
+											"data-prohibitions": "[editContent]",
+											path: "/",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
+												"data-uid": "src/App.tsx:29:44",
+												"data-prohibitions": "[editContent]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:30:19",
+											"data-prohibitions": "[editContent]",
+											path: "/consulta",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Consulta, {
+												"data-uid": "src/App.tsx:30:52",
+												"data-prohibitions": "[editContent]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 											"data-uid": "src/App.tsx:31:19",
 											"data-prohibitions": "[editContent]",
-											index: true,
-											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dashboard, {
-												"data-uid": "src/App.tsx:31:41",
-												"data-prohibitions": "[editContent]"
-											})
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:32:19",
-											"data-prohibitions": "[editContent]",
-											path: "respostas",
-											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Responses, {
-												"data-uid": "src/App.tsx:32:52",
-												"data-prohibitions": "[editContent]"
-											})
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:33:19",
-											"data-prohibitions": "[editContent]",
-											path: "usuarios",
-											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, {
-												"data-uid": "src/App.tsx:33:51",
-												"data-prohibitions": "[editContent]"
-											})
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:34:19",
-											"data-prohibitions": "[editContent]",
-											path: "relatorios",
-											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reports, {
-												"data-uid": "src/App.tsx:34:53",
-												"data-prohibitions": "[editContent]"
-											})
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-											"data-uid": "src/App.tsx:35:19",
-											"data-prohibitions": "[editContent]",
-											path: "configuracoes",
-											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Settings, {
-												"data-uid": "src/App.tsx:35:56",
+											path: "/login",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
+												"data-uid": "src/App.tsx:31:49",
 												"data-prohibitions": "[editContent]"
 											})
 										})
 									]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-									"data-uid": "src/App.tsx:38:17",
+									"data-uid": "src/App.tsx:34:17",
+									"data-prohibitions": "[editContent]",
+									path: "/chat",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChatAssistant, {
+										"data-uid": "src/App.tsx:34:46",
+										"data-prohibitions": "[editContent]"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
+									"data-uid": "src/App.tsx:36:17",
+									"data-prohibitions": "[]",
+									path: "/dashboard",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AdminLayout, {
+										"data-uid": "src/App.tsx:36:51",
+										"data-prohibitions": "[editContent]"
+									}),
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:37:19",
+											"data-prohibitions": "[editContent]",
+											index: true,
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dashboard, {
+												"data-uid": "src/App.tsx:37:41",
+												"data-prohibitions": "[editContent]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:38:19",
+											"data-prohibitions": "[editContent]",
+											path: "respostas",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Responses, {
+												"data-uid": "src/App.tsx:38:52",
+												"data-prohibitions": "[editContent]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:39:19",
+											"data-prohibitions": "[editContent]",
+											path: "usuarios",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, {
+												"data-uid": "src/App.tsx:39:51",
+												"data-prohibitions": "[editContent]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:40:19",
+											"data-prohibitions": "[editContent]",
+											path: "relatorios",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reports, {
+												"data-uid": "src/App.tsx:40:53",
+												"data-prohibitions": "[editContent]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+											"data-uid": "src/App.tsx:41:19",
+											"data-prohibitions": "[editContent]",
+											path: "configuracoes",
+											element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Settings, {
+												"data-uid": "src/App.tsx:41:56",
+												"data-prohibitions": "[editContent]"
+											})
+										})
+									]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:44:17",
 									"data-prohibitions": "[editContent]",
 									path: "*",
 									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
-										"data-uid": "src/App.tsx:38:42",
+										"data-uid": "src/App.tsx:44:42",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
-							"data-uid": "src/App.tsx:40:15",
+							"data-uid": "src/App.tsx:46:15",
 							"data-prohibitions": "[editContent]"
 						})]
 					})
@@ -75540,4 +76783,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DXwdl6f6.js.map
+//# sourceMappingURL=index-DGYwC8T-.js.map

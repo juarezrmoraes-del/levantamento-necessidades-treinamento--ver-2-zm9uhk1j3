@@ -664,6 +664,10 @@ body{
   bottom: 0px;
 }
 
+.bottom-6{
+  bottom: 1.5rem;
+}
+
 .left-0{
   left: 0px;
 }
@@ -710,6 +714,10 @@ body{
 
 .right-4{
   right: 1rem;
+}
+
+.right-6{
+  right: 1.5rem;
 }
 
 .top-0{
@@ -964,6 +972,10 @@ body{
 .size-\[--cell-size\]{
   width: var(--cell-size);
   height: var(--cell-size);
+}
+
+.h-1{
+  height: 0.25rem;
 }
 
 .h-1\.5{
@@ -1356,6 +1368,10 @@ body{
   max-width: 1400px;
 }
 
+.max-w-\[80\%\]{
+  max-width: 80%;
+}
+
 .max-w-\[800px\]{
   max-width: 800px;
 }
@@ -1556,6 +1572,10 @@ body{
 
 .flex-row{
   flex-direction: row;
+}
+
+.flex-row-reverse{
+  flex-direction: row-reverse;
 }
 
 .flex-col{
@@ -1802,8 +1822,16 @@ body{
   border-top-right-radius: 10px;
 }
 
+.rounded-tl-none{
+  border-top-left-radius: 0px;
+}
+
 .rounded-tl-sm{
   border-top-left-radius: calc(var(--radius) - 4px);
+}
+
+.rounded-tr-none{
+  border-top-right-radius: 0px;
 }
 
 .rounded-tr-sm{
@@ -1824,6 +1852,11 @@ body{
 
 .border-\[1\.5px\]{
   border-width: 1.5px;
+}
+
+.border-x{
+  border-left-width: 1px;
+  border-right-width: 1px;
 }
 
 .border-y{
@@ -2121,6 +2154,10 @@ body{
 
 .bg-primary\/5{
   background-color: hsl(var(--primary) / 0.05);
+}
+
+.bg-primary\/50{
+  background-color: hsl(var(--primary) / 0.5);
 }
 
 .bg-purple-100{
@@ -3238,6 +3275,14 @@ body{
   --cell-size: 2rem;
 }
 
+.\[animation-delay\:-\.3s\]{
+  animation-delay: -.3s;
+}
+
+.\[animation-delay\:-\.5s\]{
+  animation-delay: -.5s;
+}
+
 .\[animation-delay\:-0\.15s\]{
   animation-delay: -0.15s;
 }
@@ -3344,6 +3389,11 @@ body{
 .last\:rounded-r-md:last-child{
   border-top-right-radius: calc(var(--radius) - 2px);
   border-bottom-right-radius: calc(var(--radius) - 2px);
+}
+
+.hover\:-translate-y-1:hover{
+  --tw-translate-y: -0.25rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .hover\:border-primary\/50:hover{
@@ -3535,6 +3585,12 @@ body{
 .hover\:shadow-\[0_0_0_1px_hsl\(var\(--sidebar-accent\)\)\]:hover{
   --tw-shadow: 0 0 0 1px hsl(var(--sidebar-accent));
   --tw-shadow-colored: 0 0 0 1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.hover\:shadow-xl:hover{
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 

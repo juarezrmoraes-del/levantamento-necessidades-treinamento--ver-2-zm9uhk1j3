@@ -2,7 +2,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Index from '@/pages/Index'
 import Consulta from '@/pages/Consulta'
 import Login from '@/pages/Login'
+import Layout from '@/components/Layout'
 import AdminLayout from '@/components/AdminLayout'
+import ChatAssistant from '@/pages/ChatAssistant'
 import Dashboard from '@/pages/admin/Dashboard'
 import Responses from '@/pages/admin/Responses'
 import Users from '@/pages/admin/Users'
@@ -23,9 +25,13 @@ function App() {
           <MainStoreProvider>
             <Router>
               <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/consulta" element={<Consulta />} />
-                <Route path="/login" element={<Login />} />
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/consulta" element={<Consulta />} />
+                  <Route path="/login" element={<Login />} />
+                </Route>
+
+                <Route path="/chat" element={<ChatAssistant />} />
 
                 <Route path="/dashboard" element={<AdminLayout />}>
                   <Route index element={<Dashboard />} />

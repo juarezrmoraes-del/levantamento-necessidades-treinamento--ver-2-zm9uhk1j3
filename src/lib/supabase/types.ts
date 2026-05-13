@@ -44,7 +44,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_survey_by_id: {
+        Args: { search_id: string }
+        Returns: {
+          created_at: string | null
+          email: string | null
+          fazenda: string | null
+          id: string
+          nome: string | null
+          status: string | null
+          whatsapp: string | null
+        }[]
+        SetofOptions: {
+          from: '*'
+          to: 'survey_leads'
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       [_ in never]: never
@@ -205,3 +222,16 @@ export const Constants = {
 //     WITH CHECK: true
 //   Policy "Enable select for authenticated" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: true
+
+// --- DATABASE FUNCTIONS ---
+// FUNCTION get_survey_by_id(uuid)
+//   CREATE OR REPLACE FUNCTION public.get_survey_by_id(search_id uuid)
+//    RETURNS SETOF survey_leads
+//    LANGUAGE plpgsql
+//    SECURITY DEFINER
+//   AS $function$
+//   BEGIN
+//     RETURN QUERY SELECT * FROM public.survey_leads WHERE id = search_id;
+//   END;
+//   $function$
+//
