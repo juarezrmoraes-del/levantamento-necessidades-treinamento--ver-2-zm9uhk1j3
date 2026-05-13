@@ -195,12 +195,6 @@ export const getCursosCategory = (cultura: string, setor: string) => {
 
 export const STEPS_CONFIG = [
   {
-    id: 'identificacao_inicial',
-    title:
-      'Olá! Sou o assistente de capacitação da ABAPA. Para personalizar sua solicitação, como podemos entrar em contato?',
-    type: 'identificacao_inicial',
-  },
-  {
     id: 'funcao',
     title: 'Qual é a sua função principal?',
     type: 'single',
@@ -296,22 +290,27 @@ export const STEPS_CONFIG = [
     title: 'Alguma demanda por nova tecnologia ou inovação não listada?',
     type: 'text',
   },
+  {
+    id: 'identificacao',
+    title: 'Para finalizar, como podemos entrar em contato?',
+    type: 'identificacao',
+  },
 ]
 
 export const getNextStep = (current: number, data: any): number => {
   if (
-    current === 10 &&
+    current === 9 &&
     !['Fazenda/Empresa', 'EAD', 'Híbrido (EAD + Presencial)'].includes(data.modalidade)
   )
-    return 12
+    return 11
   return current + 1
 }
 
 export const getPrevStep = (current: number, data: any): number => {
   if (
-    current === 12 &&
+    current === 11 &&
     !['Fazenda/Empresa', 'EAD', 'Híbrido (EAD + Presencial)'].includes(data.modalidade)
   )
-    return 10
+    return 9
   return current - 1
 }

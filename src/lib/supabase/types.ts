@@ -9,7 +9,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      survey_leads: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          fazenda: string | null
+          id: string
+          nome: string | null
+          status: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          fazenda?: string | null
+          id?: string
+          nome?: string | null
+          status?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          fazenda?: string | null
+          id?: string
+          nome?: string | null
+          status?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -153,3 +182,26 @@ export const Constants = {
 // IMPORTANT: The TypeScript types above map UUID, TEXT, VARCHAR all to "string".
 // Use the COLUMN TYPES section below to know the real PostgreSQL type for each column.
 // Always use the correct PostgreSQL type when writing SQL migrations.
+
+// --- COLUMN TYPES (actual PostgreSQL types) ---
+// Use this to know the real database type when writing migrations.
+// "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: survey_leads
+//   id: uuid (not null, default: gen_random_uuid())
+//   nome: text (nullable)
+//   whatsapp: text (nullable)
+//   email: text (nullable)
+//   fazenda: text (nullable)
+//   status: text (nullable, default: 'in_progress'::text)
+//   created_at: timestamp with time zone (nullable, default: now())
+
+// --- CONSTRAINTS ---
+// Table: survey_leads
+//   PRIMARY KEY survey_leads_pkey: PRIMARY KEY (id)
+
+// --- ROW LEVEL SECURITY POLICIES ---
+// Table: survey_leads
+//   Policy "Enable insert for anonymous" (INSERT, PERMISSIVE) roles={public}
+//     WITH CHECK: true
+//   Policy "Enable select for authenticated" (SELECT, PERMISSIVE) roles={authenticated}
+//     USING: true

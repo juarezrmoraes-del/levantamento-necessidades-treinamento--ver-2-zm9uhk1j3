@@ -13,7 +13,6 @@ export function SurveyContainer() {
   const [stepIndex, setStepIndex] = useState(0)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const leadSavedRef = useRef(false)
   const { addSurveys } = useMainStore()
   const { toast } = useToast()
 
@@ -48,22 +47,6 @@ export function SurveyContainer() {
 
   const handleNext = async () => {
     const values = form.getValues()
-
-    if (stepIndex === 0 && (values.nome || values.whatsapp) && !leadSavedRef.current) {
-      try {
-        await supabase.from('survey_leads').insert([
-          {
-            nome: values.nome,
-            whatsapp: values.whatsapp,
-            email: values.email || null,
-            fazenda: values.fazenda || null,
-          },
-        ])
-        leadSavedRef.current = true
-      } catch (err) {
-        console.error('Failed to save lead info:', err)
-      }
-    }
 
     const nextIdx = getNextStep(stepIndex, values)
     if (nextIdx >= STEPS_CONFIG.length) {
@@ -115,6 +98,21 @@ export function SurveyContainer() {
 
     try {
       console.log('Final Form Data JSON:', JSON.stringify(values, null, 2))
+
+      try {
+        await supabase.from('survey_leads').insert([
+          {
+            nome: values.nome,
+            whatsapp: values.whatsapp,
+            email: values.email || null,
+            fazenda: values.fazenda || null,
+            status: 'completed',
+          },
+        ])
+      } catch (err) {
+        console.error('Failed to save lead info:', err)
+      }
+
       if (records.length > 0) {
         await addSurveys(records)
 
@@ -204,39 +202,59 @@ export function SurveyContainer() {
             {step.title}
           </h1>
 
-          {step.id === 'identificacao_inicial' ? (
+          {step.id === 'identificacao' ? (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col h-full pb-10">
               <div className="flex-1 space-y-6">
                 <div>
                   <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                    Seu nome e WhatsApp
+                    Nome Completo
                   </label>
                   <input
                     type="text"
-                    placeholder="Ex: João Silva — (77) 99999-0000"
+                    placeholder="Seu nome"
                     className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     {...form.register('nome')}
-                    onChange={(e) => {
-                      form.setValue('nome', e.target.value)
-                      form.setValue('whatsapp', e.target.value)
-                    }}
                   />
-                  <div className="mt-4 bg-blue-50/50 border border-blue-100 rounded-lg p-3 text-sm text-blue-700 flex items-start gap-2">
-                    <div className="shrink-0 mt-0.5">💡</div>
-                    <p>
-                      Nome + contato no início cria comprometimento e otimiza seu tempo eliminando
-                      etapas no final.
-                    </p>
-                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                    WhatsApp (com DDD)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="(00) 00000-0000"
+                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    {...form.register('whatsapp')}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-slate-700 mb-2 block">E-mail</label>
+                  <input
+                    type="email"
+                    placeholder="seu@email.com"
+                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    {...form.register('email')}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                    Fazenda / Empresa
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Nome da fazenda ou empresa"
+                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    {...form.register('fazenda')}
+                  />
                 </div>
               </div>
               <div className="pt-6 mt-8">
                 <Button
                   onClick={handleNext}
                   className="w-full h-12 text-base font-semibold"
-                  disabled={!watchNome}
+                  disabled={!watchNome || isSubmitting}
                 >
-                  Continuar
+                  {isSubmitting ? 'Enviando...' : 'Finalizar'}
                 </Button>
               </div>
             </div>
