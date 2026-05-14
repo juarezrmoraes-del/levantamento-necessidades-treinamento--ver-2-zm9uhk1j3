@@ -24,8 +24,6 @@ import {
 } from '@/components/ui/accordion'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { InfoIcon } from 'lucide-react'
 
 function IdentificationStep({ step, form, onNext }: any) {
   const {
@@ -47,14 +45,21 @@ function IdentificationStep({ step, form, onNext }: any) {
   useEffect(() => {
     const fetchGrupos = async () => {
       setLoadingGrupos(true)
-      const { data } = await supabase.from('fazendas').select('grupo').order('grupo')
-      if (data) {
-        const uniqueGrupos = Array.from(
-          new Set(data.map((d) => d.grupo).filter(Boolean)),
-        ) as string[]
-        setGrupos(uniqueGrupos)
+      try {
+        const { data, error } = await supabase.from('fazendas').select('grupo').order('grupo')
+        if (data && !error) {
+          const uniqueGrupos = Array.from(
+            new Set(data.map((d) => d.grupo).filter(Boolean)),
+          ) as string[]
+          setGrupos(uniqueGrupos)
+        } else {
+          setGrupos([])
+        }
+      } catch (err) {
+        setGrupos([])
+      } finally {
+        setLoadingGrupos(false)
       }
-      setLoadingGrupos(false)
     }
     fetchGrupos()
   }, [])
@@ -62,16 +67,22 @@ function IdentificationStep({ step, form, onNext }: any) {
   useEffect(() => {
     if (grupoWatch && grupoWatch !== 'Outro') {
       const fetchFazendas = async () => {
-        const { data } = await supabase
-          .from('fazendas')
-          .select('fazenda')
-          .eq('grupo', grupoWatch)
-          .order('fazenda')
-        if (data) {
-          const uniqueFazendas = Array.from(
-            new Set(data.map((d) => d.fazenda).filter(Boolean)),
-          ) as string[]
-          setFazendas(uniqueFazendas)
+        try {
+          const { data, error } = await supabase
+            .from('fazendas')
+            .select('fazenda')
+            .eq('grupo', grupoWatch)
+            .order('fazenda')
+          if (data && !error) {
+            const uniqueFazendas = Array.from(
+              new Set(data.map((d) => d.fazenda).filter(Boolean)),
+            ) as string[]
+            setFazendas(uniqueFazendas)
+          } else {
+            setFazendas([])
+          }
+        } catch (err) {
+          setFazendas([])
         }
       }
       fetchFazendas()
@@ -130,18 +141,6 @@ function IdentificationStep({ step, form, onNext }: any) {
         <Label className="text-base text-slate-600 font-semibold">
           Grupo <span className="text-red-500">*</span>
         </Label>
-
-        {!loadingGrupos && grupos.length === 0 && (
-          <Alert className="mb-3 bg-amber-50 text-amber-800 border-amber-200">
-            <InfoIcon className="h-4 w-4 text-amber-600" />
-            <AlertTitle className="font-semibold text-amber-800">Dados não encontrados</AlertTitle>
-            <AlertDescription className="text-amber-700">
-              Para utilizar os dados do arquivo CSV, você deve importar as linhas para a tabela{' '}
-              <strong>fazendas</strong> no seu painel do Supabase. O aplicativo está configurado
-              para ler as informações de lá em tempo real.
-            </AlertDescription>
-          </Alert>
-        )}
 
         <Popover open={openGrupo} onOpenChange={setOpenGrupo}>
           <PopoverTrigger asChild>
