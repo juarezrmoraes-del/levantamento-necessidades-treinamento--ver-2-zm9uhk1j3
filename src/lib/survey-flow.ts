@@ -312,6 +312,15 @@ export const getNextStep = (current: number, data: any): number => {
       next++
       continue
     }
+
+    if (['localizacao', 'tamanho'].includes(STEPS_CONFIG[next].id)) {
+      const hasOutra = (data.fazenda || []).includes('Outra')
+      if (!hasOutra) {
+        next++
+        continue
+      }
+    }
+
     break
   }
   return next
@@ -327,6 +336,15 @@ export const getPrevStep = (current: number, data: any): number => {
       prev--
       continue
     }
+
+    if (['localizacao', 'tamanho'].includes(STEPS_CONFIG[prev].id)) {
+      const hasOutra = (data.fazenda || []).includes('Outra')
+      if (!hasOutra) {
+        prev--
+        continue
+      }
+    }
+
     break
   }
   return prev

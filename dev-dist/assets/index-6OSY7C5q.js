@@ -36030,6 +36030,12 @@ var getNextStep = (current, data) => {
 			next++;
 			continue;
 		}
+		if (["localizacao", "tamanho"].includes(STEPS_CONFIG[next].id)) {
+			if (!(data.fazenda || []).includes("Outra")) {
+				next++;
+				continue;
+			}
+		}
 		break;
 	}
 	return next;
@@ -36044,6 +36050,12 @@ var getPrevStep = (current, data) => {
 		].includes(data.modalidade)) {
 			prev--;
 			continue;
+		}
+		if (["localizacao", "tamanho"].includes(STEPS_CONFIG[prev].id)) {
+			if (!(data.fazenda || []).includes("Outra")) {
+				prev--;
+				continue;
+			}
 		}
 		break;
 	}
@@ -78030,4 +78042,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DAGUI1uc.js.map
+//# sourceMappingURL=index-6OSY7C5q.js.map
