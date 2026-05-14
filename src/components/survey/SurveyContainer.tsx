@@ -38,7 +38,7 @@ export function SurveyContainer() {
       whatsapp: '',
       email: '',
       grupo: '',
-      fazenda: '',
+      fazenda: [] as string[],
       fazenda_custom: '',
       localizacao: '',
       tamanho: '',
@@ -73,6 +73,9 @@ export function SurveyContainer() {
     if (draftStr) {
       try {
         const draft = JSON.parse(draftStr)
+        if (draft.values && typeof draft.values.fazenda === 'string') {
+          draft.values.fazenda = draft.values.fazenda ? [draft.values.fazenda] : []
+        }
         form.reset(draft.values)
         setStepIndex(draft.stepIndex || 0)
       } catch (e) {
@@ -96,7 +99,7 @@ export function SurveyContainer() {
     let isValid = true
     if (step.id === 'identificacao') {
       const fieldsToValidate = ['nome', 'whatsapp', 'grupo', 'fazenda']
-      if (values.fazenda === 'Outra') fieldsToValidate.push('fazenda_custom')
+      if ((values.fazenda || []).includes('Outra')) fieldsToValidate.push('fazenda_custom')
       isValid = await form.trigger(fieldsToValidate as any)
     } else if (step.id !== 'revisao') {
       isValid = await form.trigger(step.id as any)
@@ -119,7 +122,11 @@ export function SurveyContainer() {
     setIsSubmitting(true)
     const protocolNumber = `TRN-${new Date().getFullYear()}-${crypto.randomUUID().split('-')[0].toUpperCase()}`
 
-    const finalFazenda = values.fazenda === 'Outra' ? values.fazenda_custom : values.fazenda
+    const finalFazendasList = (values.fazenda || []).filter((f: string) => f !== 'Outra')
+    if ((values.fazenda || []).includes('Outra') && values.fazenda_custom) {
+      finalFazendasList.push(values.fazenda_custom)
+    }
+    const finalFazenda = finalFazendasList.join(', ')
 
     const records = (values.cursos || []).map((curso: string) => {
       const marcas = values.curso_marcas?.[curso] || []

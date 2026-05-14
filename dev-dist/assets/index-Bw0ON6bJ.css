@@ -1138,6 +1138,10 @@ body{
   min-height: 150px;
 }
 
+.min-h-\[3\.5rem\]{
+  min-height: 3.5rem;
+}
+
 .min-h-\[80px\]{
   min-height: 80px;
 }
@@ -1386,6 +1390,10 @@ body{
 
 .max-w-\[85\%\]{
   max-width: 85%;
+}
+
+.max-w-\[90\%\]{
+  max-width: 90%;
 }
 
 .max-w-lg{

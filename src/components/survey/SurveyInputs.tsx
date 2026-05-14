@@ -40,7 +40,7 @@ function IdentificationStep({ step, form, onNext }: any) {
   const [openFazenda, setOpenFazenda] = useState(false)
 
   const grupoWatch = watch('grupo')
-  const fazendaWatch = watch('fazenda')
+  const fazendaWatch = watch('fazenda') || []
 
   useEffect(() => {
     const fetchGrupos = async () => {
@@ -176,7 +176,7 @@ function IdentificationStep({ step, form, onNext }: any) {
                       value={g}
                       onSelect={() => {
                         setValue('grupo', g, { shouldValidate: true })
-                        setValue('fazenda', '')
+                        setValue('fazenda', [])
                         clearErrors('grupo')
                         setOpenGrupo(false)
                       }}
@@ -194,7 +194,7 @@ function IdentificationStep({ step, form, onNext }: any) {
                     value="Outro"
                     onSelect={() => {
                       setValue('grupo', 'Outro', { shouldValidate: true })
-                      setValue('fazenda', '')
+                      setValue('fazenda', ['Outra'])
                       clearErrors('grupo')
                       setOpenGrupo(false)
                     }}
@@ -228,19 +228,23 @@ function IdentificationStep({ step, form, onNext }: any) {
           <Input
             className={cn(
               'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
-              errors.fazenda && 'border-red-500',
+              errors.fazenda_custom && 'border-red-500',
             )}
             placeholder="Digite o nome da fazenda ou empresa"
-            {...register('fazenda', { required: 'Fazenda é obrigatória' })}
+            {...register('fazenda_custom', {
+              required: 'Nome da fazenda ou empresa é obrigatório',
+            })}
           />
-          {errors.fazenda && (
-            <span className="text-red-500 text-sm block">{errors.fazenda.message as string}</span>
+          {errors.fazenda_custom && (
+            <span className="text-red-500 text-sm block">
+              {errors.fazenda_custom.message as string}
+            </span>
           )}
         </div>
       ) : (
         <div className="space-y-2 pt-2">
           <Label className="text-base text-slate-600 font-semibold">
-            Fazenda <span className="text-red-500">*</span>
+            Fazendas <span className="text-red-500">*</span>
           </Label>
 
           <Popover open={openFazenda} onOpenChange={setOpenFazenda}>
@@ -251,18 +255,25 @@ function IdentificationStep({ step, form, onNext }: any) {
                 aria-expanded={openFazenda}
                 disabled={!grupoWatch || fazendas.length === 0}
                 className={cn(
-                  'w-full justify-between h-14 text-lg bg-white border-slate-300 disabled:opacity-50 font-normal hover:bg-slate-50',
-                  !fazendaWatch && 'text-slate-400',
+                  'w-full justify-between min-h-[3.5rem] h-auto py-2 text-lg bg-white border-slate-300 disabled:opacity-50 font-normal hover:bg-slate-50',
+                  (!fazendaWatch || fazendaWatch.length === 0) && 'text-slate-400',
                   errors.fazenda && 'border-red-500',
                 )}
               >
-                {fazendaWatch
-                  ? fazendaWatch === 'Outra'
-                    ? 'Outra (Não listada)'
-                    : fazendas.find((f) => f === fazendaWatch) || fazendaWatch
-                  : grupoWatch
-                    ? 'Selecione uma Fazenda...'
-                    : 'Selecione um grupo primeiro'}
+                <div className="flex flex-wrap gap-1.5 items-center text-left max-w-[90%]">
+                  {fazendaWatch && fazendaWatch.length > 0
+                    ? fazendaWatch.map((f: string) => (
+                        <span
+                          key={f}
+                          className="bg-primary/10 text-primary text-sm px-2.5 py-1 rounded-md font-semibold"
+                        >
+                          {f === 'Outra' ? 'Outra (Não listada)' : f}
+                        </span>
+                      ))
+                    : grupoWatch
+                      ? 'Selecione as Fazendas...'
+                      : 'Selecione um grupo primeiro'}
+                </div>
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -272,38 +283,43 @@ function IdentificationStep({ step, form, onNext }: any) {
                 <CommandList>
                   <CommandEmpty>Nenhuma fazenda encontrada.</CommandEmpty>
                   <CommandGroup>
-                    {fazendas.map((f) => (
-                      <CommandItem
-                        key={f}
-                        value={f}
-                        onSelect={() => {
-                          setValue('fazenda', f, { shouldValidate: true })
-                          clearErrors('fazenda')
-                          setOpenFazenda(false)
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            'mr-2 h-4 w-4',
-                            fazendaWatch === f ? 'opacity-100' : 'opacity-0',
-                          )}
-                        />
-                        {f}
-                      </CommandItem>
-                    ))}
+                    {fazendas.map((f) => {
+                      const isSelected = fazendaWatch.includes(f)
+                      return (
+                        <CommandItem
+                          key={f}
+                          value={f}
+                          onSelect={() => {
+                            const next = isSelected
+                              ? fazendaWatch.filter((x: string) => x !== f)
+                              : [...fazendaWatch, f]
+                            setValue('fazenda', next, { shouldValidate: true })
+                            clearErrors('fazenda')
+                          }}
+                        >
+                          <Check
+                            className={cn('mr-2 h-4 w-4', isSelected ? 'opacity-100' : 'opacity-0')}
+                          />
+                          {f}
+                        </CommandItem>
+                      )
+                    })}
                     {grupoWatch && (
                       <CommandItem
                         value="Outra"
                         onSelect={() => {
-                          setValue('fazenda', 'Outra', { shouldValidate: true })
+                          const isSelected = fazendaWatch.includes('Outra')
+                          const next = isSelected
+                            ? fazendaWatch.filter((x: string) => x !== 'Outra')
+                            : [...fazendaWatch, 'Outra']
+                          setValue('fazenda', next, { shouldValidate: true })
                           clearErrors('fazenda')
-                          setOpenFazenda(false)
                         }}
                       >
                         <Check
                           className={cn(
                             'mr-2 h-4 w-4',
-                            fazendaWatch === 'Outra' ? 'opacity-100' : 'opacity-0',
+                            fazendaWatch.includes('Outra') ? 'opacity-100' : 'opacity-0',
                           )}
                         />
                         Outra (Não listada)
@@ -315,7 +331,12 @@ function IdentificationStep({ step, form, onNext }: any) {
             </PopoverContent>
           </Popover>
           {/* Input escondido para manter o react-hook-form preenchido e poder fazer o hook das validações */}
-          <input type="hidden" {...register('fazenda', { required: 'Fazenda é obrigatória' })} />
+          <input
+            type="hidden"
+            {...register('fazenda', {
+              validate: (v) => (v && v.length > 0) || 'Selecione ao menos uma fazenda',
+            })}
+          />
 
           {errors.fazenda && (
             <span className="text-red-500 text-sm block">{errors.fazenda.message as string}</span>
@@ -323,20 +344,20 @@ function IdentificationStep({ step, form, onNext }: any) {
         </div>
       )}
 
-      {fazendaWatch === 'Outra' && grupoWatch !== 'Outro' && (
+      {fazendaWatch.includes('Outra') && grupoWatch !== 'Outro' && (
         <div className="space-y-2 animate-in fade-in slide-in-from-top-2 pt-2">
           <Label className="text-base text-slate-600 font-semibold">
-            Nome da Fazenda <span className="text-red-500">*</span>
+            Nome da(s) Fazenda(s) Não Listada(s) <span className="text-red-500">*</span>
           </Label>
           <Input
             className={cn(
               'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
               errors.fazenda_custom && 'border-red-500',
             )}
-            placeholder="Digite o nome da fazenda"
+            placeholder="Digite o nome (separe por vírgula se mais de uma)"
             {...register('fazenda_custom', {
               validate: (v: string) =>
-                watch('fazenda') !== 'Outra' || !!v || 'Nome da fazenda é obrigatório',
+                !watch('fazenda')?.includes('Outra') || !!v || 'Nome da fazenda é obrigatório',
             })}
           />
           {errors.fazenda_custom && (
