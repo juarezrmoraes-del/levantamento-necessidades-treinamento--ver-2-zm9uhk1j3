@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/accordion'
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { InfoIcon } from 'lucide-react'
 
 function IdentificationStep({ step, form, onNext }: any) {
   const {
@@ -128,6 +130,18 @@ function IdentificationStep({ step, form, onNext }: any) {
         <Label className="text-base text-slate-600 font-semibold">
           Grupo <span className="text-red-500">*</span>
         </Label>
+
+        {!loadingGrupos && grupos.length === 0 && (
+          <Alert className="mb-3 bg-amber-50 text-amber-800 border-amber-200">
+            <InfoIcon className="h-4 w-4 text-amber-600" />
+            <AlertTitle className="font-semibold text-amber-800">Dados não encontrados</AlertTitle>
+            <AlertDescription className="text-amber-700">
+              Para utilizar os dados do arquivo CSV, você deve importar as linhas para a tabela{' '}
+              <strong>fazendas</strong> no seu painel do Supabase. O aplicativo está configurado
+              para ler as informações de lá em tempo real.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Popover open={openGrupo} onOpenChange={setOpenGrupo}>
           <PopoverTrigger asChild>
