@@ -876,6 +876,10 @@ body{
   margin-left: 0.25rem;
 }
 
+.ml-2{
+  margin-left: 0.5rem;
+}
+
 .ml-4{
   margin-left: 1rem;
 }
@@ -1288,6 +1292,10 @@ body{
 
 .w-\[95vw\]{
   width: 95vw;
+}
+
+.w-\[var\(--radix-popover-trigger-width\)\]{
+  width: var(--radix-popover-trigger-width);
 }
 
 .w-auto{
@@ -3340,16 +3348,6 @@ body{
 
 .placeholder\:text-muted-foreground::placeholder{
   color: hsl(var(--muted-foreground));
-}
-
-.placeholder\:text-slate-400::-moz-placeholder{
-  --tw-text-opacity: 1;
-  color: rgb(148 163 184 / var(--tw-text-opacity, 1));
-}
-
-.placeholder\:text-slate-400::placeholder{
-  --tw-text-opacity: 1;
-  color: rgb(148 163 184 / var(--tw-text-opacity, 1));
 }
 
 .after\:absolute::after{

@@ -5,8 +5,17 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getCursosCategory, hasMachineCourse, getMarcasForCourse } from '@/lib/survey-flow'
-import { Check } from 'lucide-react'
+import { Check, ChevronsUpDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Accordion,
   AccordionItem,
@@ -27,8 +36,11 @@ function IdentificationStep({ step, form, onNext }: any) {
   const [grupos, setGrupos] = useState<string[]>([])
   const [fazendas, setFazendas] = useState<string[]>([])
   const [loadingGrupos, setLoadingGrupos] = useState(true)
+  const [openGrupo, setOpenGrupo] = useState(false)
+  const [openFazenda, setOpenFazenda] = useState(false)
 
   const grupoWatch = watch('grupo')
+  const fazendaWatch = watch('fazenda')
 
   useEffect(() => {
     const fetchGrupos = async () => {
@@ -116,28 +128,80 @@ function IdentificationStep({ step, form, onNext }: any) {
         <Label className="text-base text-slate-600 font-semibold">
           Grupo <span className="text-red-500">*</span>
         </Label>
-        <select
-          className={cn(
-            'flex h-14 w-full rounded-xl border bg-white px-4 py-2 text-lg ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-            errors.grupo ? 'border-red-500' : 'border-slate-300',
-          )}
-          {...register('grupo', { required: 'Grupo é obrigatório' })}
-          onChange={(e) => {
-            setValue('grupo', e.target.value)
-            setValue('fazenda', '')
-            clearErrors('grupo')
-          }}
-        >
-          <option value="" disabled>
-            {loadingGrupos ? 'Carregando grupos...' : 'Selecione um Grupo'}
-          </option>
-          {grupos.map((g) => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
-          <option value="Outro">Outro (Não listado)</option>
-        </select>
+
+        <Popover open={openGrupo} onOpenChange={setOpenGrupo}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={openGrupo}
+              className={cn(
+                'w-full justify-between h-14 text-lg bg-white border-slate-300 font-normal hover:bg-slate-50',
+                !grupoWatch && 'text-slate-400',
+                errors.grupo && 'border-red-500',
+              )}
+            >
+              {loadingGrupos
+                ? 'Carregando grupos...'
+                : grupoWatch
+                  ? grupoWatch === 'Outro'
+                    ? 'Outro (Não listado)'
+                    : grupos.find((g) => g === grupoWatch) || grupoWatch
+                  : 'Selecione um Grupo...'}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Buscar grupo..." />
+              <CommandList>
+                <CommandEmpty>Nenhum grupo encontrado.</CommandEmpty>
+                <CommandGroup>
+                  {grupos.map((g) => (
+                    <CommandItem
+                      key={g}
+                      value={g}
+                      onSelect={() => {
+                        setValue('grupo', g, { shouldValidate: true })
+                        setValue('fazenda', '')
+                        clearErrors('grupo')
+                        setOpenGrupo(false)
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          grupoWatch === g ? 'opacity-100' : 'opacity-0',
+                        )}
+                      />
+                      {g}
+                    </CommandItem>
+                  ))}
+                  <CommandItem
+                    value="Outro"
+                    onSelect={() => {
+                      setValue('grupo', 'Outro', { shouldValidate: true })
+                      setValue('fazenda', '')
+                      clearErrors('grupo')
+                      setOpenGrupo(false)
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        'mr-2 h-4 w-4',
+                        grupoWatch === 'Outro' ? 'opacity-100' : 'opacity-0',
+                      )}
+                    />
+                    Outro (Não listado)
+                  </CommandItem>
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        {/* Input escondido para manter o react-hook-form preenchido e poder fazer o hook das validações */}
+        <input type="hidden" {...register('grupo', { required: 'Grupo é obrigatório' })} />
+
         {errors.grupo && (
           <span className="text-red-500 text-sm block">{errors.grupo.message as string}</span>
         )}
@@ -165,35 +229,88 @@ function IdentificationStep({ step, form, onNext }: any) {
           <Label className="text-base text-slate-600 font-semibold">
             Fazenda <span className="text-red-500">*</span>
           </Label>
-          <select
-            className={cn(
-              'flex h-14 w-full rounded-xl border bg-white px-4 py-2 text-lg ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50',
-              errors.fazenda ? 'border-red-500' : 'border-slate-300',
-            )}
-            disabled={!grupoWatch || fazendas.length === 0}
-            {...register('fazenda', { required: 'Fazenda é obrigatória' })}
-            onChange={(e) => {
-              setValue('fazenda', e.target.value)
-              clearErrors('fazenda')
-            }}
-          >
-            <option value="" disabled>
-              {grupoWatch ? 'Selecione uma Fazenda' : 'Selecione um grupo primeiro'}
-            </option>
-            {fazendas.map((f) => (
-              <option key={f} value={f}>
-                {f}
-              </option>
-            ))}
-            {grupoWatch && <option value="Outra">Outra (Não listada)</option>}
-          </select>
+
+          <Popover open={openFazenda} onOpenChange={setOpenFazenda}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={openFazenda}
+                disabled={!grupoWatch || fazendas.length === 0}
+                className={cn(
+                  'w-full justify-between h-14 text-lg bg-white border-slate-300 disabled:opacity-50 font-normal hover:bg-slate-50',
+                  !fazendaWatch && 'text-slate-400',
+                  errors.fazenda && 'border-red-500',
+                )}
+              >
+                {fazendaWatch
+                  ? fazendaWatch === 'Outra'
+                    ? 'Outra (Não listada)'
+                    : fazendas.find((f) => f === fazendaWatch) || fazendaWatch
+                  : grupoWatch
+                    ? 'Selecione uma Fazenda...'
+                    : 'Selecione um grupo primeiro'}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+              <Command>
+                <CommandInput placeholder="Buscar fazenda..." />
+                <CommandList>
+                  <CommandEmpty>Nenhuma fazenda encontrada.</CommandEmpty>
+                  <CommandGroup>
+                    {fazendas.map((f) => (
+                      <CommandItem
+                        key={f}
+                        value={f}
+                        onSelect={() => {
+                          setValue('fazenda', f, { shouldValidate: true })
+                          clearErrors('fazenda')
+                          setOpenFazenda(false)
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            'mr-2 h-4 w-4',
+                            fazendaWatch === f ? 'opacity-100' : 'opacity-0',
+                          )}
+                        />
+                        {f}
+                      </CommandItem>
+                    ))}
+                    {grupoWatch && (
+                      <CommandItem
+                        value="Outra"
+                        onSelect={() => {
+                          setValue('fazenda', 'Outra', { shouldValidate: true })
+                          clearErrors('fazenda')
+                          setOpenFazenda(false)
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            'mr-2 h-4 w-4',
+                            fazendaWatch === 'Outra' ? 'opacity-100' : 'opacity-0',
+                          )}
+                        />
+                        Outra (Não listada)
+                      </CommandItem>
+                    )}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          {/* Input escondido para manter o react-hook-form preenchido e poder fazer o hook das validações */}
+          <input type="hidden" {...register('fazenda', { required: 'Fazenda é obrigatória' })} />
+
           {errors.fazenda && (
             <span className="text-red-500 text-sm block">{errors.fazenda.message as string}</span>
           )}
         </div>
       )}
 
-      {watch('fazenda') === 'Outra' && grupoWatch !== 'Outro' && (
+      {fazendaWatch === 'Outra' && grupoWatch !== 'Outro' && (
         <div className="space-y-2 animate-in fade-in slide-in-from-top-2 pt-2">
           <Label className="text-base text-slate-600 font-semibold">
             Nome da Fazenda <span className="text-red-500">*</span>

@@ -9,11 +9,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      fazendas: {
+        Row: {
+          cpf_cnpj: string | null
+          created_at: string
+          email: string | null
+          endereco: string | null
+          estado: string | null
+          fazenda: string | null
+          grupo: string | null
+          id: string
+          inscricao_estadual: string | null
+          linha_escoamento: string | null
+          municipio: string | null
+          nucleo_agricola: string | null
+          proprietario: string | null
+          responsavel: string | null
+          telefone: string | null
+        }
+        Insert: {
+          cpf_cnpj?: string | null
+          created_at?: string
+          email?: string | null
+          endereco?: string | null
+          estado?: string | null
+          fazenda?: string | null
+          grupo?: string | null
+          id?: string
+          inscricao_estadual?: string | null
+          linha_escoamento?: string | null
+          municipio?: string | null
+          nucleo_agricola?: string | null
+          proprietario?: string | null
+          responsavel?: string | null
+          telefone?: string | null
+        }
+        Update: {
+          cpf_cnpj?: string | null
+          created_at?: string
+          email?: string | null
+          endereco?: string | null
+          estado?: string | null
+          fazenda?: string | null
+          grupo?: string | null
+          id?: string
+          inscricao_estadual?: string | null
+          linha_escoamento?: string | null
+          municipio?: string | null
+          nucleo_agricola?: string | null
+          proprietario?: string | null
+          responsavel?: string | null
+          telefone?: string | null
+        }
+        Relationships: []
+      }
       survey_leads: {
         Row: {
           created_at: string | null
           email: string | null
           fazenda: string | null
+          grupo: string | null
           id: string
           nome: string | null
           status: string | null
@@ -23,6 +78,7 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           fazenda?: string | null
+          grupo?: string | null
           id?: string
           nome?: string | null
           status?: string | null
@@ -32,6 +88,7 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           fazenda?: string | null
+          grupo?: string | null
           id?: string
           nome?: string | null
           status?: string | null
@@ -50,6 +107,7 @@ export type Database = {
           created_at: string | null
           email: string | null
           fazenda: string | null
+          grupo: string | null
           id: string
           nome: string | null
           status: string | null
@@ -203,6 +261,22 @@ export const Constants = {
 // --- COLUMN TYPES (actual PostgreSQL types) ---
 // Use this to know the real database type when writing migrations.
 // "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: fazendas
+//   id: uuid (not null, default: gen_random_uuid())
+//   grupo: text (nullable)
+//   fazenda: text (nullable)
+//   proprietario: text (nullable)
+//   cpf_cnpj: text (nullable)
+//   inscricao_estadual: text (nullable)
+//   responsavel: text (nullable)
+//   endereco: text (nullable)
+//   municipio: text (nullable)
+//   estado: text (nullable)
+//   email: text (nullable)
+//   telefone: text (nullable)
+//   nucleo_agricola: text (nullable)
+//   linha_escoamento: text (nullable)
+//   created_at: timestamp with time zone (not null, default: now())
 // Table: survey_leads
 //   id: uuid (not null, default: gen_random_uuid())
 //   nome: text (nullable)
@@ -211,12 +285,18 @@ export const Constants = {
 //   fazenda: text (nullable)
 //   status: text (nullable, default: 'in_progress'::text)
 //   created_at: timestamp with time zone (nullable, default: now())
+//   grupo: text (nullable)
 
 // --- CONSTRAINTS ---
+// Table: fazendas
+//   PRIMARY KEY fazendas_pkey: PRIMARY KEY (id)
 // Table: survey_leads
 //   PRIMARY KEY survey_leads_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
+// Table: fazendas
+//   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
 // Table: survey_leads
 //   Policy "Enable insert for anonymous" (INSERT, PERMISSIVE) roles={public}
 //     WITH CHECK: true
