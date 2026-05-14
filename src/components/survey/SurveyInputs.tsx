@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -16,7 +17,13 @@ import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent } from '@/components/ui/card'
 
 export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any) {
-  const { watch, setValue } = form as UseFormReturn<any>
+  const {
+    watch,
+    setValue,
+    register,
+    formState: { errors },
+    clearErrors,
+  } = form as UseFormReturn<any>
   const value = watch(step.id)
 
   if (step.type === 'single') {
@@ -52,7 +59,6 @@ export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any
         : [...current, opt]
       setValue(step.id, next)
 
-      // Limpar vagas e marcas se o curso for desmarcado
       if (current.includes(opt)) {
         const cursoVagas = { ...(watch('curso_vagas') || {}) }
         delete cursoVagas[opt]
@@ -156,10 +162,7 @@ export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any
                           onChange={(e) => {
                             const val = e.target.value
                             const cursoVagasHomens = watch('curso_vagas_homens') || {}
-                            setValue('curso_vagas_homens', {
-                              ...cursoVagasHomens,
-                              [opt]: val,
-                            })
+                            setValue('curso_vagas_homens', { ...cursoVagasHomens, [opt]: val })
                             const mulheres = (watch('curso_vagas_mulheres') || {})[opt] || '0'
                             const total =
                               val || mulheres
@@ -181,10 +184,7 @@ export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any
                           onChange={(e) => {
                             const val = e.target.value
                             const cursoVagasMulheres = watch('curso_vagas_mulheres') || {}
-                            setValue('curso_vagas_mulheres', {
-                              ...cursoVagasMulheres,
-                              [opt]: val,
-                            })
+                            setValue('curso_vagas_mulheres', { ...cursoVagasMulheres, [opt]: val })
                             const homens = (watch('curso_vagas_homens') || {})[opt] || '0'
                             const total =
                               homens || val
@@ -350,105 +350,225 @@ export function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }: any
           </Card>
         </div>
 
-        <Button
-          size="lg"
-          onClick={onNext}
-          className="w-full sm:w-auto mt-2 h-14 px-10 text-lg shadow-md"
-        >
-          Confirmar e Continuar
-        </Button>
+        <div className="pt-4 space-y-5">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-600 flex items-center gap-3">
+            <span className="text-xl">🔒</span>
+            <p className="font-medium">As informações prestadas são protegidas pela LGPD.</p>
+          </div>
+          <Button
+            size="lg"
+            onClick={onNext}
+            disabled={isSubmitting || cursos.length === 0}
+            className="w-full h-14 text-lg font-bold shadow-md"
+          >
+            {isSubmitting ? 'Processando...' : 'Confirmar e Enviar Mapeamento'}
+          </Button>
+        </div>
       </div>
     )
   }
 
   if (step.type === 'identification') {
+    const [grupos, setGrupos] = useState<string[]>([])
+    const [fazendas, setFazendas] = useState<string[]>([])
+    const [loadingGrupos, setLoadingGrupos] = useState(true)
+
+    const grupoWatch = watch('grupo')
+
+    useEffect(() => {
+      const fetchGrupos = async () => {
+        setLoadingGrupos(true)
+        const { data } = await supabase.from('fazendas').select('grupo').order('grupo')
+        if (data) {
+          const uniqueGrupos = Array.from(
+            new Set(data.map((d) => d.grupo).filter(Boolean)),
+          ) as string[]
+          setGrupos(uniqueGrupos)
+        }
+        setLoadingGrupos(false)
+      }
+      fetchGrupos()
+    }, [])
+
+    useEffect(() => {
+      if (grupoWatch && grupoWatch !== 'Outro') {
+        const fetchFazendas = async () => {
+          const { data } = await supabase
+            .from('fazendas')
+            .select('fazenda')
+            .eq('grupo', grupoWatch)
+            .order('fazenda')
+          if (data) {
+            const uniqueFazendas = Array.from(
+              new Set(data.map((d) => d.fazenda).filter(Boolean)),
+            ) as string[]
+            setFazendas(uniqueFazendas)
+          }
+        }
+        fetchFazendas()
+      } else {
+        setFazendas([])
+      }
+    }, [grupoWatch])
+
     return (
-      <div className="space-y-5 max-w-lg pb-10">
-        <div className="space-y-2">
-          <Label className="text-base text-slate-600 font-semibold">Nome Completo</Label>
-          <Input
-            required
-            className="h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white"
-            value={watch('nome')}
-            onChange={(e) => setValue('nome', e.target.value)}
-          />
-        </div>
+      <div className="space-y-5 max-w-lg pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="space-y-2">
           <Label className="text-base text-slate-600 font-semibold">
-            Nome da Fazenda / Empresa
+            Nome Completo <span className="text-red-500">*</span>
           </Label>
           <Input
-            required
-            className="h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white"
-            value={watch('fazenda')}
-            onChange={(e) => setValue('fazenda', e.target.value)}
+            className={cn(
+              'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+              errors.nome && 'border-red-500',
+            )}
+            placeholder="Seu nome"
+            {...register('nome', { required: 'Nome é obrigatório' })}
           />
+          {errors.nome && (
+            <span className="text-red-500 text-sm block">{errors.nome.message as string}</span>
+          )}
         </div>
+
         <div className="space-y-2">
-          <Label className="text-base text-slate-600 font-semibold">WhatsApp</Label>
+          <Label className="text-base text-slate-600 font-semibold">
+            WhatsApp (com DDD) <span className="text-red-500">*</span>
+          </Label>
           <Input
-            required
-            className="h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white"
+            className={cn(
+              'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+              errors.whatsapp && 'border-red-500',
+            )}
             placeholder="(00) 00000-0000"
-            value={watch('whatsapp')}
-            onChange={(e) => setValue('whatsapp', e.target.value)}
+            {...register('whatsapp', { required: 'WhatsApp é obrigatório' })}
           />
+          {errors.whatsapp && (
+            <span className="text-red-500 text-sm block">{errors.whatsapp.message as string}</span>
+          )}
         </div>
+
         <div className="space-y-2">
           <Label className="text-base text-slate-600 font-semibold">E-mail</Label>
           <Input
-            required
             type="email"
             className="h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white"
             placeholder="seu@email.com"
-            value={watch('email')}
-            onChange={(e) => setValue('email', e.target.value)}
+            {...register('email')}
           />
         </div>
-        <div className="pt-4 space-y-5">
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-600 flex items-center gap-3">
-            <span className="text-xl">🔒</span>
-            <p className="font-medium">
-              As informações prestadas são protegidas pela LGPD (Lei Geral de Proteção de Dados).
-            </p>
+
+        <div className="space-y-2">
+          <Label className="text-base text-slate-600 font-semibold">
+            Grupo <span className="text-red-500">*</span>
+          </Label>
+          <select
+            className={cn(
+              'flex h-14 w-full rounded-xl border bg-white px-4 py-2 text-lg ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
+              errors.grupo ? 'border-red-500' : 'border-slate-300',
+            )}
+            {...register('grupo', { required: 'Grupo é obrigatório' })}
+            onChange={(e) => {
+              setValue('grupo', e.target.value)
+              setValue('fazenda', '')
+              clearErrors('grupo')
+            }}
+          >
+            <option value="" disabled>
+              {loadingGrupos ? 'Carregando grupos...' : 'Selecione um Grupo'}
+            </option>
+            {grupos.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+            <option value="Outro">Outro (Não listado)</option>
+          </select>
+          {errors.grupo && (
+            <span className="text-red-500 text-sm block">{errors.grupo.message as string}</span>
+          )}
+        </div>
+
+        {grupoWatch === 'Outro' ? (
+          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 pt-2">
+            <Label className="text-base text-slate-600 font-semibold">
+              Nome da Fazenda / Empresa <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              className={cn(
+                'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+                errors.fazenda && 'border-red-500',
+              )}
+              placeholder="Digite o nome da fazenda ou empresa"
+              {...register('fazenda', { required: 'Fazenda é obrigatória' })}
+            />
+            {errors.fazenda && (
+              <span className="text-red-500 text-sm block">{errors.fazenda.message as string}</span>
+            )}
           </div>
+        ) : (
+          <div className="space-y-2 pt-2">
+            <Label className="text-base text-slate-600 font-semibold">
+              Fazenda <span className="text-red-500">*</span>
+            </Label>
+            <select
+              className={cn(
+                'flex h-14 w-full rounded-xl border bg-white px-4 py-2 text-lg ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50',
+                errors.fazenda ? 'border-red-500' : 'border-slate-300',
+              )}
+              disabled={!grupoWatch || fazendas.length === 0}
+              {...register('fazenda', { required: 'Fazenda é obrigatória' })}
+              onChange={(e) => {
+                setValue('fazenda', e.target.value)
+                clearErrors('fazenda')
+              }}
+            >
+              <option value="" disabled>
+                {grupoWatch ? 'Selecione uma Fazenda' : 'Selecione um grupo primeiro'}
+              </option>
+              {fazendas.map((f) => (
+                <option key={f} value={f}>
+                  {f}
+                </option>
+              ))}
+              {grupoWatch && <option value="Outra">Outra (Não listada)</option>}
+            </select>
+            {errors.fazenda && (
+              <span className="text-red-500 text-sm block">{errors.fazenda.message as string}</span>
+            )}
+          </div>
+        )}
+
+        {watch('fazenda') === 'Outra' && grupoWatch !== 'Outro' && (
+          <div className="space-y-2 animate-in fade-in slide-in-from-top-2 pt-2">
+            <Label className="text-base text-slate-600 font-semibold">
+              Nome da Fazenda <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              className={cn(
+                'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+                errors.fazenda_custom && 'border-red-500',
+              )}
+              placeholder="Digite o nome da fazenda"
+              {...register('fazenda_custom', {
+                validate: (v: string) =>
+                  watch('fazenda') !== 'Outra' || !!v || 'Nome da fazenda é obrigatório',
+              })}
+            />
+            {errors.fazenda_custom && (
+              <span className="text-red-500 text-sm block">
+                {errors.fazenda_custom.message as string}
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="pt-4">
           <Button
             size="lg"
-            onClick={async () => {
-              if (!watch('protocol')) {
-                const protocol = `TRN-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
-                setValue('protocol', protocol)
-              }
-
-              const formData = watch()
-
-              await onSubmit()
-
-              try {
-                const protocol = formData.protocol || watch('protocol')
-
-                await supabase.functions.invoke('send-survey-email', {
-                  body: {
-                    to: 'ct9@abapa.com.br',
-                    protocol,
-                    nome: formData.nome,
-                    fazenda: formData.fazenda,
-                    whatsapp: formData.whatsapp,
-                    email: formData.email,
-                    cursos: formData.cursos,
-                    vagas: formData.curso_vagas,
-                    vagas_homens: formData.curso_vagas_homens,
-                    vagas_mulheres: formData.curso_vagas_mulheres,
-                  },
-                })
-              } catch (error) {
-                console.error('Failed to notify:', error)
-              }
-            }}
-            disabled={isSubmitting || !watch('nome') || !watch('fazenda') || !watch('whatsapp')}
-            className="w-full h-14 text-lg font-bold shadow-md"
+            onClick={onNext}
+            className="w-full sm:w-auto h-14 px-10 text-lg shadow-md"
           >
-            {isSubmitting ? 'Processando...' : 'Enviar Mapeamento'}
+            Continuar
           </Button>
         </div>
       </div>

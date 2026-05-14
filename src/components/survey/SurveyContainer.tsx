@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import useMainStore from '@/stores/main'
 import { useToast } from '@/hooks/use-toast'
@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle2 } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import { supabase } from '@/lib/supabase/client'
-import { cn } from '@/lib/utils'
 
 export function SurveyContainer() {
   const [stepIndex, setStepIndex] = useState(0)
@@ -35,6 +34,12 @@ export function SurveyContainer() {
   const form = useForm({
     defaultValues: {
       funcao: '',
+      nome: '',
+      whatsapp: '',
+      email: '',
+      grupo: '',
+      fazenda: '',
+      fazenda_custom: '',
       localizacao: '',
       tamanho: '',
       cultura: '',
@@ -52,14 +57,8 @@ export function SurveyContainer() {
       infraestrutura: '',
       epoca: '',
       inovacao: '',
-      nome: '',
-      fazenda: '',
-      whatsapp: '',
-      email: '',
     },
   })
-
-  const watchNome = form.watch('nome')
 
   useEffect(() => {
     if (!draftLoaded || isSuccess || hasDraft) return
@@ -68,14 +67,6 @@ export function SurveyContainer() {
     })
     return () => subscription.unsubscribe()
   }, [form, form.watch, stepIndex, draftLoaded, isSuccess, hasDraft])
-
-  useEffect(() => {
-    if (!draftLoaded || isSuccess || hasDraft) return
-    localStorage.setItem(
-      'abapa_survey_draft',
-      JSON.stringify({ values: form.getValues(), stepIndex }),
-    )
-  }, [stepIndex, draftLoaded, isSuccess, form, hasDraft])
 
   const restoreDraft = () => {
     const draftStr = localStorage.getItem('abapa_survey_draft')
@@ -100,18 +91,18 @@ export function SurveyContainer() {
     if (hasDraft) setHasDraft(false)
 
     const step = STEPS_CONFIG[stepIndex]
-
-    const fieldsToValidate =
-      step.id === 'identificacao'
-        ? (['nome', 'whatsapp'] as const)
-        : step.id === 'revisao'
-          ? []
-          : (step.id as any)
-
-    const isValid = fieldsToValidate.length ? await form.trigger(fieldsToValidate) : true
-    if (!isValid) return
-
     const values = form.getValues()
+
+    let isValid = true
+    if (step.id === 'identificacao') {
+      const fieldsToValidate = ['nome', 'whatsapp', 'grupo', 'fazenda']
+      if (values.fazenda === 'Outra') fieldsToValidate.push('fazenda_custom')
+      isValid = await form.trigger(fieldsToValidate as any)
+    } else if (step.id !== 'revisao') {
+      isValid = await form.trigger(step.id as any)
+    }
+
+    if (!isValid) return
 
     const nextIdx = getNextStep(stepIndex, values)
     if (nextIdx >= STEPS_CONFIG.length) {
@@ -128,6 +119,8 @@ export function SurveyContainer() {
     setIsSubmitting(true)
     const protocolNumber = `TRN-${new Date().getFullYear()}-${crypto.randomUUID().split('-')[0].toUpperCase()}`
 
+    const finalFazenda = values.fazenda === 'Outra' ? values.fazenda_custom : values.fazenda
+
     const records = (values.cursos || []).map((curso: string) => {
       const marcas = values.curso_marcas?.[curso] || []
       const vagas = values.curso_vagas?.[curso] || ''
@@ -138,7 +131,7 @@ export function SurveyContainer() {
       return {
         protocol: protocolNumber,
         nome: values.nome,
-        fazenda_grupo: values.fazenda,
+        fazenda_grupo: finalFazenda,
         celular: values.whatsapp,
         email: values.email,
         area_foco: values.setor,
@@ -161,17 +154,14 @@ export function SurveyContainer() {
     })
 
     try {
-      if (import.meta.env.DEV) {
-        console.log('Final Form Data JSON:', JSON.stringify(values, null, 2))
-      }
-
       try {
         await supabase.from('survey_leads').insert([
           {
             nome: values.nome,
             whatsapp: values.whatsapp,
             email: values.email || null,
-            fazenda: values.fazenda || null,
+            fazenda: finalFazenda || null,
+            grupo: values.grupo || null,
             status: 'completed',
           },
         ])
@@ -182,14 +172,14 @@ export function SurveyContainer() {
       if (records.length > 0) {
         await addSurveys(records)
 
-        // Dispara e-mail via Edge Function
         try {
           await supabase.functions.invoke('send-survey-email', {
             body: {
               to: values.email,
               protocol: protocolNumber,
               nome: values.nome,
-              fazenda: values.fazenda,
+              fazenda: finalFazenda,
+              grupo: values.grupo,
               cursos: records.map((r) => r.curso_solicitado),
               vagas: records.reduce(
                 (acc, r) => acc + parseInt(r.quantidade_colaboradores || '0'),
@@ -277,7 +267,7 @@ export function SurveyContainer() {
             <ArrowLeft className="w-6 h-6" />
           </Button>
         ) : (
-          <div className="w-10 h-10 shrink-0" /> // spacer
+          <div className="w-10 h-10 shrink-0" />
         )}
         <Progress value={progress} className="h-2.5 flex-1 bg-slate-200" />
         <span className="text-sm text-slate-400 font-bold shrink-0">
@@ -294,91 +284,13 @@ export function SurveyContainer() {
             {step.title}
           </h1>
 
-          {step.id === 'identificacao' ? (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col h-full pb-10">
-              <div className="flex-1 space-y-6">
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                    Nome Completo <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Seu nome"
-                    className={cn(
-                      'flex h-12 w-full rounded-md border bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                      form.formState.errors.nome
-                        ? 'border-red-500 focus-visible:ring-red-500'
-                        : 'border-slate-300',
-                    )}
-                    {...form.register('nome', { required: 'Nome é obrigatório' })}
-                  />
-                  {form.formState.errors.nome && (
-                    <span className="text-red-500 text-sm mt-1 block">
-                      {form.formState.errors.nome.message as string}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                    WhatsApp (com DDD) <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="(00) 00000-0000"
-                    className={cn(
-                      'flex h-12 w-full rounded-md border bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                      form.formState.errors.whatsapp
-                        ? 'border-red-500 focus-visible:ring-red-500'
-                        : 'border-slate-300',
-                    )}
-                    {...form.register('whatsapp', { required: 'WhatsApp é obrigatório' })}
-                  />
-                  {form.formState.errors.whatsapp && (
-                    <span className="text-red-500 text-sm mt-1 block">
-                      {form.formState.errors.whatsapp.message as string}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-2 block">E-mail</label>
-                  <input
-                    type="email"
-                    placeholder="seu@email.com"
-                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    {...form.register('email')}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                    Fazenda / Empresa
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Nome da fazenda ou empresa"
-                    className="flex h-12 w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-base ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    {...form.register('fazenda')}
-                  />
-                </div>
-              </div>
-              <div className="pt-6 mt-8">
-                <Button
-                  onClick={handleNext}
-                  className="w-full h-12 text-base font-semibold"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Enviando...' : 'Finalizar'}
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <SurveyInputs
-              step={step}
-              form={form}
-              onNext={handleNext}
-              onSubmit={form.handleSubmit(onSubmit)}
-              isSubmitting={isSubmitting}
-            />
-          )}
+          <SurveyInputs
+            step={step}
+            form={form}
+            onNext={handleNext}
+            onSubmit={form.handleSubmit(onSubmit)}
+            isSubmitting={isSubmitting}
+          />
         </div>
       </div>
     </div>

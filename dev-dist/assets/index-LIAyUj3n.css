@@ -3675,17 +3675,8 @@ body{
   --tw-ring-color: rgb(45 90 39 / var(--tw-ring-opacity, 1));
 }
 
-.focus-visible\:ring-primary:focus-visible{
-  --tw-ring-color: hsl(var(--primary));
-}
-
 .focus-visible\:ring-primary\/50:focus-visible{
   --tw-ring-color: hsl(var(--primary) / 0.5);
-}
-
-.focus-visible\:ring-red-500:focus-visible{
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity, 1));
 }
 
 .focus-visible\:ring-ring:focus-visible{

@@ -207,6 +207,11 @@ export const STEPS_CONFIG = [
     ],
   },
   {
+    id: 'identificacao',
+    title: 'Dados de Contato e Localização',
+    type: 'identification',
+  },
+  {
     id: 'localizacao',
     title: 'Qual é a localização da sua base?',
     type: 'single',
@@ -294,11 +299,6 @@ export const STEPS_CONFIG = [
     id: 'revisao',
     title: 'Resumo do Mapeamento',
     type: 'review',
-  },
-  {
-    id: 'identificacao',
-    title: 'Para finalizar, como podemos entrar em contato?',
-    type: 'identificacao',
   },
 ]
 
