@@ -1,173 +1,116 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useCallback,
-  useEffect,
-} from 'react'
+import { create } from 'zustand'
 import { supabase } from '@/lib/supabase/client'
+import React, { useEffect, ReactNode } from 'react'
 
-export type SurveyStatus =
-  | 'Pendente'
-  | 'Em Análise'
-  | 'Aprovado'
-  | 'Rejeitado'
-  | 'Programado'
-  | 'Concluído'
-export type Priority = 'Alta' | 'Média' | 'Baixa'
-
-export type AdminSettings = {
-  notification_email: string
-  scheduled_report_emails: string
-  scheduled_report_active: boolean
-}
-
-export type SurveyRecord = {
+export interface SurveyRecord {
   id: string
-  protocol?: string
-  created_at: string
   nome: string
-  fazenda_grupo: string
-  celular: string
   email: string
-  area_foco: string
+  whatsapp: string
+  fazenda_grupo: string
+  fazenda_nome: string
   curso_solicitado: string
   quantidade_colaboradores: string
-  vagas_homens?: string
-  vagas_mulheres?: string
-  local_realizacao: string
-  mes_previsto: string
-  desafio_roi: string
-  sugestao_futura: string
-  notification_sent: boolean
-  status: SurveyStatus
-  prioridade?: Priority
-  data_agendada?: string
+  vagas_homens: string
+  vagas_mulheres: string
+  prioridade: string
+  status: string
+  data_solicitacao: string
+  area_foco: string
+  detalhes_cursos: any
+  sistema: string
+  date: string
 }
 
-type MainContextType = {
+interface MainStore {
   surveys: SurveyRecord[]
-  settings: AdminSettings
   loading: boolean
   fetchSurveys: () => Promise<void>
-  addSurveys: (
-    newSurveys: Omit<SurveyRecord, 'id' | 'created_at' | 'notification_sent' | 'status'>[],
-  ) => Promise<void>
-  updateSettings: (newSettings: Partial<AdminSettings>) => Promise<void>
-  updateSurvey: (id: string, updates: Partial<SurveyRecord>) => Promise<void>
-  deleteSurvey: (id: string) => Promise<void>
 }
 
-const MainContext = createContext<MainContextType | undefined>(undefined)
+export const useMainStore = create<MainStore>((set) => ({
+  surveys: [],
+  loading: false,
+  fetchSurveys: async () => {
+    set({ loading: true })
+    try {
+      const { data, error } = await supabase
+        .from('survey_leads')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+
+      const formattedSurveys: SurveyRecord[] = []
+
+      data.forEach((row: any) => {
+        const cursos = row.cursos || []
+        const vagas = row.vagas || {}
+        const vagasHomens = row.vagas_homens || {}
+        const vagasMulheres = row.vagas_mulheres || {}
+        const marcas = row.detalhes_cursos || {}
+
+        if (cursos.length > 0) {
+          cursos.forEach((curso: string) => {
+            formattedSurveys.push({
+              id: `${row.id}-${curso}`,
+              nome: row.nome || '',
+              email: row.email || '',
+              whatsapp: row.whatsapp || '',
+              fazenda_grupo: row.grupo || 'Outros',
+              fazenda_nome: row.fazenda || '',
+              curso_solicitado: curso,
+              quantidade_colaboradores: vagas[curso] || '0',
+              vagas_homens: vagasHomens[curso] || '0',
+              vagas_mulheres: vagasMulheres[curso] || '0',
+              prioridade: 'Média',
+              status: row.status || 'Pendente',
+              data_solicitacao: row.created_at || new Date().toISOString(),
+              date: row.created_at || new Date().toISOString(),
+              area_foco: row.setor || 'Geral',
+              detalhes_cursos: { marca: marcas[curso]?.[0] || '' },
+              sistema: row.sistema || '',
+            })
+          })
+        } else {
+          formattedSurveys.push({
+            id: row.id,
+            nome: row.nome || '',
+            email: row.email || '',
+            whatsapp: row.whatsapp || '',
+            fazenda_grupo: row.grupo || 'Outros',
+            fazenda_nome: row.fazenda || '',
+            curso_solicitado: 'Não especificado',
+            quantidade_colaboradores: '0',
+            vagas_homens: '0',
+            vagas_mulheres: '0',
+            prioridade: 'Média',
+            status: row.status || 'Pendente',
+            data_solicitacao: row.created_at || new Date().toISOString(),
+            date: row.created_at || new Date().toISOString(),
+            area_foco: row.setor || 'Geral',
+            detalhes_cursos: {},
+            sistema: row.sistema || '',
+          })
+        }
+      })
+
+      set({ surveys: formattedSurveys, loading: false })
+    } catch (err) {
+      console.error('Error fetching surveys', err)
+      set({ loading: false })
+    }
+  },
+}))
 
 export function MainStoreProvider({ children }: { children: ReactNode }) {
-  const [surveys, setSurveys] = useState<SurveyRecord[]>([])
-  const [settings, setSettings] = useState<AdminSettings>({
-    notification_email: 'treinamentos@abapa.com.br',
-    scheduled_report_emails: 'ct9@abapa.com.br, gerente.ct@abapa.com.br',
-    scheduled_report_active: true,
-  })
-  const [loading, setLoading] = useState(true)
-
-  const fetchSurveys = useCallback(async () => {
-    const { data, error } = await supabase
-      .from('surveys')
-      .select('*')
-      .order('created_at', { ascending: false })
-    if (!error && data) {
-      setSurveys(data as SurveyRecord[])
-    }
-  }, [])
-
-  const fetchSettings = useCallback(async () => {
-    const { data, error } = await supabase.from('system_settings').select('*').eq('id', 1).single()
-    if (!error && data) {
-      setSettings(data as AdminSettings)
-    }
-  }, [])
+  const fetchSurveys = useMainStore((state) => state.fetchSurveys)
 
   useEffect(() => {
-    Promise.all([fetchSurveys(), fetchSettings()]).finally(() => setLoading(false))
+    fetchSurveys()
+  }, [fetchSurveys])
 
-    // Realtime subscription para atualizar o Dashboard instantaneamente
-    const subscription = supabase
-      .channel('public:surveys')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'surveys' }, () => {
-        fetchSurveys()
-      })
-      .subscribe()
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [fetchSurveys, fetchSettings])
-
-  const addSurveys = async (
-    newRecords: Omit<SurveyRecord, 'id' | 'created_at' | 'notification_sent' | 'status'>[],
-  ) => {
-    const recordsToInsert = newRecords.map((rec) => ({
-      ...rec,
-      status: 'Pendente' as SurveyStatus,
-      prioridade: 'Média' as Priority,
-      notification_sent: true,
-    }))
-
-    const { data, error } = await supabase.from('surveys').insert(recordsToInsert).select()
-
-    if (error) {
-      console.error('Erro ao inserir pesquisas:', error)
-      throw error
-    }
-
-    if (data) {
-      setSurveys((prev) => [...(data as SurveyRecord[]), ...prev])
-    }
-  }
-
-  const updateSettings = async (newSettings: Partial<AdminSettings>) => {
-    const { error } = await supabase
-      .from('system_settings')
-      .upsert({ id: 1, ...settings, ...newSettings })
-    if (!error) {
-      setSettings((prev) => ({ ...prev, ...newSettings }))
-    }
-  }
-
-  const updateSurvey = async (id: string, updates: Partial<SurveyRecord>) => {
-    const { error } = await supabase.from('surveys').update(updates).eq('id', id)
-    if (!error) {
-      setSurveys((prev) => prev.map((s) => (s.id === id ? { ...s, ...updates } : s)))
-    }
-  }
-
-  const deleteSurvey = async (id: string) => {
-    const { error } = await supabase.from('surveys').delete().eq('id', id)
-    if (!error) {
-      setSurveys((prev) => prev.filter((s) => s.id !== id))
-    }
-  }
-
-  return React.createElement(
-    MainContext.Provider,
-    {
-      value: {
-        surveys,
-        settings,
-        loading,
-        fetchSurveys,
-        addSurveys,
-        updateSettings,
-        updateSurvey,
-        deleteSurvey,
-      },
-    },
-    children,
-  )
+  return React.createElement(React.Fragment, null, children)
 }
 
-export default function useMainStore() {
-  const context = useContext(MainContext)
-  if (!context) throw new Error('useMainStore must be used within MainStoreProvider')
-  return context
-}
+export default useMainStore

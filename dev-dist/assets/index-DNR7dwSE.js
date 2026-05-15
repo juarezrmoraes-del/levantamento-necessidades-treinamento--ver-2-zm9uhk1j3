@@ -17490,6 +17490,10 @@ var ChevronDown = createLucideIcon("chevron-down", [["path", {
 	d: "m6 9 6 6 6-6",
 	key: "qrunsl"
 }]]);
+var ChevronLeft = createLucideIcon("chevron-left", [["path", {
+	d: "m15 18-6-6 6-6",
+	key: "1wnfg3"
+}]]);
 var ChevronUp = createLucideIcon("chevron-up", [["path", {
 	d: "m18 15-6-6-6 6",
 	key: "153udz"
@@ -35485,90 +35489,6 @@ function useForm(props = {}) {
 	return _formControl.current;
 }
 //#endregion
-//#region src/stores/main.ts
-var MainContext = (0, import_react.createContext)(void 0);
-function MainStoreProvider({ children }) {
-	const [surveys, setSurveys] = (0, import_react.useState)([]);
-	const [settings, setSettings] = (0, import_react.useState)({
-		notification_email: "treinamentos@abapa.com.br",
-		scheduled_report_emails: "ct9@abapa.com.br, gerente.ct@abapa.com.br",
-		scheduled_report_active: true
-	});
-	const [loading, setLoading] = (0, import_react.useState)(true);
-	const fetchSurveys = (0, import_react.useCallback)(async () => {
-		const { data, error } = await supabase$1.from("surveys").select("*").order("created_at", { ascending: false });
-		if (!error && data) setSurveys(data);
-	}, []);
-	const fetchSettings = (0, import_react.useCallback)(async () => {
-		const { data, error } = await supabase$1.from("system_settings").select("*").eq("id", 1).single();
-		if (!error && data) setSettings(data);
-	}, []);
-	(0, import_react.useEffect)(() => {
-		Promise.all([fetchSurveys(), fetchSettings()]).finally(() => setLoading(false));
-		const subscription = supabase$1.channel("public:surveys").on("postgres_changes", {
-			event: "*",
-			schema: "public",
-			table: "surveys"
-		}, () => {
-			fetchSurveys();
-		}).subscribe();
-		return () => {
-			subscription.unsubscribe();
-		};
-	}, [fetchSurveys, fetchSettings]);
-	const addSurveys = async (newRecords) => {
-		const recordsToInsert = newRecords.map((rec) => ({
-			...rec,
-			status: "Pendente",
-			prioridade: "Média",
-			notification_sent: true
-		}));
-		const { data, error } = await supabase$1.from("surveys").insert(recordsToInsert).select();
-		if (error) {
-			console.error("Erro ao inserir pesquisas:", error);
-			throw error;
-		}
-		if (data) setSurveys((prev) => [...data, ...prev]);
-	};
-	const updateSettings = async (newSettings) => {
-		const { error } = await supabase$1.from("system_settings").upsert({
-			id: 1,
-			...settings,
-			...newSettings
-		});
-		if (!error) setSettings((prev) => ({
-			...prev,
-			...newSettings
-		}));
-	};
-	const updateSurvey = async (id, updates) => {
-		const { error } = await supabase$1.from("surveys").update(updates).eq("id", id);
-		if (!error) setSurveys((prev) => prev.map((s) => s.id === id ? {
-			...s,
-			...updates
-		} : s));
-	};
-	const deleteSurvey = async (id) => {
-		const { error } = await supabase$1.from("surveys").delete().eq("id", id);
-		if (!error) setSurveys((prev) => prev.filter((s) => s.id !== id));
-	};
-	return import_react.createElement(MainContext.Provider, { value: {
-		surveys,
-		settings,
-		loading,
-		fetchSurveys,
-		addSurveys,
-		updateSettings,
-		updateSurvey,
-		deleteSurvey
-	} }, children);
-}
-function useMainStore() {
-	const context = (0, import_react.useContext)(MainContext);
-	if (!context) throw new Error("useMainStore must be used within MainStoreProvider");
-	return context;
-}
-//#endregion
 //#region src/lib/survey-flow.ts
 var MAPA_MAQUINAS = [
 	{
@@ -36781,12 +36701,12 @@ var lengthUnitRegex = /\d+(%|px|r?em|[sdl]?v([hwib]|min|max)|pt|pc|in|cm|mm|cap|
 var colorFunctionRegex = /^(rgba?|hsla?|hwb|(ok)?(lab|lch)|color-mix)\(.+\)$/;
 var shadowRegex = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/;
 var imageRegex = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/;
-var isLength = (value) => isNumber$2(value) || stringLengths.has(value) || fractionRegex.test(value);
+var isLength = (value) => isNumber$1(value) || stringLengths.has(value) || fractionRegex.test(value);
 var isArbitraryLength = (value) => getIsArbitraryValue(value, "length", isLengthOnly);
-var isNumber$2 = (value) => Boolean(value) && !Number.isNaN(Number(value));
-var isArbitraryNumber = (value) => getIsArbitraryValue(value, "number", isNumber$2);
+var isNumber$1 = (value) => Boolean(value) && !Number.isNaN(Number(value));
+var isArbitraryNumber = (value) => getIsArbitraryValue(value, "number", isNumber$1);
 var isInteger = (value) => Boolean(value) && Number.isInteger(Number(value));
-var isPercent$1 = (value) => value.endsWith("%") && isNumber$2(value.slice(0, -1));
+var isPercent$1 = (value) => value.endsWith("%") && isNumber$1(value.slice(0, -1));
 var isArbitraryValue = (value) => arbitraryValueRegex.test(value);
 var isTshirtSize = (value) => tshirtUnitRegex.test(value);
 var sizeLabels = /* @__PURE__ */ new Set([
@@ -36863,7 +36783,7 @@ var getDefaultConfig = () => {
 	];
 	const getNumberWithAutoAndArbitrary = () => [
 		"auto",
-		isNumber$2,
+		isNumber$1,
 		isArbitraryValue
 	];
 	const getPositions = () => [
@@ -36926,7 +36846,7 @@ var getDefaultConfig = () => {
 		"right",
 		"column"
 	];
-	const getNumberAndArbitrary = () => [isNumber$2, isArbitraryValue];
+	const getNumberAndArbitrary = () => [isNumber$1, isArbitraryValue];
 	return {
 		cacheSize: 500,
 		separator: ":",
@@ -37315,7 +37235,7 @@ var getDefaultConfig = () => {
 			] }],
 			"line-clamp": [{ "line-clamp": [
 				"none",
-				isNumber$2,
+				isNumber$1,
 				isArbitraryNumber
 			] }],
 			leading: [{ leading: [
@@ -37881,51 +37801,24 @@ var getDefaultConfig = () => {
 var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
 //#endregion
 //#region src/lib/utils.ts
-/**
-* Merges multiple class names into a single string
-* @param inputs - Array of class names
-* @returns Merged class names
-*/
 function cn(...inputs) {
 	return twMerge(clsx(inputs));
 }
-/**
-* Parses and extracts the most requested brands from the surveys list.
-* Handles parsing "Marcas: X, Y" from the curso_solicitado column.
-*/
 function extractTopMarcas(surveys) {
 	const marcasCount = {};
 	surveys.forEach((s) => {
-		let extracted = false;
-		if (typeof s.curso_solicitado === "string") {
-			const match = s.curso_solicitado.match(/Marcas?:\s*([^-\n|]+)/i);
-			if (match && match[1]) {
-				const brands = match[1].split(",").map((m) => m.trim()).filter(Boolean);
-				if (brands.length > 0) {
-					brands.forEach((b) => {
-						marcasCount[b] = (marcasCount[b] || 0) + 1;
-					});
-					extracted = true;
-				}
-			}
+		let marcaStr = "";
+		if (s.detalhes_cursos && typeof s.detalhes_cursos === "object") {
+			if (s.detalhes_cursos.marca) marcaStr = s.detalhes_cursos.marca;
+			else if (s.detalhes_cursos.fabricante) marcaStr = s.detalhes_cursos.fabricante;
 		}
-		if (!extracted) {
-			let fallbackMarca = "";
-			if (s.detalhes_cursos && typeof s.detalhes_cursos === "object") {
-				const dc = s.detalhes_cursos;
-				if (dc.marca) fallbackMarca = dc.marca;
-				else if (dc.fabricante) fallbackMarca = dc.fabricante;
-			}
-			if (!fallbackMarca && s.sistema) fallbackMarca = s.sistema;
-			if (fallbackMarca && typeof fallbackMarca === "string") fallbackMarca.split(",").map((m) => m.trim()).filter(Boolean).forEach((b) => {
-				marcasCount[b] = (marcasCount[b] || 0) + 1;
-			});
-		}
+		if (!marcaStr && s.sistema) marcaStr = s.sistema;
+		if (marcaStr) marcasCount[marcaStr] = (marcasCount[marcaStr] || 0) + 1;
 	});
-	return Object.entries(marcasCount).map(([name, value]) => ({
+	return Object.entries(marcasCount).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([name, value]) => ({
 		name,
 		value
-	})).sort((a, b) => b.value - a.value).slice(0, 5);
+	}));
 }
 //#endregion
 //#region src/components/ui/button.tsx
@@ -38043,18 +37936,18 @@ var Label$3 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Label$3.displayName = NAME$3;
-var Root$10 = Label$3;
+var Root$9 = Label$3;
 //#endregion
 //#region src/components/ui/label.tsx
 var labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
-var Label$2 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$10, {
+var Label$2 = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$9, {
 	"data-uid": "src/components/ui/label.tsx:16:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	className: cn(labelVariants(), className),
 	...props
 }));
-Label$2.displayName = Root$10.displayName;
+Label$2.displayName = Root$9.displayName;
 typeof window !== "undefined" && window.document && window.document.createElement;
 function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
 	return function handleEvent(event) {
@@ -38472,7 +38365,7 @@ function handleAndDispatchCustomEvent$1(name, handler, detail, { discrete }) {
 	if (discrete) dispatchDiscreteCustomEvent(target, event);
 	else target.dispatchEvent(event);
 }
-var Root$9 = DismissableLayer;
+var Root$8 = DismissableLayer;
 var Branch = DismissableLayerBranch;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-focus-guards@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-focus-guards/dist/index.mjs
@@ -40371,7 +40264,7 @@ var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Arrow$1.displayName = NAME$2;
-var Root$8 = Arrow$1;
+var Root$7 = Arrow$1;
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-use-size@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-size/dist/index.mjs
 function useSize(element) {
@@ -40592,7 +40485,7 @@ var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwarded
 			}[contentContext.placedSide],
 			visibility: contentContext.shouldHideArrow ? "hidden" : void 0
 		},
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
 			...arrowProps,
 			ref: forwardedRef,
 			style: {
@@ -42155,7 +42048,7 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
 	]);
 	return null;
 };
-var Root$7 = Dialog$1;
+var Root$6 = Dialog$1;
 var Portal$1 = DialogPortal$1;
 var Overlay = DialogOverlay$1;
 var Content$1 = DialogContent$1;
@@ -42501,7 +42394,7 @@ var N = "[cmdk-group=\"\"]", Y = "[cmdk-group-items=\"\"]", be = "[cmdk-group-he
 	}, m)));
 }), xe = import_react.forwardRef((r, o) => {
 	let { open: n, onOpenChange: u, overlayClassName: c, contentClassName: d, container: f, ...p } = r;
-	return import_react.createElement(Root$7, {
+	return import_react.createElement(Root$6, {
 		open: n,
 		onOpenChange: u
 	}, import_react.createElement(Portal$1, { container: f }, import_react.createElement(Overlay, {
@@ -42613,7 +42506,7 @@ var Te = {
 };
 //#endregion
 //#region src/components/ui/dialog.tsx
-var Dialog = Root$7;
+var Dialog = Root$6;
 var DialogPortal = Portal$1;
 var DialogOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
 	"data-uid": "src/components/ui/dialog.tsx:20:3",
@@ -42945,7 +42838,7 @@ var CollapsibleContentImpl = import_react.forwardRef((props, forwardedRef) => {
 function getState$2(open) {
 	return open ? "open" : "closed";
 }
-var Root$6 = Collapsible;
+var Root$5 = Collapsible;
 var Trigger$2 = CollapsibleTrigger;
 var Content = CollapsibleContent;
 //#endregion
@@ -43115,7 +43008,7 @@ var AccordionItem$1 = import_react.forwardRef((props, forwardedRef) => {
 		open,
 		disabled,
 		triggerId,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
 			"data-orientation": accordionContext.orientation,
 			"data-state": getState$1(open),
 			...collapsibleScope,
@@ -44229,331 +44122,81 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 	return null;
 }
 //#endregion
-//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-context@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
-function createContextScope(scopeName, createContextScopeDeps = []) {
-	let defaultContexts = [];
-	function createContext3(rootComponentName, defaultContext) {
-		const BaseContext = import_react.createContext(defaultContext);
-		BaseContext.displayName = rootComponentName + "Context";
-		const index = defaultContexts.length;
-		defaultContexts = [...defaultContexts, defaultContext];
-		const Provider = (props) => {
-			const { scope, children, ...context } = props;
-			const Context = scope?.[scopeName]?.[index] || BaseContext;
-			const value = import_react.useMemo(() => context, Object.values(context));
-			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
-				value,
-				children
-			});
-		};
-		Provider.displayName = rootComponentName + "Provider";
-		function useContext2(consumerName, scope) {
-			const Context = scope?.[scopeName]?.[index] || BaseContext;
-			const context = import_react.useContext(Context);
-			if (context) return context;
-			if (defaultContext !== void 0) return defaultContext;
-			throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-		}
-		return [Provider, useContext2];
-	}
-	const createScope = () => {
-		const scopeContexts = defaultContexts.map((defaultContext) => {
-			return import_react.createContext(defaultContext);
-		});
-		return function useScope(scope) {
-			const contexts = scope?.[scopeName] || scopeContexts;
-			return import_react.useMemo(() => ({ [`__scope${scopeName}`]: {
-				...scope,
-				[scopeName]: contexts
-			} }), [scope, contexts]);
-		};
-	};
-	createScope.scopeName = scopeName;
-	return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
-}
-function composeContextScopes(...scopes) {
-	const baseScope = scopes[0];
-	if (scopes.length === 1) return baseScope;
-	const createScope = () => {
-		const scopeHooks = scopes.map((createScope2) => ({
-			useScope: createScope2(),
-			scopeName: createScope2.scopeName
-		}));
-		return function useComposedScopes(overrideScopes) {
-			const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-				const currentScope = useScope(overrideScopes)[`__scope${scopeName}`];
-				return {
-					...nextScopes2,
-					...currentScope
-				};
-			}, {});
-			return import_react.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-		};
-	};
-	createScope.scopeName = baseScope.scopeName;
-	return createScope;
-}
-//#endregion
-//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-progress@1.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+rea_7258c0b550570cef5cd6f2d2227aa6b9/node_modules/@radix-ui/react-progress/dist/index.mjs
-var PROGRESS_NAME = "Progress";
-var DEFAULT_MAX = 100;
-var [createProgressContext, createProgressScope] = createContextScope(PROGRESS_NAME);
-var [ProgressProvider, useProgressContext] = createProgressContext(PROGRESS_NAME);
-var Progress$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeProgress, value: valueProp = null, max: maxProp, getValueLabel = defaultGetValueLabel, ...progressProps } = props;
-	if ((maxProp || maxProp === 0) && !isValidMaxNumber(maxProp)) console.error(getInvalidMaxError(`${maxProp}`, "Progress"));
-	const max = isValidMaxNumber(maxProp) ? maxProp : DEFAULT_MAX;
-	if (valueProp !== null && !isValidValueNumber(valueProp, max)) console.error(getInvalidValueError(`${valueProp}`, "Progress"));
-	const value = isValidValueNumber(valueProp, max) ? valueProp : null;
-	const valueLabel = isNumber$1(value) ? getValueLabel(value, max) : void 0;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProgressProvider, {
-		scope: __scopeProgress,
-		value,
-		max,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-			"aria-valuemax": max,
-			"aria-valuemin": 0,
-			"aria-valuenow": isNumber$1(value) ? value : void 0,
-			"aria-valuetext": valueLabel,
-			role: "progressbar",
-			"data-state": getProgressState(value, max),
-			"data-value": value ?? void 0,
-			"data-max": max,
-			...progressProps,
-			ref: forwardedRef
-		})
-	});
-});
-Progress$1.displayName = PROGRESS_NAME;
-var INDICATOR_NAME = "ProgressIndicator";
-var ProgressIndicator = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeProgress, ...indicatorProps } = props;
-	const context = useProgressContext(INDICATOR_NAME, __scopeProgress);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		"data-state": getProgressState(context.value, context.max),
-		"data-value": context.value ?? void 0,
-		"data-max": context.max,
-		...indicatorProps,
-		ref: forwardedRef
-	});
-});
-ProgressIndicator.displayName = INDICATOR_NAME;
-function defaultGetValueLabel(value, max) {
-	return `${Math.round(value / max * 100)}%`;
-}
-function getProgressState(value, maxValue) {
-	return value == null ? "indeterminate" : value === maxValue ? "complete" : "loading";
-}
-function isNumber$1(value) {
-	return typeof value === "number";
-}
-function isValidMaxNumber(max) {
-	return isNumber$1(max) && !isNaN(max) && max > 0;
-}
-function isValidValueNumber(value, max) {
-	return isNumber$1(value) && !isNaN(value) && value <= max && value >= 0;
-}
-function getInvalidMaxError(propValue, componentName) {
-	return `Invalid prop \`max\` of value \`${propValue}\` supplied to \`${componentName}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${DEFAULT_MAX}\`.`;
-}
-function getInvalidValueError(propValue, componentName) {
-	return `Invalid prop \`value\` of value \`${propValue}\` supplied to \`${componentName}\`. The \`value\` prop must be:
-  - a positive number
-  - less than the value passed to \`max\` (or ${DEFAULT_MAX} if no \`max\` prop is set)
-  - \`null\` or \`undefined\` if the progress is indeterminate.
-
-Defaulting to \`null\`.`;
-}
-var Root$5 = Progress$1;
-var Indicator = ProgressIndicator;
-//#endregion
-//#region src/components/ui/progress.tsx
-var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
-	"data-uid": "src/components/ui/progress.tsx:11:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className),
-	...props,
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Indicator, {
-		"data-uid": "src/components/ui/progress.tsx:16:5",
-		"data-prohibitions": "[editContent]",
-		className: "h-full w-full flex-1 bg-primary transition-all",
-		style: { transform: `translateX(-${100 - (value || 0)}%)` }
-	})
-}));
-Progress.displayName = Root$5.displayName;
-//#endregion
 //#region src/components/survey/SurveyContainer.tsx
 function SurveyContainer() {
-	const [stepIndex, setStepIndex] = (0, import_react.useState)(0);
+	const [currentIdx, setCurrentIdx] = (0, import_react.useState)(0);
 	const [isSubmitting, setIsSubmitting] = (0, import_react.useState)(false);
 	const [isSuccess, setIsSuccess] = (0, import_react.useState)(false);
-	const [hasDraft, setHasDraft] = (0, import_react.useState)(false);
-	const [draftLoaded, setDraftLoaded] = (0, import_react.useState)(false);
-	(0, import_react.useEffect)(() => {
-		if (sessionStorage.getItem("abapa_survey_submitted_protocol")) setIsSuccess(true);
-		else if (localStorage.getItem("abapa_survey_draft")) setHasDraft(true);
-		setDraftLoaded(true);
-	}, []);
-	const { addSurveys } = useMainStore();
-	const { toast } = useToast();
-	const form = useForm({ defaultValues: {
-		funcao: "",
-		nome: "",
-		whatsapp: "",
-		email: "",
-		grupo: "",
-		fazenda: [],
-		fazenda_custom: "",
-		localizacao: "",
-		tamanho: "",
-		cultura: "",
-		sistema: "",
-		gargalo: "",
-		desafio: "",
-		setor: "",
-		cursos: [],
-		curso_marcas: {},
-		curso_vagas: {},
-		curso_vagas_homens: {},
-		curso_vagas_mulheres: {},
-		volume_vagas: "",
-		modalidade: "",
-		infraestrutura: "",
-		epoca: "",
-		inovacao: ""
-	} });
-	(0, import_react.useEffect)(() => {
-		if (!draftLoaded || isSuccess || hasDraft) return;
-		const subscription = form.watch((value) => {
-			localStorage.setItem("abapa_survey_draft", JSON.stringify({
-				values: value,
-				stepIndex
-			}));
-		});
-		return () => subscription.unsubscribe();
-	}, [
-		form,
-		form.watch,
-		stepIndex,
-		draftLoaded,
-		isSuccess,
-		hasDraft
-	]);
-	const restoreDraft = () => {
-		const draftStr = localStorage.getItem("abapa_survey_draft");
-		if (draftStr) try {
-			const draft = JSON.parse(draftStr);
-			if (draft.values && typeof draft.values.fazenda === "string") draft.values.fazenda = draft.values.fazenda ? [draft.values.fazenda] : [];
-			form.reset(draft.values);
-			setStepIndex(draft.stepIndex || 0);
-		} catch (e) {
-			console.error("Error parsing draft:", e);
-		}
-		setHasDraft(false);
-	};
-	const discardDraft = () => {
-		localStorage.removeItem("abapa_survey_draft");
-		setHasDraft(false);
-	};
+	const form = useForm({ defaultValues: { fazenda: [] } });
+	const { watch, getValues } = form;
+	const data = watch();
+	const step = STEPS_CONFIG[currentIdx];
 	const handleNext = async () => {
-		if (hasDraft) setHasDraft(false);
-		const step = STEPS_CONFIG[stepIndex];
-		const values = form.getValues();
-		let isValid = true;
-		if (step.id === "identificacao") {
-			const fieldsToValidate = [
-				"nome",
-				"whatsapp",
-				"grupo",
-				"fazenda"
-			];
-			if ((values.fazenda || []).includes("Outra")) fieldsToValidate.push("fazenda_custom");
-			isValid = await form.trigger(fieldsToValidate);
-		} else if (step.id !== "revisao") isValid = await form.trigger(step.id);
-		if (!isValid) return;
-		const nextIdx = getNextStep(stepIndex, values);
-		if (nextIdx >= STEPS_CONFIG.length) {
-			form.handleSubmit(onSubmit)();
-			return;
-		}
-		setStepIndex(nextIdx);
+		if (!await form.trigger()) return;
+		if (step.id === "revisao") submitForm();
+		else setCurrentIdx(getNextStep(currentIdx, data));
 	};
-	const handlePrev = () => setStepIndex((prev) => getPrevStep(prev, form.getValues()));
-	const onSubmit = async (values) => {
+	const handlePrev = () => {
+		setCurrentIdx(getPrevStep(currentIdx, data));
+	};
+	const submitForm = async () => {
 		setIsSubmitting(true);
-		const protocolNumber = `TRN-${(/* @__PURE__ */ new Date()).getFullYear()}-${crypto.randomUUID().split("-")[0].toUpperCase()}`;
-		const finalFazendasList = (values.fazenda || []).filter((f) => f !== "Outra");
-		if ((values.fazenda || []).includes("Outra") && values.fazenda_custom) finalFazendasList.push(values.fazenda_custom);
-		const finalFazenda = finalFazendasList.join(", ");
-		const records = (values.cursos || []).map((curso) => {
-			const marcas = values.curso_marcas?.[curso] || [];
-			const vagas = values.curso_vagas?.[curso] || "";
-			const vagasHomens = values.curso_vagas_homens?.[curso] || "";
-			const vagasMulheres = values.curso_vagas_mulheres?.[curso] || "";
-			const cursoFinal = marcas.length > 0 ? `${curso} (Marcas: ${marcas.join(", ")})` : curso;
-			return {
-				protocol: protocolNumber,
+		try {
+			const values = getValues();
+			let fazendas = values.fazenda || [];
+			if (fazendas.includes("Outra")) {
+				fazendas = fazendas.filter((f) => f !== "Outra");
+				if (values.fazenda_custom) fazendas.push(...values.fazenda_custom.split(",").map((s) => s.trim()));
+			} else if (values.grupo === "Outro" && values.fazenda_custom) fazendas = [values.fazenda_custom.trim()];
+			const fazendasStr = fazendas.join(", ");
+			const insertData = {
 				nome: values.nome,
-				fazenda_grupo: finalFazenda,
-				celular: values.whatsapp,
+				whatsapp: values.whatsapp,
 				email: values.email,
-				area_foco: values.setor,
-				curso_solicitado: cursoFinal,
-				quantidade_colaboradores: vagas,
-				vagas_homens: vagasHomens || "0",
-				vagas_mulheres: vagasMulheres || "0",
-				local_realizacao: values.modalidade,
-				mes_previsto: values.epoca,
-				desafio_roi: values.desafio,
+				grupo: values.grupo,
+				fazenda: fazendasStr,
 				funcao: values.funcao,
 				localizacao: values.localizacao,
 				tamanho: values.tamanho,
 				cultura: values.cultura,
 				sistema: values.sistema,
 				gargalo: values.gargalo,
+				desafio: values.desafio,
+				setor: values.setor,
+				cursos: values.cursos,
+				vagas: values.curso_vagas,
+				vagas_homens: values.curso_vagas_homens,
+				vagas_mulheres: values.curso_vagas_mulheres,
+				modalidade: values.modalidade,
 				infraestrutura: values.infraestrutura,
-				inovacao: values.inovacao
+				epoca: values.epoca,
+				inovacao: values.inovacao,
+				detalhes_cursos: values.curso_marcas
 			};
-		});
-		try {
-			try {
-				await supabase$1.from("survey_leads").insert([{
-					nome: values.nome,
-					whatsapp: values.whatsapp,
-					email: values.email || null,
-					fazenda: finalFazenda || null,
-					grupo: values.grupo || null,
-					status: "completed"
-				}]);
-			} catch (err) {
-				console.error("Failed to save lead info:", err);
-			}
-			if (records.length > 0) {
-				await addSurveys(records);
-				try {
-					await supabase$1.functions.invoke("send-survey-email", { body: {
-						to: values.email,
-						protocol: protocolNumber,
+			const { data: leadData, error } = await supabase$1.from("survey_leads").insert([insertData]).select().single();
+			if (error) throw error;
+			if (values.grupo && values.grupo !== "Outro") {
+				const { data: fazendasData } = await supabase$1.from("fazendas").select("email, fazenda").eq("grupo", values.grupo).in("fazenda", fazendas);
+				if (fazendasData && fazendasData.length > 0) {
+					const emails = fazendasData.map((f) => f.email).filter(Boolean);
+					const uniqueEmails = Array.from(new Set(emails));
+					for (const email of uniqueEmails) await supabase$1.functions.invoke("send-survey-email", { body: {
+						to: email,
+						protocol: leadData.id,
 						nome: values.nome,
-						fazenda: finalFazenda,
-						grupo: values.grupo,
-						cursos: records.map((r) => r.curso_solicitado),
-						vagas: records.reduce((acc, r) => acc + parseInt(r.quantidade_colaboradores || "0"), 0),
-						vagas_homens: records.reduce((acc, r) => acc + parseInt(r.vagas_homens || "0"), 0),
-						vagas_mulheres: records.reduce((acc, r) => acc + parseInt(r.vagas_mulheres || "0"), 0)
+						fazenda: fazendasStr,
+						cursos: values.cursos,
+						vagas: values.curso_vagas,
+						vagas_homens: values.curso_vagas_homens,
+						vagas_mulheres: values.curso_vagas_mulheres
 					} });
-				} catch (emailErr) {
-					console.error("Erro ao enviar e-mail de confirmação:", emailErr);
 				}
 			}
-			sessionStorage.setItem("abapa_survey_submitted_protocol", protocolNumber);
-			localStorage.removeItem("abapa_survey_draft");
 			setIsSuccess(true);
 		} catch (err) {
 			toast({
 				title: "Erro ao enviar",
-				description: "Tente novamente.",
+				description: err.message || "Ocorreu um erro inesperado. Tente novamente.",
 				variant: "destructive"
 			});
 		} finally {
@@ -44561,144 +44204,107 @@ function SurveyContainer() {
 		}
 	};
 	if (isSuccess) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:218:7",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:132:7",
 		"data-prohibitions": "[]",
-		className: "flex flex-col items-center justify-center h-full text-center space-y-6 animate-in fade-in zoom-in duration-500 p-6",
+		className: "flex flex-col items-center justify-center h-full p-8 text-center bg-white rounded-2xl shadow-sm animate-in fade-in zoom-in duration-500 max-w-2xl mx-auto my-8 border",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:219:9",
-				"data-prohibitions": "[editContent]",
-				className: "w-24 h-24 text-primary"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/components/survey/SurveyContainer.tsx:133:9",
+				"data-prohibitions": "[]",
+				className: "w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
+					"data-uid": "src/components/survey/SurveyContainer.tsx:134:11",
+					"data-prohibitions": "[editContent]",
+					className: "w-10 h-10"
+				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:220:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:136:9",
 				"data-prohibitions": "[]",
-				className: "text-3xl font-bold text-slate-800",
-				children: "Mapeamento Concluído!"
+				className: "text-3xl font-bold text-slate-800 mb-3",
+				children: "Mapeamento Enviado!"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:221:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:137:9",
 				"data-prohibitions": "[]",
-				className: "text-slate-600 max-w-md text-lg",
-				children: "Agradecemos sua participação. Suas necessidades de treinamento foram registradas com sucesso e ajudarão a ABAPA a preparar as melhores capacitações para sua equipe."
+				className: "text-slate-600 text-lg mb-8 max-w-md",
+				children: "Suas necessidades de treinamento foram registradas com sucesso. A equipe do Centro de Treinamento entrará em contato em breve."
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:225:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:141:9",
 				"data-prohibitions": "[]",
-				onClick: () => {
-					sessionStorage.removeItem("abapa_survey_submitted_protocol");
-					window.location.reload();
-				},
-				variant: "outline",
-				className: "mt-4",
+				onClick: () => window.location.reload(),
 				size: "lg",
-				children: "Realizar novo mapeamento"
+				className: "px-8 shadow-md h-14 text-lg",
+				children: "Novo Mapeamento"
 			})
 		]
 	});
-	const step = STEPS_CONFIG[stepIndex];
-	const progress = (stepIndex + 1) / STEPS_CONFIG.length * 100;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:244:5",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:153:5",
 		"data-prohibitions": "[editContent]",
-		className: "flex flex-col h-full max-w-3xl mx-auto w-full p-5 sm:p-8",
-		children: [
-			hasDraft && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:246:9",
-				"data-prohibitions": "[]",
-				className: "mb-6 p-4 bg-primary/5 border border-primary/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 shadow-sm",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:247:11",
+		className: "max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 h-full flex flex-col overflow-hidden",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/survey/SurveyContainer.tsx:154:7",
+			"data-prohibitions": "[editContent]",
+			className: "flex items-center mb-8 shrink-0",
+			children: [
+				currentIdx > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+					"data-uid": "src/components/survey/SurveyContainer.tsx:156:11",
 					"data-prohibitions": "[]",
-					className: "text-sm text-slate-700 font-medium",
-					children: "Identificamos um mapeamento em andamento. Deseja continuar de onde parou?"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:250:11",
+					onClick: handlePrev,
+					className: "flex items-center text-slate-500 hover:text-primary transition-colors font-medium mr-4 active:scale-95",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {
+						"data-uid": "src/components/survey/SurveyContainer.tsx:160:13",
+						"data-prohibitions": "[editContent]",
+						className: "w-5 h-5 mr-1"
+					}), "Voltar"]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/survey/SurveyContainer.tsx:164:9",
 					"data-prohibitions": "[]",
-					className: "flex items-center gap-3 shrink-0 w-full sm:w-auto",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:251:13",
+					className: "flex-1",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/survey/SurveyContainer.tsx:165:11",
 						"data-prohibitions": "[]",
-						variant: "outline",
-						size: "sm",
-						className: "flex-1 sm:flex-none border-slate-200",
-						onClick: discardDraft,
-						children: "Reiniciar"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:259:13",
-						"data-prohibitions": "[]",
-						size: "sm",
-						className: "flex-1 sm:flex-none",
-						onClick: restoreDraft,
-						children: "Restaurar"
-					})]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:266:7",
-				"data-prohibitions": "[editContent]",
-				className: "flex items-center gap-4 mb-8 sm:mb-12 pt-2",
-				children: [
-					stepIndex > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:268:11",
-						"data-prohibitions": "[]",
-						variant: "ghost",
-						size: "icon",
-						onClick: handlePrev,
-						className: "rounded-full shrink-0 text-slate-500 hover:text-primary",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
-							"data-uid": "src/components/survey/SurveyContainer.tsx:274:13",
+						className: "h-2 w-full bg-slate-100 rounded-full overflow-hidden",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/components/survey/SurveyContainer.tsx:166:13",
 							"data-prohibitions": "[editContent]",
-							className: "w-6 h-6"
+							className: "h-full bg-primary transition-all duration-500 ease-out",
+							style: { width: `${Math.max(5, currentIdx / (STEPS_CONFIG.length - 1) * 100)}%` }
 						})
-					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:277:11",
-						"data-prohibitions": "[editContent]",
-						className: "w-10 h-10 shrink-0"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Progress, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:279:9",
-						"data-prohibitions": "[editContent]",
-						value: progress,
-						className: "h-2.5 flex-1 bg-slate-200"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:280:9",
-						"data-prohibitions": "[editContent]",
-						className: "text-sm text-slate-400 font-bold shrink-0",
-						children: [
-							stepIndex + 1,
-							" / ",
-							STEPS_CONFIG.length
-						]
 					})
-				]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:285:7",
-				"data-prohibitions": "[editContent]",
-				className: "flex-1 overflow-y-auto no-scrollbar relative",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:286:9",
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					"data-uid": "src/components/survey/SurveyContainer.tsx:172:9",
 					"data-prohibitions": "[editContent]",
-					className: "animate-in fade-in slide-in-from-bottom-8 duration-500 h-full",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:290:11",
-						"data-prohibitions": "[editContent]",
-						className: "text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-800 mb-8 sm:mb-10 leading-tight",
-						children: step.title
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyInputs, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:294:11",
-						"data-prohibitions": "[editContent]",
-						step,
-						form,
-						onNext: handleNext,
-						onSubmit: form.handleSubmit(onSubmit),
-						isSubmitting
-					})]
-				}, step.id)
-			})
-		]
+					className: "ml-4 text-sm font-bold text-slate-400 w-12 text-right",
+					children: [
+						currentIdx + 1,
+						" / ",
+						STEPS_CONFIG.length
+					]
+				})
+			]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/survey/SurveyContainer.tsx:177:7",
+			"data-prohibitions": "[editContent]",
+			className: "flex-1 overflow-y-auto no-scrollbar pb-20 px-1",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+				"data-uid": "src/components/survey/SurveyContainer.tsx:178:9",
+				"data-prohibitions": "[editContent]",
+				className: "text-2xl sm:text-3xl font-bold text-slate-800 mb-8 leading-tight",
+				children: step.title
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyInputs, {
+				"data-uid": "src/components/survey/SurveyContainer.tsx:182:9",
+				"data-prohibitions": "[editContent]",
+				step,
+				form,
+				onNext: handleNext,
+				isSubmitting
+			})]
+		})]
 	});
 }
 //#endregion
@@ -44825,6 +44431,280 @@ function Index() {
 			]
 		})
 	});
+}
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/zustand@4.5.7_@types+react@19.2.14_react@19.2.4/node_modules/zustand/esm/vanilla.mjs
+var createStoreImpl = (createState) => {
+	let state;
+	const listeners = /* @__PURE__ */ new Set();
+	const setState = (partial, replace) => {
+		const nextState = typeof partial === "function" ? partial(state) : partial;
+		if (!Object.is(nextState, state)) {
+			const previousState = state;
+			state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
+			listeners.forEach((listener) => listener(state, previousState));
+		}
+	};
+	const getState = () => state;
+	const getInitialState = () => initialState;
+	const subscribe = (listener) => {
+		listeners.add(listener);
+		return () => listeners.delete(listener);
+	};
+	const destroy = () => {
+		console.warn("[DEPRECATED] The `destroy` method will be unsupported in a future version. Instead use unsubscribe function returned by subscribe. Everything will be garbage-collected if store is garbage-collected.");
+		listeners.clear();
+	};
+	const api = {
+		setState,
+		getState,
+		getInitialState,
+		subscribe,
+		destroy
+	};
+	const initialState = state = createState(setState, getState, api);
+	return api;
+};
+var createStore = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/use-sync-external-store@1.6.0_react@19.2.4/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js
+/**
+* @license React
+* use-sync-external-store-shim.development.js
+*
+* Copyright (c) Meta Platforms, Inc. and affiliates.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+var require_use_sync_external_store_shim_development = /* @__PURE__ */ __commonJSMin(((exports) => {
+	(function() {
+		function is(x, y) {
+			return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
+		}
+		function useSyncExternalStore$2(subscribe, getSnapshot) {
+			didWarnOld18Alpha || void 0 === React.startTransition || (didWarnOld18Alpha = !0, console.error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."));
+			var value = getSnapshot();
+			if (!didWarnUncachedGetSnapshot) {
+				var cachedValue = getSnapshot();
+				objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = !0);
+			}
+			cachedValue = useState({ inst: {
+				value,
+				getSnapshot
+			} });
+			var inst = cachedValue[0].inst, forceUpdate = cachedValue[1];
+			useLayoutEffect(function() {
+				inst.value = value;
+				inst.getSnapshot = getSnapshot;
+				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
+			}, [
+				subscribe,
+				value,
+				getSnapshot
+			]);
+			useEffect(function() {
+				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
+				return subscribe(function() {
+					checkIfSnapshotChanged(inst) && forceUpdate({ inst });
+				});
+			}, [subscribe]);
+			useDebugValue(value);
+			return value;
+		}
+		function checkIfSnapshotChanged(inst) {
+			var latestGetSnapshot = inst.getSnapshot;
+			inst = inst.value;
+			try {
+				var nextValue = latestGetSnapshot();
+				return !objectIs(inst, nextValue);
+			} catch (error) {
+				return !0;
+			}
+		}
+		function useSyncExternalStore$1(subscribe, getSnapshot) {
+			return getSnapshot();
+		}
+		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
+		var React = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is, useState = React.useState, useEffect = React.useEffect, useLayoutEffect = React.useLayoutEffect, useDebugValue = React.useDebugValue, didWarnOld18Alpha = !1, didWarnUncachedGetSnapshot = !1, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
+		exports.useSyncExternalStore = void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
+		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+	})();
+}));
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/use-sync-external-store@1.6.0_react@19.2.4/node_modules/use-sync-external-store/shim/index.js
+var require_shim = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = require_use_sync_external_store_shim_development();
+}));
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/use-sync-external-store@1.6.0_react@19.2.4/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js
+/**
+* @license React
+* use-sync-external-store-shim/with-selector.development.js
+*
+* Copyright (c) Meta Platforms, Inc. and affiliates.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+var require_with_selector_development = /* @__PURE__ */ __commonJSMin(((exports) => {
+	(function() {
+		function is(x, y) {
+			return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
+		}
+		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
+		var React = require_react(), shim = require_shim(), objectIs = "function" === typeof Object.is ? Object.is : is, useSyncExternalStore = shim.useSyncExternalStore, useRef = React.useRef, useEffect = React.useEffect, useMemo = React.useMemo, useDebugValue = React.useDebugValue;
+		exports.useSyncExternalStoreWithSelector = function(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
+			var instRef = useRef(null);
+			if (null === instRef.current) {
+				var inst = {
+					hasValue: !1,
+					value: null
+				};
+				instRef.current = inst;
+			} else inst = instRef.current;
+			instRef = useMemo(function() {
+				function memoizedSelector(nextSnapshot) {
+					if (!hasMemo) {
+						hasMemo = !0;
+						memoizedSnapshot = nextSnapshot;
+						nextSnapshot = selector(nextSnapshot);
+						if (void 0 !== isEqual && inst.hasValue) {
+							var currentSelection = inst.value;
+							if (isEqual(currentSelection, nextSnapshot)) return memoizedSelection = currentSelection;
+						}
+						return memoizedSelection = nextSnapshot;
+					}
+					currentSelection = memoizedSelection;
+					if (objectIs(memoizedSnapshot, nextSnapshot)) return currentSelection;
+					var nextSelection = selector(nextSnapshot);
+					if (void 0 !== isEqual && isEqual(currentSelection, nextSelection)) return memoizedSnapshot = nextSnapshot, currentSelection;
+					memoizedSnapshot = nextSnapshot;
+					return memoizedSelection = nextSelection;
+				}
+				var hasMemo = !1, memoizedSnapshot, memoizedSelection, maybeGetServerSnapshot = void 0 === getServerSnapshot ? null : getServerSnapshot;
+				return [function() {
+					return memoizedSelector(getSnapshot());
+				}, null === maybeGetServerSnapshot ? void 0 : function() {
+					return memoizedSelector(maybeGetServerSnapshot());
+				}];
+			}, [
+				getSnapshot,
+				getServerSnapshot,
+				selector,
+				isEqual
+			]);
+			var value = useSyncExternalStore(subscribe, instRef[0], instRef[1]);
+			useEffect(function() {
+				inst.hasValue = !0;
+				inst.value = value;
+			}, [value]);
+			useDebugValue(value);
+			return value;
+		};
+		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+	})();
+}));
+//#endregion
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/zustand@4.5.7_@types+react@19.2.14_react@19.2.4/node_modules/zustand/esm/index.mjs
+var import_with_selector = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = require_with_selector_development();
+})))(), 1);
+var { useDebugValue } = import_react.default;
+var { useSyncExternalStoreWithSelector } = import_with_selector.default;
+var didWarnAboutEqualityFn = false;
+var identity$4 = (arg) => arg;
+function useStore(api, selector = identity$4, equalityFn) {
+	if (equalityFn && !didWarnAboutEqualityFn) {
+		console.warn("[DEPRECATED] Use `createWithEqualityFn` instead of `create` or use `useStoreWithEqualityFn` instead of `useStore`. They can be imported from 'zustand/traditional'. https://github.com/pmndrs/zustand/discussions/1937");
+		didWarnAboutEqualityFn = true;
+	}
+	const slice = useSyncExternalStoreWithSelector(api.subscribe, api.getState, api.getServerState || api.getInitialState, selector, equalityFn);
+	useDebugValue(slice);
+	return slice;
+}
+var createImpl = (createState) => {
+	if (typeof createState !== "function") console.warn("[DEPRECATED] Passing a vanilla store will be unsupported in a future version. Instead use `import { useStore } from 'zustand'`.");
+	const api = typeof createState === "function" ? createStore(createState) : createState;
+	const useBoundStore = (selector, equalityFn) => useStore(api, selector, equalityFn);
+	Object.assign(useBoundStore, api);
+	return useBoundStore;
+};
+var create = (createState) => createState ? createImpl(createState) : createImpl;
+//#endregion
+//#region src/stores/main.ts
+var useMainStore = create((set) => ({
+	surveys: [],
+	loading: false,
+	fetchSurveys: async () => {
+		set({ loading: true });
+		try {
+			const { data, error } = await supabase$1.from("survey_leads").select("*").order("created_at", { ascending: false });
+			if (error) throw error;
+			const formattedSurveys = [];
+			data.forEach((row) => {
+				const cursos = row.cursos || [];
+				const vagas = row.vagas || {};
+				const vagasHomens = row.vagas_homens || {};
+				const vagasMulheres = row.vagas_mulheres || {};
+				const marcas = row.detalhes_cursos || {};
+				if (cursos.length > 0) cursos.forEach((curso) => {
+					formattedSurveys.push({
+						id: `${row.id}-${curso}`,
+						nome: row.nome || "",
+						email: row.email || "",
+						whatsapp: row.whatsapp || "",
+						fazenda_grupo: row.grupo || "Outros",
+						fazenda_nome: row.fazenda || "",
+						curso_solicitado: curso,
+						quantidade_colaboradores: vagas[curso] || "0",
+						vagas_homens: vagasHomens[curso] || "0",
+						vagas_mulheres: vagasMulheres[curso] || "0",
+						prioridade: "Média",
+						status: row.status || "Pendente",
+						data_solicitacao: row.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+						date: row.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+						area_foco: row.setor || "Geral",
+						detalhes_cursos: { marca: marcas[curso]?.[0] || "" },
+						sistema: row.sistema || ""
+					});
+				});
+				else formattedSurveys.push({
+					id: row.id,
+					nome: row.nome || "",
+					email: row.email || "",
+					whatsapp: row.whatsapp || "",
+					fazenda_grupo: row.grupo || "Outros",
+					fazenda_nome: row.fazenda || "",
+					curso_solicitado: "Não especificado",
+					quantidade_colaboradores: "0",
+					vagas_homens: "0",
+					vagas_mulheres: "0",
+					prioridade: "Média",
+					status: row.status || "Pendente",
+					data_solicitacao: row.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+					date: row.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+					area_foco: row.setor || "Geral",
+					detalhes_cursos: {},
+					sistema: row.sistema || ""
+				});
+			});
+			set({
+				surveys: formattedSurveys,
+				loading: false
+			});
+		} catch (err) {
+			console.error("Error fetching surveys", err);
+			set({ loading: false });
+		}
+	}
+}));
+function MainStoreProvider({ children }) {
+	const fetchSurveys = useMainStore((state) => state.fetchSurveys);
+	(0, import_react.useEffect)(() => {
+		fetchSurveys();
+	}, [fetchSurveys]);
+	return import_react.createElement(import_react.Fragment, null, children);
 }
 //#endregion
 //#region src/pages/Consulta.tsx
@@ -45183,7 +45063,7 @@ var Separator$1 = import_react.forwardRef(({ className, orientation = "horizonta
 Separator$1.displayName = Root$4.displayName;
 //#endregion
 //#region src/components/ui/sheet.tsx
-var Sheet = Root$7;
+var Sheet = Root$6;
 var SheetPortal = Portal$1;
 var SheetOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
 	"data-uid": "src/components/ui/sheet.tsx:21:3",
@@ -47276,75 +47156,73 @@ var ScrollBar = import_react.forwardRef(({ className, orientation = "vertical", 
 }));
 ScrollBar.displayName = ScrollAreaScrollbar.displayName;
 //#endregion
-//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/use-sync-external-store@1.6.0_react@19.2.4/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js
-/**
-* @license React
-* use-sync-external-store-shim.development.js
-*
-* Copyright (c) Meta Platforms, Inc. and affiliates.
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
-var require_use_sync_external_store_shim_development = /* @__PURE__ */ __commonJSMin(((exports) => {
-	(function() {
-		function is(x, y) {
-			return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
-		}
-		function useSyncExternalStore$2(subscribe, getSnapshot) {
-			didWarnOld18Alpha || void 0 === React.startTransition || (didWarnOld18Alpha = !0, console.error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."));
-			var value = getSnapshot();
-			if (!didWarnUncachedGetSnapshot) {
-				var cachedValue = getSnapshot();
-				objectIs(value, cachedValue) || (console.error("The result of getSnapshot should be cached to avoid an infinite loop"), didWarnUncachedGetSnapshot = !0);
-			}
-			cachedValue = useState({ inst: {
+//#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-context@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
+function createContextScope(scopeName, createContextScopeDeps = []) {
+	let defaultContexts = [];
+	function createContext3(rootComponentName, defaultContext) {
+		const BaseContext = import_react.createContext(defaultContext);
+		BaseContext.displayName = rootComponentName + "Context";
+		const index = defaultContexts.length;
+		defaultContexts = [...defaultContexts, defaultContext];
+		const Provider = (props) => {
+			const { scope, children, ...context } = props;
+			const Context = scope?.[scopeName]?.[index] || BaseContext;
+			const value = import_react.useMemo(() => context, Object.values(context));
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
 				value,
-				getSnapshot
-			} });
-			var inst = cachedValue[0].inst, forceUpdate = cachedValue[1];
-			useLayoutEffect(function() {
-				inst.value = value;
-				inst.getSnapshot = getSnapshot;
-				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
-			}, [
-				subscribe,
-				value,
-				getSnapshot
-			]);
-			useEffect(function() {
-				checkIfSnapshotChanged(inst) && forceUpdate({ inst });
-				return subscribe(function() {
-					checkIfSnapshotChanged(inst) && forceUpdate({ inst });
-				});
-			}, [subscribe]);
-			useDebugValue(value);
-			return value;
+				children
+			});
+		};
+		Provider.displayName = rootComponentName + "Provider";
+		function useContext2(consumerName, scope) {
+			const Context = scope?.[scopeName]?.[index] || BaseContext;
+			const context = import_react.useContext(Context);
+			if (context) return context;
+			if (defaultContext !== void 0) return defaultContext;
+			throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
 		}
-		function checkIfSnapshotChanged(inst) {
-			var latestGetSnapshot = inst.getSnapshot;
-			inst = inst.value;
-			try {
-				var nextValue = latestGetSnapshot();
-				return !objectIs(inst, nextValue);
-			} catch (error) {
-				return !0;
-			}
-		}
-		function useSyncExternalStore$1(subscribe, getSnapshot) {
-			return getSnapshot();
-		}
-		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-		var React = require_react(), objectIs = "function" === typeof Object.is ? Object.is : is, useState = React.useState, useEffect = React.useEffect, useLayoutEffect = React.useLayoutEffect, useDebugValue = React.useDebugValue, didWarnOld18Alpha = !1, didWarnUncachedGetSnapshot = !1, shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
-		exports.useSyncExternalStore = void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
-		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-	})();
-}));
+		return [Provider, useContext2];
+	}
+	const createScope = () => {
+		const scopeContexts = defaultContexts.map((defaultContext) => {
+			return import_react.createContext(defaultContext);
+		});
+		return function useScope(scope) {
+			const contexts = scope?.[scopeName] || scopeContexts;
+			return import_react.useMemo(() => ({ [`__scope${scopeName}`]: {
+				...scope,
+				[scopeName]: contexts
+			} }), [scope, contexts]);
+		};
+	};
+	createScope.scopeName = scopeName;
+	return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
+}
+function composeContextScopes(...scopes) {
+	const baseScope = scopes[0];
+	if (scopes.length === 1) return baseScope;
+	const createScope = () => {
+		const scopeHooks = scopes.map((createScope2) => ({
+			useScope: createScope2(),
+			scopeName: createScope2.scopeName
+		}));
+		return function useComposedScopes(overrideScopes) {
+			const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+				const currentScope = useScope(overrideScopes)[`__scope${scopeName}`];
+				return {
+					...nextScopes2,
+					...currentScope
+				};
+			}, {});
+			return import_react.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+		};
+	};
+	createScope.scopeName = baseScope.scopeName;
+	return createScope;
+}
 //#endregion
 //#region ../../cache/modules/levantamento-necessidades-treinamento-copy-0fa27/node_modules/.pnpm/@radix-ui+react-use-is-hydrated@0.1.0_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-is-hydrated/dist/index.mjs
-var import_shim = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
-	module.exports = require_use_sync_external_store_shim_development();
-})))();
+var import_shim = require_shim();
 function useIsHydrated() {
 	return (0, import_shim.useSyncExternalStore)(subscribe, () => true, () => false);
 }
@@ -77663,7 +77541,7 @@ var ToastImpl = import_react.forwardRef((props, forwardedRef) => {
 		onClose: handleClose,
 		children: import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection.ItemSlot, {
 			scope: __scopeToast,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$9, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
 				asChild: true,
 				onEscapeKeyDown: composeEventHandlers(onEscapeKeyDown, () => {
 					if (!context.isFocusedToastEscapeKeyDownRef.current) handleClose();
@@ -78156,4 +78034,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-D99VR8yl.js.map
+//# sourceMappingURL=index-DNR7dwSE.js.map

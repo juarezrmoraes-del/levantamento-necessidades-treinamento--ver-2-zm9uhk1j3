@@ -836,6 +836,11 @@ body{
   margin-bottom: 1rem;
 }
 
+.my-8{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 .-ml-2{
   margin-left: -0.5rem;
 }
@@ -888,6 +893,10 @@ body{
   margin-left: auto;
 }
 
+.mr-1{
+  margin-right: 0.25rem;
+}
+
 .mr-1\.5{
   margin-right: 0.375rem;
 }
@@ -898,6 +907,10 @@ body{
 
 .mr-3{
   margin-right: 0.75rem;
+}
+
+.mr-4{
+  margin-right: 1rem;
 }
 
 .mt-0\.5{
@@ -1014,8 +1027,8 @@ body{
   height: 0.625rem;
 }
 
-.h-24{
-  height: 6rem;
+.h-20{
+  height: 5rem;
 }
 
 .h-3{
@@ -1198,10 +1211,6 @@ body{
   width: 5rem;
 }
 
-.w-24{
-  width: 6rem;
-}
-
 .w-3{
   width: 0.75rem;
 }
@@ -1362,6 +1371,10 @@ body{
 
 .min-w-\[var\(--radix-select-trigger-width\)\]{
   min-width: var(--radix-select-trigger-width);
+}
+
+.max-w-2xl{
+  max-width: 42rem;
 }
 
 .max-w-3xl{
@@ -1962,10 +1975,6 @@ body{
   border-color: hsl(var(--primary));
 }
 
-.border-primary\/20{
-  border-color: hsl(var(--primary) / 0.2);
-}
-
 .border-purple-100{
   --tw-border-opacity: 1;
   border-color: rgb(243 232 255 / var(--tw-border-opacity, 1));
@@ -2364,6 +2373,10 @@ body{
   padding: 1.5rem;
 }
 
+.p-8{
+  padding: 2rem;
+}
+
 .p-\[1px\]{
   padding: 1px;
 }
@@ -2471,6 +2484,11 @@ body{
 .py-6{
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-8{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .pb-10{
@@ -3231,6 +3249,10 @@ body{
   transition-timing-function: linear;
 }
 
+.ease-out{
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
 @keyframes enter{
 
   from{
@@ -3281,16 +3303,8 @@ body{
   --tw-enter-translate-y: 1rem;
 }
 
-.slide-in-from-bottom-8{
-  --tw-enter-translate-y: 2rem;
-}
-
 .slide-in-from-top-2{
   --tw-enter-translate-y: -0.5rem;
-}
-
-.slide-in-from-top-4{
-  --tw-enter-translate-y: -1rem;
 }
 
 .duration-1000{
@@ -3315,6 +3329,10 @@ body{
 
 .ease-linear{
   animation-timing-function: linear;
+}
+
+.ease-out{
+  animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* Scrollbar hide for chat area but keep functionality */
@@ -4540,14 +4558,6 @@ body{
     grid-column: span 2 / span 2;
   }
 
-  .sm\:mb-10{
-    margin-bottom: 2.5rem;
-  }
-
-  .sm\:mb-12{
-    margin-bottom: 3rem;
-  }
-
   .sm\:mt-0{
     margin-top: 0px;
   }
@@ -4654,8 +4664,9 @@ body{
     padding: 1.5rem;
   }
 
-  .sm\:p-8{
-    padding: 2rem;
+  .sm\:px-6{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   .sm\:px-8{
@@ -4752,11 +4763,6 @@ body{
     line-height: 2.25rem;
   }
 
-  .md\:text-4xl{
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
-
   .md\:text-sm{
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -4806,6 +4812,11 @@ body{
 
   .lg\:p-8{
     padding: 2rem;
+  }
+
+  .lg\:px-8{
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
