@@ -109,10 +109,27 @@ export function SurveyContainer() {
                 vagas: values.curso_vagas,
                 vagas_homens: values.curso_vagas_homens,
                 vagas_mulheres: values.curso_vagas_mulheres,
+                is_admin: true,
               },
             })
           }
         }
+      }
+
+      if (values.email) {
+        await supabase.functions.invoke('send-survey-email', {
+          body: {
+            to: values.email,
+            protocol: leadData.id,
+            nome: values.nome,
+            fazenda: fazendasStr,
+            cursos: values.cursos,
+            vagas: values.curso_vagas,
+            vagas_homens: values.curso_vagas_homens,
+            vagas_mulheres: values.curso_vagas_mulheres,
+            is_submitter: true,
+          },
+        })
       }
 
       setIsSuccess(true)

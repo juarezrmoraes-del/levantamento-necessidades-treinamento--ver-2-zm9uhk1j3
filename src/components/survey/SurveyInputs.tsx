@@ -98,11 +98,18 @@ function IdentificationStep({ step, form, onNext }: any) {
       {!loadingGrupos && grupos.length === 0 && (
         <Alert className="bg-yellow-50 text-yellow-800 border-yellow-200">
           <Database className="h-4 w-4 text-yellow-600" />
-          <AlertTitle className="text-yellow-800 font-semibold">Aguardando dados</AlertTitle>
-          <AlertDescription className="text-yellow-700 text-sm mt-1">
-            A lista de fazendas ainda não foi importada. Você pode continuar escolhendo a opção{' '}
-            <strong>"Outro (Não listado)"</strong> ou solicitar a importação do arquivo CSV no
-            painel do Supabase.
+          <AlertTitle className="text-yellow-800 font-semibold">
+            Aguardando Importação da Planilha
+          </AlertTitle>
+          <AlertDescription className="text-yellow-700 text-sm mt-1 flex flex-col gap-2">
+            <p>
+              Por favor, importe a planilha anexa de grupos e fazendas diretamente no seu banco de
+              dados Supabase na tabela <strong>fazendas</strong> para que as opções apareçam aqui.
+            </p>
+            <p>
+              Você pode continuar escolhendo a opção <strong>"Outro (Não listado)"</strong> enquanto
+              os dados não estiverem disponíveis.
+            </p>
           </AlertDescription>
         </Alert>
       )}
@@ -142,13 +149,27 @@ function IdentificationStep({ step, form, onNext }: any) {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-base text-slate-600 font-semibold">E-mail</Label>
+        <Label className="text-base text-slate-600 font-semibold">
+          E-mail (Para receber o extrato) <span className="text-red-500">*</span>
+        </Label>
         <Input
           type="email"
-          className="h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white"
+          className={cn(
+            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+            errors.email && 'border-red-500',
+          )}
           placeholder="seu@email.com"
-          {...register('email')}
+          {...register('email', {
+            required: 'E-mail é obrigatório para envio do extrato',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'E-mail inválido',
+            },
+          })}
         />
+        {errors.email && (
+          <span className="text-red-500 text-sm block">{errors.email.message as string}</span>
+        )}
       </div>
 
       <div className="space-y-2">

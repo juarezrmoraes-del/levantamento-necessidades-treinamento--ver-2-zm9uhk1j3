@@ -14,13 +14,29 @@ Deno.serve(async (req: Request) => {
 
   try {
     const data = await req.json()
-    const { to, protocol, nome, fazenda, cursos, vagas, vagas_homens, vagas_mulheres } = data
+    const {
+      to,
+      protocol,
+      nome,
+      fazenda,
+      cursos,
+      vagas,
+      vagas_homens,
+      vagas_mulheres,
+      is_submitter,
+    } = data
 
     console.log('=== EMAIL NOTIFICATION ===')
     console.log(`To: ${to}`)
-    console.log(`Subject: Novo Mapeamento de Treinamento - Protocolo: ${protocol}`)
-    console.log(`Solicitante: ${nome}`)
-    console.log(`Fazenda/Empresa: ${fazenda}`)
+    if (is_submitter) {
+      console.log(`Subject: Extrato da sua solicitação de Mapeamento - Protocolo: ${protocol}`)
+      console.log(`Olá ${nome}, recebemos sua solicitação com sucesso!`)
+      console.log(`Abaixo está o resumo dos treinamentos solicitados para: ${fazenda}`)
+    } else {
+      console.log(`Subject: Novo Mapeamento de Treinamento - Protocolo: ${protocol}`)
+      console.log(`Solicitante: ${nome}`)
+      console.log(`Fazenda/Empresa: ${fazenda}`)
+    }
     console.log(`Cursos Solicitados:`, cursos)
     console.log(`Vagas Mapeadas:`, vagas)
     console.log(`Vagas Homens:`, vagas_homens)
