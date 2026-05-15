@@ -3,9 +3,28 @@ import { Lock, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '@/stores/auth'
 import { SurveyContainer } from '@/components/survey/SurveyContainer'
 import abapaLogo from '@/assets/abapa-7ed0c.jpeg'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase/client'
+import { cn } from '@/lib/utils'
 
 export default function Index() {
   const { isAuthenticated } = useAuth()
+  const [dbStatus, setDbStatus] = useState<'loading' | 'active' | 'waiting'>('loading')
+
+  useEffect(() => {
+    const checkDb = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('fazendas')
+          .select('*', { count: 'exact', head: true })
+        if (error) throw error
+        setDbStatus(count && count > 0 ? 'active' : 'waiting')
+      } catch (err) {
+        setDbStatus('waiting')
+      }
+    }
+    checkDb()
+  }, [])
 
   return (
     <div className="flex flex-col h-[100dvh] bg-[#FAFAFA] relative overflow-hidden font-sans">
@@ -30,6 +49,29 @@ export default function Index() {
                 Levantamento de Demandas
               </p>
             </div>
+            {dbStatus !== 'loading' && (
+              <div
+                className={cn(
+                  'hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ml-2',
+                  dbStatus === 'active'
+                    ? 'bg-green-50 text-green-700 border-green-200'
+                    : 'bg-yellow-50 text-yellow-700 border-yellow-200',
+                )}
+                title={
+                  dbStatus === 'active'
+                    ? 'Banco de dados sincronizado'
+                    : 'Aguardando importação do CSV no Supabase'
+                }
+              >
+                <div
+                  className={cn(
+                    'w-1.5 h-1.5 rounded-full',
+                    dbStatus === 'active' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse',
+                  )}
+                />
+                {dbStatus === 'active' ? 'DB Ativo' : 'Aguardando Dados CSV'}
+              </div>
+            )}
           </div>
           <Link
             to={isAuthenticated ? '/dashboard' : '/login'}
