@@ -100,17 +100,22 @@ function IdentificationStep({ step, form, onNext }: any) {
     if (grupoWatch && grupoWatch !== 'Outro') {
       const loadFazendas = async () => {
         try {
-          const data = await getFazendasData()
-          const matchingFazendas = data
-            .filter((d) => d.grupo?.trim() === grupoWatch.trim())
-            .map((d) => d.fazenda?.trim())
-            .filter(Boolean)
+          const { data, error } = await supabase
+            .from('fazendas')
+            .select('fazenda')
+            .ilike('grupo', grupoWatch.trim())
+
+          if (error) throw error
+
+          const matchingFazendas = (data || []).map((d) => d.fazenda?.trim()).filter(Boolean)
 
           const uniqueFazendas = Array.from(new Set(matchingFazendas)).sort((a, b) =>
             a.localeCompare(b),
           ) as string[]
+
           setFazendas(uniqueFazendas)
         } catch (err) {
+          console.error('Erro ao carregar fazendas:', err)
           setFazendas([])
         }
       }
@@ -123,19 +128,34 @@ function IdentificationStep({ step, form, onNext }: any) {
   return (
     <div className="space-y-5 max-w-lg pb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {!loadingGrupos && grupos.length === 0 && (
-        <Alert className="bg-yellow-50 text-yellow-800 border-yellow-200">
-          <Database className="h-4 w-4 text-yellow-600" />
-          <AlertTitle className="text-yellow-800 font-semibold">
-            Aguardando Importação da Planilha
+        <Alert className="bg-red-50 text-red-900 border-red-200 shadow-sm">
+          <Database className="h-5 w-5 text-red-600" />
+          <AlertTitle className="text-red-900 font-bold text-base">
+            Ação Necessária: Importar Dados no Banco
           </AlertTitle>
-          <AlertDescription className="text-yellow-700 text-sm mt-1 flex flex-col gap-2">
+          <AlertDescription className="text-red-800 text-sm mt-2 flex flex-col gap-3">
             <p>
-              Por favor, importe a planilha anexa de grupos e fazendas diretamente no seu banco de
-              dados Supabase na tabela <strong>fazendas</strong> para que as opções apareçam aqui.
+              Os dados da planilha não podem ser inseridos automaticamente no código. Para que os
+              grupos e fazendas apareçam corretamente aqui, você deve{' '}
+              <strong>importar a planilha no seu banco de dados conectado (Supabase)</strong>.
             </p>
-            <p>
-              Você pode continuar escolhendo a opção <strong>"Outro (Não listado)"</strong> enquanto
-              os dados não estiverem disponíveis.
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Acesse o seu painel do Supabase.</li>
+              <li>
+                Abra a tabela <strong>fazendas</strong>.
+              </li>
+              <li>
+                Importe as linhas da planilha CSV/Excel para popular as colunas <code>grupo</code> e{' '}
+                <code>fazenda</code>.
+              </li>
+            </ul>
+            <p className="font-medium text-red-900 mt-1">
+              Caso ainda não tenha um backend conectado, conecte um via painel antes de importar os
+              dados.
+            </p>
+            <p className="text-red-700 mt-2">
+              Enquanto os dados não são importados, você pode utilizar a opção{' '}
+              <strong>"Outro (Não listado)"</strong> abaixo para continuar os testes.
             </p>
           </AlertDescription>
         </Alert>

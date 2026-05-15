@@ -52,24 +52,24 @@ export default function Index() {
             {dbStatus !== 'loading' && (
               <div
                 className={cn(
-                  'hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ml-2',
+                  'hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ml-2 cursor-help',
                   dbStatus === 'active'
                     ? 'bg-green-50 text-green-700 border-green-200'
-                    : 'bg-yellow-50 text-yellow-700 border-yellow-200',
+                    : 'bg-red-50 text-red-700 border-red-200',
                 )}
                 title={
                   dbStatus === 'active'
-                    ? 'Banco de dados sincronizado'
-                    : 'Aguardando importação do CSV no Supabase'
+                    ? 'Banco de dados sincronizado com sucesso'
+                    : 'ATENÇÃO: Importe a planilha no Supabase conectado (tabela fazendas)!'
                 }
               >
                 <div
                   className={cn(
                     'w-1.5 h-1.5 rounded-full',
-                    dbStatus === 'active' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse',
+                    dbStatus === 'active' ? 'bg-green-500' : 'bg-red-500 animate-pulse',
                   )}
                 />
-                {dbStatus === 'active' ? 'DB Ativo' : 'Aguardando Dados CSV'}
+                {dbStatus === 'active' ? 'DB Sincronizado' : 'Falta Importar Planilha'}
               </div>
             )}
           </div>
