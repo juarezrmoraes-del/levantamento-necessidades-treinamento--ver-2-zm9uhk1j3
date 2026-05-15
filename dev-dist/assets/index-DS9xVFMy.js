@@ -76980,39 +76980,43 @@ function Settings() {
 	const { user } = useAuth();
 	const { settings, updateSettings } = useMainStore();
 	const { addLog } = useAuditStore();
-	const [formData, setFormData] = (0, import_react.useState)(settings);
+	const [formData, setFormData] = (0, import_react.useState)(settings || {
+		scheduled_report_active: false,
+		scheduled_report_emails: "",
+		notification_email: ""
+	});
 	(0, import_react.useEffect)(() => {
-		setFormData(settings);
+		if (settings) setFormData(settings);
 	}, [settings]);
 	if (!user || user.role !== "Administrator") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/admin/Settings.tsx:26:7",
+		"data-uid": "src/pages/admin/Settings.tsx:34:7",
 		"data-prohibitions": "[editContent]",
 		className: "flex flex-col items-center justify-center h-[50vh] w-full space-y-8",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/admin/Settings.tsx:27:9",
+			"data-uid": "src/pages/admin/Settings.tsx:35:9",
 			"data-prohibitions": "[]",
 			className: "text-center space-y-4",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/pages/admin/Settings.tsx:28:11",
+				"data-uid": "src/pages/admin/Settings.tsx:36:11",
 				"data-prohibitions": "[]",
 				className: "text-2xl font-bold text-zinc-800",
 				children: "Acesso Restrito"
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/admin/Settings.tsx:29:11",
+				"data-uid": "src/pages/admin/Settings.tsx:37:11",
 				"data-prohibitions": "[]",
 				className: "text-zinc-500 max-w-md",
 				children: "Acesso restrito a Administradores. Faça login para visualizar e modificar configurações do sistema."
 			})]
 		}), !user && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-			"data-uid": "src/pages/admin/Settings.tsx:35:11",
+			"data-uid": "src/pages/admin/Settings.tsx:43:11",
 			"data-prohibitions": "[]",
 			to: "/login",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-				"data-uid": "src/pages/admin/Settings.tsx:36:13",
+				"data-uid": "src/pages/admin/Settings.tsx:44:13",
 				"data-prohibitions": "[]",
 				className: "bg-[#00a884] hover:bg-[#008f6f] text-white",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogIn, {
-					"data-uid": "src/pages/admin/Settings.tsx:37:15",
+					"data-uid": "src/pages/admin/Settings.tsx:45:15",
 					"data-prohibitions": "[editContent]",
 					className: "w-4 h-4 mr-2"
 				}), "Fazer Login"]
@@ -77037,119 +77041,119 @@ function Settings() {
 	const handleSendNow = () => {
 		toast({
 			title: "Relatório Enviado",
-			description: `Planilha de LNT enviada para: ${formData.scheduled_report_emails}`
+			description: `Planilha de LNT enviada para: ${formData?.scheduled_report_emails || ""}`
 		});
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/admin/Settings.tsx:70:5",
+		"data-uid": "src/pages/admin/Settings.tsx:78:5",
 		"data-prohibitions": "[editContent]",
 		className: "flex flex-col h-full w-full bg-slate-50 overflow-y-auto no-scrollbar",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/admin/Settings.tsx:71:7",
+			"data-uid": "src/pages/admin/Settings.tsx:79:7",
 			"data-prohibitions": "[editContent]",
 			className: "max-w-[800px] w-full space-y-6",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/admin/Settings.tsx:72:9",
+					"data-uid": "src/pages/admin/Settings.tsx:80:9",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/pages/admin/Settings.tsx:73:11",
+						"data-uid": "src/pages/admin/Settings.tsx:81:11",
 						"data-prohibitions": "[]",
 						className: "text-2xl font-bold text-zinc-900",
 						children: "Integrações e Notificações"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/admin/Settings.tsx:74:11",
+						"data-uid": "src/pages/admin/Settings.tsx:82:11",
 						"data-prohibitions": "[]",
 						className: "text-sm text-zinc-500",
 						children: "Configure alertas e envios automáticos dos relatórios."
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/admin/Settings.tsx:79:9",
+					"data-uid": "src/pages/admin/Settings.tsx:87:9",
 					"data-prohibitions": "[editContent]",
 					className: "grid gap-6",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/admin/Settings.tsx:80:11",
+						"data-uid": "src/pages/admin/Settings.tsx:88:11",
 						"data-prohibitions": "[editContent]",
 						className: "border-zinc-200 shadow-sm",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-							"data-uid": "src/pages/admin/Settings.tsx:81:13",
+							"data-uid": "src/pages/admin/Settings.tsx:89:13",
 							"data-prohibitions": "[]",
 							className: "pb-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/admin/Settings.tsx:82:15",
+								"data-uid": "src/pages/admin/Settings.tsx:90:15",
 								"data-prohibitions": "[]",
 								className: "flex items-center gap-2 text-lg",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
-									"data-uid": "src/pages/admin/Settings.tsx:83:17",
+									"data-uid": "src/pages/admin/Settings.tsx:91:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-5 h-5 text-indigo-500"
 								}), " Relatórios Agendados"]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-								"data-uid": "src/pages/admin/Settings.tsx:85:15",
+								"data-uid": "src/pages/admin/Settings.tsx:93:15",
 								"data-prohibitions": "[]",
 								children: "Envio automático de planilhas com os dados coletados a cada 12 horas."
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-							"data-uid": "src/pages/admin/Settings.tsx:89:13",
+							"data-uid": "src/pages/admin/Settings.tsx:97:13",
 							"data-prohibitions": "[editContent]",
 							className: "space-y-4",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/admin/Settings.tsx:90:15",
+									"data-uid": "src/pages/admin/Settings.tsx:98:15",
 									"data-prohibitions": "[editContent]",
 									className: "flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-zinc-100",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/admin/Settings.tsx:91:17",
+										"data-uid": "src/pages/admin/Settings.tsx:99:17",
 										"data-prohibitions": "[editContent]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/admin/Settings.tsx:92:19",
+											"data-uid": "src/pages/admin/Settings.tsx:100:19",
 											"data-prohibitions": "[editContent]",
-											className: `w-2.5 h-2.5 rounded-full ${formData.scheduled_report_active ? "bg-green-500" : "bg-zinc-300"}`
+											className: `w-2.5 h-2.5 rounded-full ${formData?.scheduled_report_active ? "bg-green-500" : "bg-zinc-300"}`
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/admin/Settings.tsx:95:19",
+											"data-uid": "src/pages/admin/Settings.tsx:103:19",
 											"data-prohibitions": "[editContent]",
 											className: "text-sm font-medium text-zinc-800",
-											children: formData.scheduled_report_active ? "Automação Ativa" : "Automação Inativa"
+											children: formData?.scheduled_report_active ? "Automação Ativa" : "Automação Inativa"
 										})]
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Switch, {
-										"data-uid": "src/pages/admin/Settings.tsx:99:17",
+										"data-uid": "src/pages/admin/Settings.tsx:107:17",
 										"data-prohibitions": "[editContent]",
-										checked: formData.scheduled_report_active,
-										onCheckedChange: (c) => setFormData({
-											...formData,
+										checked: !!formData?.scheduled_report_active,
+										onCheckedChange: (c) => setFormData((prev) => ({
+											...prev,
 											scheduled_report_active: c
-										})
+										}))
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/admin/Settings.tsx:104:15",
+									"data-uid": "src/pages/admin/Settings.tsx:114:15",
 									"data-prohibitions": "[]",
 									className: "space-y-2",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$2, {
-										"data-uid": "src/pages/admin/Settings.tsx:105:17",
+										"data-uid": "src/pages/admin/Settings.tsx:115:17",
 										"data-prohibitions": "[]",
 										children: "E-mails Destinatários (separados por vírgula)"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-										"data-uid": "src/pages/admin/Settings.tsx:106:17",
+										"data-uid": "src/pages/admin/Settings.tsx:116:17",
 										"data-prohibitions": "[editContent]",
-										value: formData.scheduled_report_emails,
-										onChange: (e) => setFormData({
-											...formData,
+										value: formData?.scheduled_report_emails || "",
+										onChange: (e) => setFormData((prev) => ({
+											...prev,
 											scheduled_report_emails: e.target.value
-										}),
+										})),
 										placeholder: "Ex: ct9@abapa.com.br, gerente.ct@abapa.com.br"
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-									"data-uid": "src/pages/admin/Settings.tsx:114:15",
+									"data-uid": "src/pages/admin/Settings.tsx:127:15",
 									"data-prohibitions": "[]",
 									variant: "outline",
 									onClick: handleSendNow,
 									className: "w-full sm:w-auto",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Send, {
-										"data-uid": "src/pages/admin/Settings.tsx:115:17",
+										"data-uid": "src/pages/admin/Settings.tsx:128:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-4 h-4 mr-2 text-indigo-500"
 									}), " Enviar Teste Agora"]
@@ -77157,60 +77161,60 @@ function Settings() {
 							]
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/admin/Settings.tsx:120:11",
+						"data-uid": "src/pages/admin/Settings.tsx:133:11",
 						"data-prohibitions": "[]",
 						className: "border-zinc-200 shadow-sm",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/admin/Settings.tsx:121:13",
+							"data-uid": "src/pages/admin/Settings.tsx:134:13",
 							"data-prohibitions": "[]",
 							className: "pb-4",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/admin/Settings.tsx:122:15",
+								"data-uid": "src/pages/admin/Settings.tsx:135:15",
 								"data-prohibitions": "[]",
 								className: "flex items-center gap-2 text-lg",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bell, {
-									"data-uid": "src/pages/admin/Settings.tsx:123:17",
+									"data-uid": "src/pages/admin/Settings.tsx:136:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-5 h-5 text-[#00a884]"
 								}), " Alertas Administrativos"]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/admin/Settings.tsx:126:13",
+							"data-uid": "src/pages/admin/Settings.tsx:139:13",
 							"data-prohibitions": "[]",
 							className: "space-y-4",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/admin/Settings.tsx:127:15",
+								"data-uid": "src/pages/admin/Settings.tsx:140:15",
 								"data-prohibitions": "[]",
 								className: "space-y-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$2, {
-									"data-uid": "src/pages/admin/Settings.tsx:128:17",
+									"data-uid": "src/pages/admin/Settings.tsx:141:17",
 									"data-prohibitions": "[]",
 									children: "E-mail Padrão para Notificações"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-									"data-uid": "src/pages/admin/Settings.tsx:129:17",
+									"data-uid": "src/pages/admin/Settings.tsx:142:17",
 									"data-prohibitions": "[editContent]",
 									type: "email",
-									value: formData.notification_email,
-									onChange: (e) => setFormData({
-										...formData,
+									value: formData?.notification_email || "",
+									onChange: (e) => setFormData((prev) => ({
+										...prev,
 										notification_email: e.target.value
-									})
+									}))
 								})]
 							})
 						})]
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/admin/Settings.tsx:139:9",
+					"data-uid": "src/pages/admin/Settings.tsx:154:9",
 					"data-prohibitions": "[]",
 					className: "flex justify-start pb-10",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/pages/admin/Settings.tsx:140:11",
+						"data-uid": "src/pages/admin/Settings.tsx:155:11",
 						"data-prohibitions": "[]",
 						onClick: handleSave,
 						className: "bg-[#00a884] hover:bg-[#008f6f] text-white shadow-sm px-8",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
-							"data-uid": "src/pages/admin/Settings.tsx:144:13",
+							"data-uid": "src/pages/admin/Settings.tsx:159:13",
 							"data-prohibitions": "[editContent]",
 							className: "mr-2 h-4 w-4"
 						}), " Salvar Configurações"]
@@ -78051,4 +78055,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DvqN6eja.js.map
+//# sourceMappingURL=index-DS9xVFMy.js.map

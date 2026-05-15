@@ -15,10 +15,18 @@ export default function Settings() {
   const { user } = useAuth()
   const { settings, updateSettings } = useMainStore()
   const { addLog } = useAuditStore()
-  const [formData, setFormData] = useState(settings)
+  const [formData, setFormData] = useState(
+    settings || {
+      scheduled_report_active: false,
+      scheduled_report_emails: '',
+      notification_email: '',
+    },
+  )
 
   useEffect(() => {
-    setFormData(settings)
+    if (settings) {
+      setFormData(settings)
+    }
   }, [settings])
 
   if (!user || user.role !== 'Administrator') {
@@ -62,7 +70,7 @@ export default function Settings() {
   const handleSendNow = () => {
     toast({
       title: 'Relatório Enviado',
-      description: `Planilha de LNT enviada para: ${formData.scheduled_report_emails}`,
+      description: `Planilha de LNT enviada para: ${formData?.scheduled_report_emails || ''}`,
     })
   }
 
@@ -90,23 +98,28 @@ export default function Settings() {
               <div className="flex items-center justify-between p-3 bg-zinc-50 rounded-lg border border-zinc-100">
                 <div className="flex items-center gap-2">
                   <div
-                    className={`w-2.5 h-2.5 rounded-full ${formData.scheduled_report_active ? 'bg-green-500' : 'bg-zinc-300'}`}
+                    className={`w-2.5 h-2.5 rounded-full ${formData?.scheduled_report_active ? 'bg-green-500' : 'bg-zinc-300'}`}
                   />
                   <span className="text-sm font-medium text-zinc-800">
-                    {formData.scheduled_report_active ? 'Automação Ativa' : 'Automação Inativa'}
+                    {formData?.scheduled_report_active ? 'Automação Ativa' : 'Automação Inativa'}
                   </span>
                 </div>
                 <Switch
-                  checked={formData.scheduled_report_active}
-                  onCheckedChange={(c) => setFormData({ ...formData, scheduled_report_active: c })}
+                  checked={!!formData?.scheduled_report_active}
+                  onCheckedChange={(c) =>
+                    setFormData((prev: any) => ({ ...prev, scheduled_report_active: c }))
+                  }
                 />
               </div>
               <div className="space-y-2">
                 <Label>E-mails Destinatários (separados por vírgula)</Label>
                 <Input
-                  value={formData.scheduled_report_emails}
+                  value={formData?.scheduled_report_emails || ''}
                   onChange={(e) =>
-                    setFormData({ ...formData, scheduled_report_emails: e.target.value })
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      scheduled_report_emails: e.target.value,
+                    }))
                   }
                   placeholder="Ex: ct9@abapa.com.br, gerente.ct@abapa.com.br"
                 />
@@ -128,8 +141,10 @@ export default function Settings() {
                 <Label>E-mail Padrão para Notificações</Label>
                 <Input
                   type="email"
-                  value={formData.notification_email}
-                  onChange={(e) => setFormData({ ...formData, notification_email: e.target.value })}
+                  value={formData?.notification_email || ''}
+                  onChange={(e) =>
+                    setFormData((prev: any) => ({ ...prev, notification_email: e.target.value }))
+                  }
                 />
               </div>
             </CardContent>
