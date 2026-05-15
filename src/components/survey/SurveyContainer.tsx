@@ -91,6 +91,7 @@ export function SurveyContainer() {
         const { data: fazendasData } = await supabase
           .from('fazendas')
           .select('grupo, email, fazenda')
+          .ilike('grupo', values.grupo)
 
         if (fazendasData && fazendasData.length > 0) {
           const matchingData = fazendasData.filter(
@@ -137,24 +138,32 @@ export function SurveyContainer() {
       }
 
       // Envia cópia para o email de notificação do sistema
-      const { data: settings } = await supabase
-        .from('system_settings')
-        .select('notification_email')
-        .single()
-      if (settings?.notification_email) {
-        await supabase.functions.invoke('send-survey-email', {
-          body: {
-            to: settings.notification_email,
-            protocol: leadData.id,
-            nome: values.nome,
-            fazenda: fazendasStr,
-            cursos: values.cursos,
-            vagas: values.curso_vagas,
-            vagas_homens: values.curso_vagas_homens,
-            vagas_mulheres: values.curso_vagas_mulheres,
-            is_admin: true,
-          },
-        })
+      try {
+        const { data: settings, error: settingsError } = await supabase
+          .from('system_settings')
+          .select('notification_email')
+          .single()
+
+        if (!settingsError && settings?.notification_email) {
+          await supabase.functions.invoke('send-survey-email', {
+            body: {
+              to: settings.notification_email,
+              protocol: leadData.id,
+              nome: values.nome,
+              fazenda: fazendasStr,
+              cursos: values.cursos,
+              vagas: values.curso_vagas,
+              vagas_homens: values.curso_vagas_homens,
+              vagas_mulheres: values.curso_vagas_mulheres,
+              is_admin: true,
+            },
+          })
+        }
+      } catch (settingsErr) {
+        console.warn(
+          'Tabela system_settings não encontrada ou erro ao buscar email de notificação',
+          settingsErr,
+        )
       }
 
       setIsSuccess(true)

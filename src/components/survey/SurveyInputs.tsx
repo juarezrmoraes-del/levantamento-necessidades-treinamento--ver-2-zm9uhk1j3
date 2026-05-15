@@ -27,6 +27,40 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Database } from 'lucide-react'
 
+let cachedFazendasData: any[] | null = null
+let fetchFazendasPromise: Promise<any[]> | null = null
+
+const getFazendasData = async () => {
+  if (cachedFazendasData) return cachedFazendasData
+  if (fetchFazendasPromise) return fetchFazendasPromise
+
+  fetchFazendasPromise = (async () => {
+    let allData: any[] = []
+    let from = 0
+    const step = 1000
+    let hasMore = true
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('fazendas')
+        .select('grupo, fazenda')
+        .range(from, from + step - 1)
+
+      if (error || !data || data.length === 0) {
+        hasMore = false
+      } else {
+        allData = [...allData, ...data]
+        from += step
+        if (data.length < step) hasMore = false
+      }
+    }
+    cachedFazendasData = allData
+    return allData
+  })()
+
+  return fetchFazendasPromise
+}
+
 function IdentificationStep({ step, form, onNext }: any) {
   const {
     watch,
@@ -48,15 +82,11 @@ function IdentificationStep({ step, form, onNext }: any) {
     const fetchGrupos = async () => {
       setLoadingGrupos(true)
       try {
-        const { data, error } = await supabase.from('fazendas').select('grupo').order('grupo')
-        if (data && !error) {
-          const uniqueGrupos = Array.from(
-            new Set(data.map((d) => d.grupo?.trim()).filter(Boolean)),
-          ).sort((a, b) => a.localeCompare(b)) as string[]
-          setGrupos(uniqueGrupos)
-        } else {
-          setGrupos([])
-        }
+        const data = await getFazendasData()
+        const uniqueGrupos = Array.from(
+          new Set(data.map((d) => d.grupo?.trim()).filter(Boolean)),
+        ).sort((a, b) => a.localeCompare(b)) as string[]
+        setGrupos(uniqueGrupos)
       } catch (err) {
         setGrupos([])
       } finally {
@@ -68,27 +98,23 @@ function IdentificationStep({ step, form, onNext }: any) {
 
   useEffect(() => {
     if (grupoWatch && grupoWatch !== 'Outro') {
-      const fetchFazendas = async () => {
+      const loadFazendas = async () => {
         try {
-          const { data, error } = await supabase.from('fazendas').select('grupo, fazenda')
-          if (data && !error) {
-            const matchingFazendas = data
-              .filter((d) => d.grupo?.trim() === grupoWatch.trim())
-              .map((d) => d.fazenda?.trim())
-              .filter(Boolean)
+          const data = await getFazendasData()
+          const matchingFazendas = data
+            .filter((d) => d.grupo?.trim() === grupoWatch.trim())
+            .map((d) => d.fazenda?.trim())
+            .filter(Boolean)
 
-            const uniqueFazendas = Array.from(new Set(matchingFazendas)).sort((a, b) =>
-              a.localeCompare(b),
-            ) as string[]
-            setFazendas(uniqueFazendas)
-          } else {
-            setFazendas([])
-          }
+          const uniqueFazendas = Array.from(new Set(matchingFazendas)).sort((a, b) =>
+            a.localeCompare(b),
+          ) as string[]
+          setFazendas(uniqueFazendas)
         } catch (err) {
           setFazendas([])
         }
       }
-      fetchFazendas()
+      loadFazendas()
     } else {
       setFazendas([])
     }

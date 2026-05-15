@@ -35,7 +35,7 @@ export const MAPA_MAQUINAS = [
     marcas: ['Valley', 'Lindsay', 'Netafim', 'Bauer Brasil', 'Focker', 'NaanDanJain'],
   },
   {
-    equipamento: 'Colheitadeiras (Pickers)',
+    equipamento: 'Colheitadeiras',
     keywords: ['colheitadeira'],
     marcas: ['John Deere', 'Case IH'],
   },

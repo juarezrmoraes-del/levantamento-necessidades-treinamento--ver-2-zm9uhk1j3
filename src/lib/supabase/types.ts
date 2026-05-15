@@ -93,6 +93,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sent_emails: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          error_message: string | null
+          id: string
+          status: string | null
+          subject: string | null
+          to: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          status?: string | null
+          subject?: string | null
+          to: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          status?: string | null
+          subject?: string | null
+          to?: string
+        }
+        Relationships: []
+      }
       survey_leads: {
         Row: {
           created_at: string | null
@@ -383,6 +413,14 @@ export const Constants = {
 //   active: boolean (nullable, default: true)
 //   department: text (nullable)
 //   created_at: timestamp with time zone (nullable, default: now())
+// Table: sent_emails
+//   id: uuid (not null, default: gen_random_uuid())
+//   created_at: timestamp with time zone (nullable, default: now())
+//   to: text (not null)
+//   subject: text (nullable)
+//   body: text (nullable)
+//   status: text (nullable, default: 'sent'::text)
+//   error_message: text (nullable)
 // Table: survey_leads
 //   id: uuid (not null, default: gen_random_uuid())
 //   nome: text (nullable)
@@ -416,6 +454,8 @@ export const Constants = {
 // Table: profiles
 //   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
 //   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
+// Table: sent_emails
+//   PRIMARY KEY sent_emails_pkey: PRIMARY KEY (id)
 // Table: survey_leads
 //   PRIMARY KEY survey_leads_pkey: PRIMARY KEY (id)
 
@@ -425,6 +465,11 @@ export const Constants = {
 //     USING: true
 // Table: profiles
 //   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
+// Table: sent_emails
+//   Policy "Anyone can insert sent_emails" (INSERT, PERMISSIVE) roles={anon,authenticated}
+//     WITH CHECK: true
+//   Policy "Authenticated can view sent_emails" (SELECT, PERMISSIVE) roles={authenticated}
 //     USING: true
 // Table: survey_leads
 //   Policy "Enable all operations for everyone" (ALL, PERMISSIVE) roles={public}
