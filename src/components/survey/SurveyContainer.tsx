@@ -136,6 +136,27 @@ export function SurveyContainer() {
         })
       }
 
+      // Envia cópia para o email de notificação do sistema
+      const { data: settings } = await supabase
+        .from('system_settings')
+        .select('notification_email')
+        .single()
+      if (settings?.notification_email) {
+        await supabase.functions.invoke('send-survey-email', {
+          body: {
+            to: settings.notification_email,
+            protocol: leadData.id,
+            nome: values.nome,
+            fazenda: fazendasStr,
+            cursos: values.cursos,
+            vagas: values.curso_vagas,
+            vagas_homens: values.curso_vagas_homens,
+            vagas_mulheres: values.curso_vagas_mulheres,
+            is_admin: true,
+          },
+        })
+      }
+
       setIsSuccess(true)
     } catch (err: any) {
       toast({

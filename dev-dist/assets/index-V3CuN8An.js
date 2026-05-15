@@ -44262,6 +44262,18 @@ function SurveyContainer() {
 				vagas_mulheres: values.curso_vagas_mulheres,
 				is_submitter: true
 			} });
+			const { data: settings } = await supabase$1.from("system_settings").select("notification_email").single();
+			if (settings?.notification_email) await supabase$1.functions.invoke("send-survey-email", { body: {
+				to: settings.notification_email,
+				protocol: leadData.id,
+				nome: values.nome,
+				fazenda: fazendasStr,
+				cursos: values.cursos,
+				vagas: values.curso_vagas,
+				vagas_homens: values.curso_vagas_homens,
+				vagas_mulheres: values.curso_vagas_mulheres,
+				is_admin: true
+			} });
 			setIsSuccess(true);
 		} catch (err) {
 			toast({
@@ -44274,34 +44286,34 @@ function SurveyContainer() {
 		}
 	};
 	if (isSuccess) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:153:7",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:174:7",
 		"data-prohibitions": "[]",
 		className: "flex flex-col items-center justify-center h-full p-8 text-center bg-white rounded-2xl shadow-sm animate-in fade-in zoom-in duration-500 max-w-2xl mx-auto my-8 border",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:154:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:175:9",
 				"data-prohibitions": "[]",
 				className: "w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:155:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:176:11",
 					"data-prohibitions": "[editContent]",
 					className: "w-10 h-10"
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:157:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:178:9",
 				"data-prohibitions": "[]",
 				className: "text-3xl font-bold text-slate-800 mb-3",
 				children: "Mapeamento Enviado!"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:158:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:179:9",
 				"data-prohibitions": "[]",
 				className: "text-slate-600 text-lg mb-8 max-w-md",
 				children: "Suas necessidades de treinamento foram registradas com sucesso. A equipe do Centro de Treinamento entrará em contato em breve."
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:162:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:183:9",
 				"data-prohibitions": "[]",
 				onClick: () => window.location.reload(),
 				size: "lg",
@@ -44311,35 +44323,35 @@ function SurveyContainer() {
 		]
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:174:5",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:195:5",
 		"data-prohibitions": "[editContent]",
 		className: "max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 h-full flex flex-col overflow-hidden",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyContainer.tsx:175:7",
+			"data-uid": "src/components/survey/SurveyContainer.tsx:196:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex items-center mb-8 shrink-0",
 			children: [
 				currentIdx > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:177:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:198:11",
 					"data-prohibitions": "[]",
 					onClick: handlePrev,
 					className: "flex items-center text-slate-500 hover:text-primary transition-colors font-medium mr-4 active:scale-95",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:181:13",
+						"data-uid": "src/components/survey/SurveyContainer.tsx:202:13",
 						"data-prohibitions": "[editContent]",
 						className: "w-5 h-5 mr-1"
 					}), "Voltar"]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:185:9",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:206:9",
 					"data-prohibitions": "[]",
 					className: "flex-1",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:186:11",
+						"data-uid": "src/components/survey/SurveyContainer.tsx:207:11",
 						"data-prohibitions": "[]",
 						className: "h-2 w-full bg-slate-100 rounded-full overflow-hidden",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/survey/SurveyContainer.tsx:187:13",
+							"data-uid": "src/components/survey/SurveyContainer.tsx:208:13",
 							"data-prohibitions": "[editContent]",
 							className: "h-full bg-primary transition-all duration-500 ease-out",
 							style: { width: `${Math.max(5, currentIdx / (STEPS_CONFIG.length - 1) * 100)}%` }
@@ -44347,7 +44359,7 @@ function SurveyContainer() {
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:193:9",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:214:9",
 					"data-prohibitions": "[editContent]",
 					className: "ml-4 text-sm font-bold text-slate-400 w-12 text-right",
 					children: [
@@ -44358,16 +44370,16 @@ function SurveyContainer() {
 				})
 			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyContainer.tsx:198:7",
+			"data-uid": "src/components/survey/SurveyContainer.tsx:219:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex-1 overflow-y-auto no-scrollbar pb-20 px-1",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:199:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:220:9",
 				"data-prohibitions": "[editContent]",
 				className: "text-2xl sm:text-3xl font-bold text-slate-800 mb-8 leading-tight",
 				children: step.title
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyInputs, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:203:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:224:9",
 				"data-prohibitions": "[editContent]",
 				step,
 				form,
@@ -78125,4 +78137,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-D9HIwxpc.js.map
+//# sourceMappingURL=index-V3CuN8An.js.map
