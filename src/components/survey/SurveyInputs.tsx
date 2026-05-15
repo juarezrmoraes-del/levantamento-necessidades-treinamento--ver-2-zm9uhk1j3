@@ -117,64 +117,6 @@ function IdentificationStep({ step, form, onNext }: any) {
 
       <div className="space-y-2">
         <Label className="text-base text-slate-600 font-semibold">
-          Nome Completo <span className="text-red-500">*</span>
-        </Label>
-        <Input
-          className={cn(
-            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
-            errors.nome && 'border-red-500',
-          )}
-          placeholder="Seu nome"
-          {...register('nome', { required: 'Nome é obrigatório' })}
-        />
-        {errors.nome && (
-          <span className="text-red-500 text-sm block">{errors.nome.message as string}</span>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-base text-slate-600 font-semibold">
-          WhatsApp (com DDD) <span className="text-red-500">*</span>
-        </Label>
-        <Input
-          className={cn(
-            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
-            errors.whatsapp && 'border-red-500',
-          )}
-          placeholder="(00) 00000-0000"
-          {...register('whatsapp', { required: 'WhatsApp é obrigatório' })}
-        />
-        {errors.whatsapp && (
-          <span className="text-red-500 text-sm block">{errors.whatsapp.message as string}</span>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-base text-slate-600 font-semibold">
-          E-mail (Para receber o extrato) <span className="text-red-500">*</span>
-        </Label>
-        <Input
-          type="email"
-          className={cn(
-            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
-            errors.email && 'border-red-500',
-          )}
-          placeholder="seu@email.com"
-          {...register('email', {
-            required: 'E-mail é obrigatório para envio do extrato',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'E-mail inválido',
-            },
-          })}
-        />
-        {errors.email && (
-          <span className="text-red-500 text-sm block">{errors.email.message as string}</span>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-base text-slate-600 font-semibold">
           Grupo <span className="text-red-500">*</span>
         </Label>
 
@@ -449,6 +391,64 @@ function IdentificationStep({ step, form, onNext }: any) {
           )}
         </div>
       )}
+
+      <div className="space-y-2 pt-4">
+        <Label className="text-base text-slate-600 font-semibold">
+          Nome Completo <span className="text-red-500">*</span>
+        </Label>
+        <Input
+          className={cn(
+            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+            errors.nome && 'border-red-500',
+          )}
+          placeholder="Seu nome"
+          {...register('nome', { required: 'Nome é obrigatório' })}
+        />
+        {errors.nome && (
+          <span className="text-red-500 text-sm block">{errors.nome.message as string}</span>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-base text-slate-600 font-semibold">
+          WhatsApp (com DDD) <span className="text-red-500">*</span>
+        </Label>
+        <Input
+          className={cn(
+            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+            errors.whatsapp && 'border-red-500',
+          )}
+          placeholder="(00) 00000-0000"
+          {...register('whatsapp', { required: 'WhatsApp é obrigatório' })}
+        />
+        {errors.whatsapp && (
+          <span className="text-red-500 text-sm block">{errors.whatsapp.message as string}</span>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-base text-slate-600 font-semibold">
+          E-mail (Para receber o extrato) <span className="text-red-500">*</span>
+        </Label>
+        <Input
+          type="email"
+          className={cn(
+            'h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white',
+            errors.email && 'border-red-500',
+          )}
+          placeholder="seu@email.com"
+          {...register('email', {
+            required: 'E-mail é obrigatório para envio do extrato',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'E-mail inválido',
+            },
+          })}
+        />
+        {errors.email && (
+          <span className="text-red-500 text-sm block">{errors.email.message as string}</span>
+        )}
+      </div>
 
       <div className="pt-4">
         <Button
