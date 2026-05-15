@@ -73395,15 +73395,31 @@ function Dashboard() {
 		let vTotal = 0;
 		let vHomens = 0;
 		let vMulheres = 0;
+		const marcasCount = {};
 		surveys.forEach((s) => {
-			if (s.curso_solicitado) coursesCount[s.curso_solicitado] = (coursesCount[s.curso_solicitado] || 0) + 1;
-			if (s.status === "Pendente" && s.fazenda_grupo) pendingSet.add(s.fazenda_grupo);
-			vTotal += parseInt(s.quantidade_colaboradores || "0") || 0;
-			vHomens += parseInt(s.vagas_homens || "0") || 0;
-			vMulheres += parseInt(s.vagas_mulheres || "0") || 0;
+			(Array.isArray(s.cursos) ? s.cursos : s.curso_solicitado ? [s.curso_solicitado] : []).forEach((c) => {
+				coursesCount[c] = (coursesCount[c] || 0) + 1;
+			});
+			const fazendaGrupo = s.grupo || s.fazenda_grupo || s.fazenda;
+			if ((s.status === "Pendente" || s.status === "in_progress") && fazendaGrupo) pendingSet.add(fazendaGrupo);
+			if (s.vagas && typeof s.vagas === "object") Object.values(s.vagas).forEach((v) => vTotal += parseInt(v) || 0);
+			else vTotal += parseInt(s.quantidade_colaboradores || "0") || 0;
+			if (s.vagas_homens && typeof s.vagas_homens === "object") Object.values(s.vagas_homens).forEach((v) => vHomens += parseInt(v) || 0);
+			else vHomens += parseInt(s.vagas_homens || "0") || 0;
+			if (s.vagas_mulheres && typeof s.vagas_mulheres === "object") Object.values(s.vagas_mulheres).forEach((v) => vMulheres += parseInt(v) || 0);
+			else vMulheres += parseInt(s.vagas_mulheres || "0") || 0;
+			if (s.detalhes_cursos && typeof s.detalhes_cursos === "object") Object.values(s.detalhes_cursos).forEach((marcasArr) => {
+				if (Array.isArray(marcasArr)) marcasArr.forEach((m) => {
+					marcasCount[m] = (marcasCount[m] || 0) + 1;
+				});
+			});
 		});
 		const mostReq = Object.entries(coursesCount).sort((a, b) => b[1] - a[1])[0];
-		const sortedMarcas = extractTopMarcas(surveys);
+		let sortedMarcas = Object.entries(marcasCount).map(([name, value]) => ({
+			name,
+			value
+		})).sort((a, b) => b.value - a.value).slice(0, 5);
+		if (sortedMarcas.length === 0) sortedMarcas = extractTopMarcas(surveys);
 		return {
 			total: surveys.length,
 			mostRequested: mostReq ? mostReq[0] : "Nenhum",
@@ -73428,7 +73444,7 @@ function Dashboard() {
 	const chartDataDepts = (0, import_react.useMemo)(() => {
 		const depts = {};
 		surveys.forEach((s) => {
-			const dept = s.fazenda_grupo || "Outros";
+			const dept = s.grupo || s.fazenda_grupo || s.fazenda || "Outros";
 			depts[dept] = (depts[dept] || 0) + 1;
 		});
 		return Object.entries(depts).map(([name, value]) => ({
@@ -73443,7 +73459,8 @@ function Dashboard() {
 			Baixa: 0
 		};
 		surveys.forEach((s) => {
-			if (s.prioridade) priorities[s.prioridade]++;
+			const prio = s.prioridade || "Média";
+			if (priorities[prio] !== void 0) priorities[prio]++;
 		});
 		return Object.entries(priorities).map(([name, value]) => ({
 			name,
@@ -73452,54 +73469,54 @@ function Dashboard() {
 	}, [surveys]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/admin/Dashboard.tsx:90:7",
+			"data-uid": "src/pages/admin/Dashboard.tsx:131:7",
 			"data-prohibitions": "[]",
 			className: "flex flex-col gap-1 mb-6",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-				"data-uid": "src/pages/admin/Dashboard.tsx:91:9",
+				"data-uid": "src/pages/admin/Dashboard.tsx:132:9",
 				"data-prohibitions": "[]",
 				className: "text-2xl font-bold tracking-tight text-slate-900",
 				children: "Visão Geral"
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/admin/Dashboard.tsx:92:9",
+				"data-uid": "src/pages/admin/Dashboard.tsx:133:9",
 				"data-prohibitions": "[]",
 				className: "text-slate-500",
 				children: "Métricas e estatísticas consolidadas dos levantamentos de necessidades de treinamento."
 			})]
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/admin/Dashboard.tsx:97:7",
+			"data-uid": "src/pages/admin/Dashboard.tsx:138:7",
 			"data-prohibitions": "[editContent]",
 			className: "grid gap-4 md:grid-cols-2 lg:grid-cols-4",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:98:9",
+					"data-uid": "src/pages/admin/Dashboard.tsx:139:9",
 					"data-prohibitions": "[editContent]",
 					className: "shadow-sm border-slate-200",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:99:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:140:11",
 						"data-prohibitions": "[]",
 						className: "flex flex-row items-center justify-between pb-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:100:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:141:13",
 							"data-prohibitions": "[]",
 							className: "text-sm font-medium text-slate-600",
 							children: "Total de Solicitações"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileStack, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:103:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:144:13",
 							"data-prohibitions": "[editContent]",
 							className: "h-4 w-4 text-[#00a884]"
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:105:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:146:11",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:106:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:147:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-3xl font-bold text-slate-900",
 							children: total
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:107:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:148:13",
 							"data-prohibitions": "[]",
 							className: "text-xs text-slate-500 mt-1",
 							children: "respostas recebidas"
@@ -73507,33 +73524,33 @@ function Dashboard() {
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:110:9",
+					"data-uid": "src/pages/admin/Dashboard.tsx:151:9",
 					"data-prohibitions": "[editContent]",
 					className: "shadow-sm border-slate-200",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:111:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:152:11",
 						"data-prohibitions": "[]",
 						className: "flex flex-row items-center justify-between pb-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:112:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:153:13",
 							"data-prohibitions": "[]",
 							className: "text-sm font-medium text-slate-600",
 							children: "Treinamento Mais Requisitado"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BookOpen, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:115:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:156:13",
 							"data-prohibitions": "[editContent]",
 							className: "h-4 w-4 text-blue-500"
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:117:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:158:11",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:118:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:159:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-lg font-bold text-slate-900 truncate leading-tight mt-1",
 							children: mostRequested
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:121:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:162:13",
 							"data-prohibitions": "[]",
 							className: "text-xs text-slate-500 mt-2",
 							children: "maior demanda atual"
@@ -73541,33 +73558,33 @@ function Dashboard() {
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:124:9",
+					"data-uid": "src/pages/admin/Dashboard.tsx:165:9",
 					"data-prohibitions": "[editContent]",
 					className: "shadow-sm border-slate-200",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:125:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:166:11",
 						"data-prohibitions": "[]",
 						className: "flex flex-row items-center justify-between pb-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:126:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:167:13",
 							"data-prohibitions": "[]",
 							className: "text-sm font-medium text-slate-600",
 							children: "Departamentos Pendentes"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleAlert, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:129:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:170:13",
 							"data-prohibitions": "[editContent]",
 							className: "h-4 w-4 text-amber-500"
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:131:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:172:11",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:132:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:173:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-3xl font-bold text-slate-900",
 							children: pendingDepts
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:133:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:174:13",
 							"data-prohibitions": "[]",
 							className: "text-xs text-slate-500 mt-1",
 							children: "aguardando aprovação"
@@ -73575,42 +73592,42 @@ function Dashboard() {
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:136:9",
+					"data-uid": "src/pages/admin/Dashboard.tsx:177:9",
 					"data-prohibitions": "[editContent]",
 					className: "shadow-sm border-slate-200",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:137:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:178:11",
 						"data-prohibitions": "[]",
 						className: "flex flex-row items-center justify-between pb-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:138:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:179:13",
 							"data-prohibitions": "[]",
 							className: "text-sm font-medium text-slate-600",
 							children: "Total de Vagas"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users$1, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:139:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:180:13",
 							"data-prohibitions": "[editContent]",
 							className: "h-4 w-4 text-indigo-500"
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:141:11",
+						"data-uid": "src/pages/admin/Dashboard.tsx:182:11",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:142:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:183:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-3xl font-bold text-slate-900",
 							children: totalVagas
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/admin/Dashboard.tsx:143:13",
+							"data-uid": "src/pages/admin/Dashboard.tsx:184:13",
 							"data-prohibitions": "[editContent]",
 							className: "flex gap-3 mt-1 text-xs text-slate-500",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-								"data-uid": "src/pages/admin/Dashboard.tsx:144:15",
+								"data-uid": "src/pages/admin/Dashboard.tsx:185:15",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-center gap-1",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(User, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:145:17",
+										"data-uid": "src/pages/admin/Dashboard.tsx:186:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-3 h-3 text-sky-600"
 									}),
@@ -73619,12 +73636,12 @@ function Dashboard() {
 									" M"
 								]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-								"data-uid": "src/pages/admin/Dashboard.tsx:147:15",
+								"data-uid": "src/pages/admin/Dashboard.tsx:188:15",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-center gap-1",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(User, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:148:17",
+										"data-uid": "src/pages/admin/Dashboard.tsx:189:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-3 h-3 text-rose-500"
 									}),
@@ -73639,32 +73656,32 @@ function Dashboard() {
 			]
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/admin/Dashboard.tsx:155:7",
+			"data-uid": "src/pages/admin/Dashboard.tsx:196:7",
 			"data-prohibitions": "[editContent]",
 			className: "grid gap-6 md:grid-cols-2 mt-6",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/admin/Dashboard.tsx:156:9",
+				"data-uid": "src/pages/admin/Dashboard.tsx:197:9",
 				"data-prohibitions": "[]",
 				className: "shadow-sm border-slate-200",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:157:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:198:11",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:158:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:199:13",
 						"data-prohibitions": "[]",
 						className: "text-lg text-slate-800",
 						children: "Necessidades por Departamento"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:159:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:200:13",
 						"data-prohibitions": "[]",
 						children: "Top 5 departamentos com mais solicitações"
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:161:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:202:11",
 					"data-prohibitions": "[]",
 					className: "h-[300px] w-full pl-0",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartContainer, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:162:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:203:13",
 						"data-prohibitions": "[]",
 						config: { value: {
 							label: "Solicitações",
@@ -73672,12 +73689,12 @@ function Dashboard() {
 						} },
 						className: "h-full w-full",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResponsiveContainer, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:166:15",
+							"data-uid": "src/pages/admin/Dashboard.tsx:207:15",
 							"data-prohibitions": "[]",
 							width: "100%",
 							height: "100%",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BarChart, {
-								"data-uid": "src/pages/admin/Dashboard.tsx:167:17",
+								"data-uid": "src/pages/admin/Dashboard.tsx:208:17",
 								"data-prohibitions": "[]",
 								data: chartDataDepts,
 								layout: "vertical",
@@ -73689,14 +73706,14 @@ function Dashboard() {
 								},
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CartesianGrid, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:172:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:213:19",
 										"data-prohibitions": "[editContent]",
 										strokeDasharray: "3 3",
 										horizontal: false,
 										stroke: "#e2e8f0"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(XAxis, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:173:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:214:19",
 										"data-prohibitions": "[editContent]",
 										type: "number",
 										stroke: "#64748b",
@@ -73705,7 +73722,7 @@ function Dashboard() {
 										axisLine: false
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(YAxis, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:180:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:221:19",
 										"data-prohibitions": "[editContent]",
 										dataKey: "name",
 										type: "category",
@@ -73716,16 +73733,16 @@ function Dashboard() {
 										width: 100
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltip, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:189:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:230:19",
 										"data-prohibitions": "[editContent]",
 										cursor: { fill: "#f1f5f9" },
 										content: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltipContent, {
-											"data-uid": "src/pages/admin/Dashboard.tsx:189:71",
+											"data-uid": "src/pages/admin/Dashboard.tsx:230:71",
 											"data-prohibitions": "[editContent]"
 										})
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bar, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:190:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:231:19",
 										"data-prohibitions": "[editContent]",
 										dataKey: "value",
 										fill: "#00a884",
@@ -73743,41 +73760,41 @@ function Dashboard() {
 					})
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/admin/Dashboard.tsx:197:9",
+				"data-uid": "src/pages/admin/Dashboard.tsx:238:9",
 				"data-prohibitions": "[editContent]",
 				className: "shadow-sm border-slate-200",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:198:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:239:11",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:199:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:240:13",
 						"data-prohibitions": "[]",
 						className: "text-lg text-slate-800",
 						children: "Distribuição de Prioridades"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:200:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:241:13",
 						"data-prohibitions": "[]",
 						children: "Volume de treinamentos por nível de urgência"
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:202:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:243:11",
 					"data-prohibitions": "[editContent]",
 					className: "h-[300px] w-full flex items-center justify-center",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartContainer, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:203:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:244:13",
 						"data-prohibitions": "[editContent]",
 						config: {},
 						className: "h-full w-full",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResponsiveContainer, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:204:15",
+							"data-uid": "src/pages/admin/Dashboard.tsx:245:15",
 							"data-prohibitions": "[editContent]",
 							width: "100%",
 							height: "100%",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(PieChart, {
-								"data-uid": "src/pages/admin/Dashboard.tsx:205:17",
+								"data-uid": "src/pages/admin/Dashboard.tsx:246:17",
 								"data-prohibitions": "[editContent]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pie, {
-									"data-uid": "src/pages/admin/Dashboard.tsx:206:19",
+									"data-uid": "src/pages/admin/Dashboard.tsx:247:19",
 									"data-prohibitions": "[editContent]",
 									data: chartDataPriority,
 									cx: "50%",
@@ -73787,15 +73804,15 @@ function Dashboard() {
 									paddingAngle: 5,
 									dataKey: "value",
 									children: chartDataPriority.map((entry, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Cell, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:216:23",
+										"data-uid": "src/pages/admin/Dashboard.tsx:257:23",
 										"data-prohibitions": "[editContent]",
 										fill: COLORS[index % COLORS.length]
 									}, `cell-${index}`))
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltip, {
-									"data-uid": "src/pages/admin/Dashboard.tsx:219:19",
+									"data-uid": "src/pages/admin/Dashboard.tsx:260:19",
 									"data-prohibitions": "[editContent]",
 									content: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltipContent, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:219:42",
+										"data-uid": "src/pages/admin/Dashboard.tsx:260:42",
 										"data-prohibitions": "[editContent]"
 									})
 								})]
@@ -73806,45 +73823,45 @@ function Dashboard() {
 			})]
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/admin/Dashboard.tsx:227:7",
+			"data-uid": "src/pages/admin/Dashboard.tsx:268:7",
 			"data-prohibitions": "[editContent]",
 			className: "grid gap-6 md:grid-cols-2 mt-6",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/admin/Dashboard.tsx:228:9",
+				"data-uid": "src/pages/admin/Dashboard.tsx:269:9",
 				"data-prohibitions": "[editContent]",
 				className: "shadow-sm border-slate-200",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:229:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:270:11",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:230:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:271:13",
 						"data-prohibitions": "[]",
 						className: "text-lg text-slate-800",
 						children: "Vagas por Sexo"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:231:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:272:13",
 						"data-prohibitions": "[]",
 						children: "Distribuição de vagas entre homens e mulheres"
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:233:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:274:11",
 					"data-prohibitions": "[editContent]",
 					className: "h-[300px] w-full flex items-center justify-center",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartContainer, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:234:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:275:13",
 						"data-prohibitions": "[editContent]",
 						config: {},
 						className: "h-full w-full",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResponsiveContainer, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:235:15",
+							"data-uid": "src/pages/admin/Dashboard.tsx:276:15",
 							"data-prohibitions": "[editContent]",
 							width: "100%",
 							height: "100%",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(PieChart, {
-								"data-uid": "src/pages/admin/Dashboard.tsx:236:17",
+								"data-uid": "src/pages/admin/Dashboard.tsx:277:17",
 								"data-prohibitions": "[editContent]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pie, {
-									"data-uid": "src/pages/admin/Dashboard.tsx:237:19",
+									"data-uid": "src/pages/admin/Dashboard.tsx:278:19",
 									"data-prohibitions": "[editContent]",
 									data: chartDataGender,
 									cx: "50%",
@@ -73854,15 +73871,15 @@ function Dashboard() {
 									paddingAngle: 5,
 									dataKey: "value",
 									children: chartDataGender.map((entry, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Cell, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:247:23",
+										"data-uid": "src/pages/admin/Dashboard.tsx:288:23",
 										"data-prohibitions": "[editContent]",
 										fill: entry.fill
 									}, `cell-${index}`))
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltip, {
-									"data-uid": "src/pages/admin/Dashboard.tsx:250:19",
+									"data-uid": "src/pages/admin/Dashboard.tsx:291:19",
 									"data-prohibitions": "[editContent]",
 									content: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltipContent, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:250:42",
+										"data-uid": "src/pages/admin/Dashboard.tsx:291:42",
 										"data-prohibitions": "[editContent]"
 									})
 								})]
@@ -73871,28 +73888,28 @@ function Dashboard() {
 					})
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/admin/Dashboard.tsx:257:9",
+				"data-uid": "src/pages/admin/Dashboard.tsx:298:9",
 				"data-prohibitions": "[]",
 				className: "shadow-sm border-slate-200",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:258:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:299:11",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:259:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:300:13",
 						"data-prohibitions": "[]",
 						className: "text-lg text-slate-800",
 						children: "Top Marcas / Fabricantes"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:260:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:301:13",
 						"data-prohibitions": "[]",
 						children: "Principais marcas solicitadas em treinamentos"
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/admin/Dashboard.tsx:262:11",
+					"data-uid": "src/pages/admin/Dashboard.tsx:303:11",
 					"data-prohibitions": "[]",
 					className: "h-[300px] w-full pl-0",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartContainer, {
-						"data-uid": "src/pages/admin/Dashboard.tsx:263:13",
+						"data-uid": "src/pages/admin/Dashboard.tsx:304:13",
 						"data-prohibitions": "[]",
 						config: { value: {
 							label: "Solicitações",
@@ -73900,12 +73917,12 @@ function Dashboard() {
 						} },
 						className: "h-full w-full",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResponsiveContainer, {
-							"data-uid": "src/pages/admin/Dashboard.tsx:267:15",
+							"data-uid": "src/pages/admin/Dashboard.tsx:308:15",
 							"data-prohibitions": "[]",
 							width: "100%",
 							height: "100%",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BarChart, {
-								"data-uid": "src/pages/admin/Dashboard.tsx:268:17",
+								"data-uid": "src/pages/admin/Dashboard.tsx:309:17",
 								"data-prohibitions": "[]",
 								data: topMarcas,
 								layout: "vertical",
@@ -73917,14 +73934,14 @@ function Dashboard() {
 								},
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CartesianGrid, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:273:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:314:19",
 										"data-prohibitions": "[editContent]",
 										strokeDasharray: "3 3",
 										horizontal: false,
 										stroke: "#e2e8f0"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(XAxis, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:274:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:315:19",
 										"data-prohibitions": "[editContent]",
 										type: "number",
 										stroke: "#64748b",
@@ -73933,7 +73950,7 @@ function Dashboard() {
 										axisLine: false
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(YAxis, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:281:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:322:19",
 										"data-prohibitions": "[editContent]",
 										dataKey: "name",
 										type: "category",
@@ -73945,16 +73962,16 @@ function Dashboard() {
 										tickFormatter: (val) => val.length > 15 ? val.substring(0, 15) + "..." : val
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltip, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:291:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:332:19",
 										"data-prohibitions": "[editContent]",
 										cursor: { fill: "#f1f5f9" },
 										content: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartTooltipContent, {
-											"data-uid": "src/pages/admin/Dashboard.tsx:291:71",
+											"data-uid": "src/pages/admin/Dashboard.tsx:332:71",
 											"data-prohibitions": "[editContent]"
 										})
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bar, {
-										"data-uid": "src/pages/admin/Dashboard.tsx:292:19",
+										"data-uid": "src/pages/admin/Dashboard.tsx:333:19",
 										"data-prohibitions": "[editContent]",
 										dataKey: "value",
 										fill: "#8b5cf6",
@@ -78034,4 +78051,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DNR7dwSE.js.map
+//# sourceMappingURL=index-BH2m_m16.js.map

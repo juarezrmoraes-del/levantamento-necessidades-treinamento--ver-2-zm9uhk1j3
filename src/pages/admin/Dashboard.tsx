@@ -28,22 +28,62 @@ export default function Dashboard() {
       let vTotal = 0
       let vHomens = 0
       let vMulheres = 0
+      const marcasCount: Record<string, number> = {}
 
-      surveys.forEach((s) => {
-        if (s.curso_solicitado) {
-          coursesCount[s.curso_solicitado] = (coursesCount[s.curso_solicitado] || 0) + 1
-        }
-        if (s.status === 'Pendente' && s.fazenda_grupo) {
-          pendingSet.add(s.fazenda_grupo)
+      surveys.forEach((s: any) => {
+        const cursosList = Array.isArray(s.cursos)
+          ? s.cursos
+          : s.curso_solicitado
+            ? [s.curso_solicitado]
+            : []
+        cursosList.forEach((c: string) => {
+          coursesCount[c] = (coursesCount[c] || 0) + 1
+        })
+
+        const fazendaGrupo = s.grupo || s.fazenda_grupo || s.fazenda
+        if ((s.status === 'Pendente' || s.status === 'in_progress') && fazendaGrupo) {
+          pendingSet.add(fazendaGrupo)
         }
 
-        vTotal += parseInt(s.quantidade_colaboradores || '0') || 0
-        vHomens += parseInt(s.vagas_homens || '0') || 0
-        vMulheres += parseInt(s.vagas_mulheres || '0') || 0
+        if (s.vagas && typeof s.vagas === 'object') {
+          Object.values(s.vagas).forEach((v: any) => (vTotal += parseInt(v) || 0))
+        } else {
+          vTotal += parseInt(s.quantidade_colaboradores || '0') || 0
+        }
+
+        if (s.vagas_homens && typeof s.vagas_homens === 'object') {
+          Object.values(s.vagas_homens).forEach((v: any) => (vHomens += parseInt(v) || 0))
+        } else {
+          vHomens += parseInt(s.vagas_homens || '0') || 0
+        }
+
+        if (s.vagas_mulheres && typeof s.vagas_mulheres === 'object') {
+          Object.values(s.vagas_mulheres).forEach((v: any) => (vMulheres += parseInt(v) || 0))
+        } else {
+          vMulheres += parseInt(s.vagas_mulheres || '0') || 0
+        }
+
+        if (s.detalhes_cursos && typeof s.detalhes_cursos === 'object') {
+          Object.values(s.detalhes_cursos).forEach((marcasArr: any) => {
+            if (Array.isArray(marcasArr)) {
+              marcasArr.forEach((m: string) => {
+                marcasCount[m] = (marcasCount[m] || 0) + 1
+              })
+            }
+          })
+        }
       })
 
       const mostReq = Object.entries(coursesCount).sort((a, b) => b[1] - a[1])[0]
-      const sortedMarcas = extractTopMarcas(surveys)
+
+      let sortedMarcas = Object.entries(marcasCount)
+        .map(([name, value]) => ({ name, value }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 5)
+
+      if (sortedMarcas.length === 0) {
+        sortedMarcas = extractTopMarcas(surveys)
+      }
 
       return {
         total: surveys.length,
@@ -65,8 +105,8 @@ export default function Dashboard() {
 
   const chartDataDepts = useMemo(() => {
     const depts: Record<string, number> = {}
-    surveys.forEach((s) => {
-      const dept = s.fazenda_grupo || 'Outros'
+    surveys.forEach((s: any) => {
+      const dept = s.grupo || s.fazenda_grupo || s.fazenda || 'Outros'
       depts[dept] = (depts[dept] || 0) + 1
     })
     return Object.entries(depts)
@@ -77,9 +117,10 @@ export default function Dashboard() {
 
   const chartDataPriority = useMemo(() => {
     const priorities = { Alta: 0, Média: 0, Baixa: 0 }
-    surveys.forEach((s) => {
-      if (s.prioridade) {
-        priorities[s.prioridade as keyof typeof priorities]++
+    surveys.forEach((s: any) => {
+      const prio = s.prioridade || 'Média'
+      if (priorities[prio as keyof typeof priorities] !== undefined) {
+        priorities[prio as keyof typeof priorities]++
       }
     })
     return Object.entries(priorities).map(([name, value]) => ({ name, value }))
