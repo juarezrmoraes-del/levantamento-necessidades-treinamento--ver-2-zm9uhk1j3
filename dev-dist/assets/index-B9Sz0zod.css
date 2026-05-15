@@ -1175,10 +1175,6 @@ body{
   width: 0.25rem;
 }
 
-.w-1\.5{
-  width: 0.375rem;
-}
-
 .w-10{
   width: 2.5rem;
 }
@@ -1567,10 +1563,6 @@ body{
 
 .cursor-default{
   cursor: default;
-}
-
-.cursor-help{
-  cursor: help;
 }
 
 .cursor-not-allowed{
@@ -2229,11 +2221,6 @@ body{
 
 .bg-red-50\/50{
   background-color: rgb(254 242 242 / 0.5);
-}
-
-.bg-red-500{
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
 }
 
 .bg-rose-100{

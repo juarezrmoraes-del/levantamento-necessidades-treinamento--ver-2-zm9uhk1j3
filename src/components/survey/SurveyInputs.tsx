@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getCursosCategory, hasMachineCourse, getMarcasForCourse } from '@/lib/survey-flow'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronsUpDown, Plus, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
@@ -15,7 +15,16 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from '@/components/ui/command'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { toast } from '@/hooks/use-toast'
 import {
   Accordion,
   AccordionItem,
@@ -25,7 +34,6 @@ import {
 import { supabase } from '@/lib/supabase/client'
 import { Card, CardContent } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Database } from 'lucide-react'
 
 let cachedFazendasData: any[] | null = null
 let fetchFazendasPromise: Promise<any[]> | null = null
@@ -75,8 +83,65 @@ function IdentificationStep({ step, form, onNext }: any) {
   const [openGrupo, setOpenGrupo] = useState(false)
   const [openFazenda, setOpenFazenda] = useState(false)
 
+  const [openNewGroupDialog, setOpenNewGroupDialog] = useState(false)
+  const [newGroupName, setNewGroupName] = useState('')
+  const [isCreatingGroup, setIsCreatingGroup] = useState(false)
+
   const grupoWatch = watch('grupo')
   const fazendaWatch = watch('fazenda') || []
+
+  const handleCreateGroup = async () => {
+    if (!newGroupName.trim()) return
+    setIsCreatingGroup(true)
+    try {
+      const name = newGroupName.trim()
+
+      const exists = grupos.some((g) => g.toUpperCase() === name.toUpperCase())
+      if (exists) {
+        toast({
+          title: 'Grupo já existe',
+          description: 'Este grupo já está na lista.',
+          variant: 'destructive',
+        })
+        setIsCreatingGroup(false)
+        return
+      }
+
+      const { error } = await supabase.from('fazendas').insert([
+        {
+          grupo: name,
+          fazenda: null,
+        },
+      ])
+
+      if (error) throw error
+
+      setGrupos((prev) => [...prev, name].sort((a, b) => a.localeCompare(b)))
+
+      setValue('grupo', name, { shouldValidate: true })
+      setValue('fazenda', [])
+      clearErrors('grupo')
+
+      if (cachedFazendasData) {
+        cachedFazendasData.push({ grupo: name, fazenda: null })
+      }
+
+      setOpenNewGroupDialog(false)
+      setNewGroupName('')
+      toast({
+        title: 'Grupo criado',
+        description: 'O novo grupo foi adicionado com sucesso.',
+      })
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao criar grupo',
+        description: error.message || 'Não foi possível adicionar o grupo.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsCreatingGroup(false)
+    }
+  }
 
   useEffect(() => {
     const fetchGrupos = async () => {
@@ -243,10 +308,67 @@ function IdentificationStep({ step, form, onNext }: any) {
                     Outro (Não listado)
                   </CommandItem>
                 </CommandGroup>
+                <CommandSeparator />
+                <CommandGroup>
+                  <CommandItem
+                    onSelect={() => {
+                      setOpenGrupo(false)
+                      setOpenNewGroupDialog(true)
+                    }}
+                    className="text-primary font-medium cursor-pointer flex items-center py-3"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Adicionar Novo Grupo
+                  </CommandItem>
+                </CommandGroup>
               </CommandList>
             </Command>
           </PopoverContent>
         </Popover>
+
+        <Dialog open={openNewGroupDialog} onOpenChange={setOpenNewGroupDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Criar Novo Grupo</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <div className="space-y-3">
+                <Label htmlFor="new-group-name" className="text-sm font-semibold text-slate-700">
+                  Nome do Grupo
+                </Label>
+                <Input
+                  id="new-group-name"
+                  placeholder="Ex: Grupo Agrícola São João"
+                  value={newGroupName}
+                  onChange={(e) => setNewGroupName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      handleCreateGroup()
+                    }
+                  }}
+                  className="h-12"
+                  autoFocus
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setOpenNewGroupDialog(false)}
+                disabled={isCreatingGroup}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleCreateGroup}
+                disabled={isCreatingGroup || !newGroupName.trim()}
+              >
+                {isCreatingGroup ? 'Salvando...' : 'Salvar Grupo'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         {/* Input escondido para manter o react-hook-form preenchido e poder fazer o hook das validações */}
         <input type="hidden" {...register('grupo', { required: 'Grupo é obrigatório' })} />
 
@@ -288,7 +410,7 @@ function IdentificationStep({ step, form, onNext }: any) {
                 variant="outline"
                 role="combobox"
                 aria-expanded={openFazenda}
-                disabled={!grupoWatch || fazendas.length === 0}
+                disabled={!grupoWatch}
                 className={cn(
                   'w-full justify-between min-h-[3.5rem] h-auto py-2 text-lg bg-white border-slate-300 disabled:opacity-50 font-normal hover:bg-slate-50',
                   (!fazendaWatch || fazendaWatch.length === 0) && 'text-slate-400',
