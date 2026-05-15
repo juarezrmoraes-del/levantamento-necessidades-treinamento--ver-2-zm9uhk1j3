@@ -24,7 +24,7 @@ export default function Login() {
     e.preventDefault()
     if (email && password) {
       setIsLoading(true)
-      const success = await login(email, password)
+      const success = await login(email.trim(), password)
       if (!success) {
         setIsLoading(false)
       }

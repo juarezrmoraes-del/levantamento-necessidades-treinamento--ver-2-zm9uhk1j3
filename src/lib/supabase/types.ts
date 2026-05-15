@@ -427,11 +427,7 @@ export const Constants = {
 //   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
 //     USING: true
 // Table: survey_leads
-//   Policy "Enable insert for anonymous" (INSERT, PERMISSIVE) roles={public}
-//     WITH CHECK: true
-//   Policy "Enable select for authenticated" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: true
-//   Policy "Enable update for authenticated" (UPDATE, PERMISSIVE) roles={authenticated}
+//   Policy "Enable all operations for everyone" (ALL, PERMISSIVE) roles={public}
 //     USING: true
 //     WITH CHECK: true
 

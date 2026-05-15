@@ -44843,7 +44843,7 @@ function Login() {
 		e.preventDefault();
 		if (email && password) {
 			setIsLoading(true);
-			if (!await login(email, password)) setIsLoading(false);
+			if (!await login(email.trim(), password)) setIsLoading(false);
 		}
 	};
 	if (authLoading || isAuthenticated) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -78051,4 +78051,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BH2m_m16.js.map
+//# sourceMappingURL=index-DvqN6eja.js.map
