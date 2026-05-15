@@ -67,11 +67,6 @@ export const MAPA_MAQUINAS = [
     marcas: ['Randon', 'Facchini', 'Librelato', 'Guerra'],
   },
   {
-    equipamento: 'Veículos 4x4 (Pickups)',
-    keywords: ['pickup', '4x4', 'veículo'],
-    marcas: ['Toyota', 'Ford', 'RAM', 'Mitsubishi', 'Chevrolet (S10)', 'VW (Amarok)'],
-  },
-  {
     equipamento: 'Softwares e IA',
     keywords: ['software', 'sistema agrícola', 'ia', 'monitoramento'],
     marcas: ['Climate FieldView', 'Trimble', 'Solinftec', 'Agrosmart'],
@@ -134,7 +129,6 @@ export const getCursosCategory = (cultura: string, setor: string) => {
     'Gestão de Combustíveis com prática simulada',
     'Gestão de Pneus com prática simulada',
     'Carretas e Implementos Rodoviários',
-    'Veículos 4x4 (Pickups)',
   ]
 
   const seguranca = [

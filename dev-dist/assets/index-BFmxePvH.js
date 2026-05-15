@@ -35637,22 +35637,6 @@ var MAPA_MAQUINAS = [
 		]
 	},
 	{
-		equipamento: "Veículos 4x4 (Pickups)",
-		keywords: [
-			"pickup",
-			"4x4",
-			"veículo"
-		],
-		marcas: [
-			"Toyota",
-			"Ford",
-			"RAM",
-			"Mitsubishi",
-			"Chevrolet (S10)",
-			"VW (Amarok)"
-		]
-	},
-	{
 		equipamento: "Softwares e IA",
 		keywords: [
 			"software",
@@ -35765,8 +35749,7 @@ var getCursosCategory = (cultura, setor) => {
 		"Caminhões/Rodotrens",
 		"Gestão de Combustíveis com prática simulada",
 		"Gestão de Pneus com prática simulada",
-		"Carretas e Implementos Rodoviários",
-		"Veículos 4x4 (Pickups)"
+		"Carretas e Implementos Rodoviários"
 	];
 	const seguranca = [
 		"NR 10 - Segurança em Eletricidade (40h)",
@@ -78142,4 +78125,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DfGjmODp.js.map
+//# sourceMappingURL=index-BFmxePvH.js.map
