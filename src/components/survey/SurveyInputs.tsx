@@ -83,9 +83,17 @@ function IdentificationStep({ step, form, onNext }: any) {
       setLoadingGrupos(true)
       try {
         const data = await getFazendasData()
-        const uniqueGrupos = Array.from(
-          new Set(data.map((d) => d.grupo?.trim()).filter(Boolean)),
-        ).sort((a, b) => a.localeCompare(b)) as string[]
+        const grupoMap = new Map<string, string>()
+        data.forEach((d) => {
+          const g = d.grupo?.trim()
+          if (g) {
+            const key = g.toUpperCase()
+            if (!grupoMap.has(key)) {
+              grupoMap.set(key, g)
+            }
+          }
+        })
+        const uniqueGrupos = Array.from(grupoMap.values()).sort((a, b) => a.localeCompare(b))
         setGrupos(uniqueGrupos)
       } catch (err) {
         setGrupos([])
@@ -100,19 +108,22 @@ function IdentificationStep({ step, form, onNext }: any) {
     if (grupoWatch && grupoWatch !== 'Outro') {
       const loadFazendas = async () => {
         try {
-          const { data, error } = await supabase
-            .from('fazendas')
-            .select('fazenda')
-            .ilike('grupo', grupoWatch.trim())
+          const allData = await getFazendasData()
 
-          if (error) throw error
+          const matchingFazendas = allData
+            .filter((d) => d.grupo?.trim().toUpperCase() === grupoWatch.trim().toUpperCase())
+            .map((d) => d.fazenda?.trim())
+            .filter(Boolean)
 
-          const matchingFazendas = (data || []).map((d) => d.fazenda?.trim()).filter(Boolean)
+          const fazendaMap = new Map<string, string>()
+          matchingFazendas.forEach((f) => {
+            const key = f.toUpperCase()
+            if (!fazendaMap.has(key)) {
+              fazendaMap.set(key, f)
+            }
+          })
 
-          const uniqueFazendas = Array.from(new Set(matchingFazendas)).sort((a, b) =>
-            a.localeCompare(b),
-          ) as string[]
-
+          const uniqueFazendas = Array.from(fazendaMap.values()).sort((a, b) => a.localeCompare(b))
           setFazendas(uniqueFazendas)
         } catch (err) {
           console.error('Erro ao carregar fazendas:', err)

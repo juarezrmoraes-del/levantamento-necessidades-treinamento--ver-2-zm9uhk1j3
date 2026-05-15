@@ -207,6 +207,27 @@ export type Database = {
         }
         Relationships: []
       }
+      system_settings: {
+        Row: {
+          created_at: string | null
+          id: string
+          notification_email: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          notification_email?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          notification_email?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -447,6 +468,11 @@ export const Constants = {
 //   epoca: text (nullable)
 //   inovacao: text (nullable)
 //   detalhes_cursos: jsonb (nullable)
+// Table: system_settings
+//   id: uuid (not null, default: gen_random_uuid())
+//   notification_email: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
+//   updated_at: timestamp with time zone (nullable, default: now())
 
 // --- CONSTRAINTS ---
 // Table: fazendas
@@ -458,6 +484,8 @@ export const Constants = {
 //   PRIMARY KEY sent_emails_pkey: PRIMARY KEY (id)
 // Table: survey_leads
 //   PRIMARY KEY survey_leads_pkey: PRIMARY KEY (id)
+// Table: system_settings
+//   PRIMARY KEY system_settings_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: fazendas
@@ -473,6 +501,12 @@ export const Constants = {
 //     USING: true
 // Table: survey_leads
 //   Policy "Enable all operations for everyone" (ALL, PERMISSIVE) roles={public}
+//     USING: true
+//     WITH CHECK: true
+// Table: system_settings
+//   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
+//     USING: true
+//   Policy "Enable write access for authenticated" (ALL, PERMISSIVE) roles={authenticated}
 //     USING: true
 //     WITH CHECK: true
 

@@ -96,9 +96,9 @@ export function SurveyContainer() {
         if (fazendasData && fazendasData.length > 0) {
           const matchingData = fazendasData.filter(
             (f) =>
-              f.grupo?.trim() === values.grupo.trim() &&
+              f.grupo?.trim().toUpperCase() === values.grupo.trim().toUpperCase() &&
               f.fazenda &&
-              fazendas.includes(f.fazenda.trim()),
+              fazendas.some((faz: string) => faz.toUpperCase() === f.fazenda.trim().toUpperCase()),
           )
           const emails = matchingData.map((f: any) => f.email).filter(Boolean)
           const uniqueEmails = Array.from(new Set(emails))
