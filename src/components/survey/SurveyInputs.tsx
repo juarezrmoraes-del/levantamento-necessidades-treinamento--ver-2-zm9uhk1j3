@@ -297,6 +297,41 @@ function IdentificationStep({ step, form, onNext }: any) {
                 <CommandList>
                   <CommandEmpty>Nenhuma fazenda encontrada.</CommandEmpty>
                   <CommandGroup>
+                    {fazendas.length > 1 && (
+                      <CommandItem
+                        value="selecionar-todas"
+                        onSelect={() => {
+                          const allSelected = fazendas.every((f) => fazendaWatch.includes(f))
+                          if (allSelected) {
+                            setValue(
+                              'fazenda',
+                              fazendaWatch.filter((x: string) => x === 'Outra'),
+                              { shouldValidate: true },
+                            )
+                          } else {
+                            const hasOutra = fazendaWatch.includes('Outra')
+                            setValue('fazenda', hasOutra ? [...fazendas, 'Outra'] : [...fazendas], {
+                              shouldValidate: true,
+                            })
+                          }
+                          clearErrors('fazenda')
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                            fazendas.length > 0 && fazendas.every((f) => fazendaWatch.includes(f))
+                              ? 'bg-primary text-primary-foreground'
+                              : 'opacity-50 [&_svg]:invisible',
+                          )}
+                        >
+                          <Check className="h-4 w-4" />
+                        </div>
+                        <span className="font-semibold text-primary">
+                          Selecionar todas as fazendas
+                        </span>
+                      </CommandItem>
+                    )}
                     {fazendas.map((f) => {
                       const isSelected = fazendaWatch.includes(f)
                       return (
@@ -311,9 +346,16 @@ function IdentificationStep({ step, form, onNext }: any) {
                             clearErrors('fazenda')
                           }}
                         >
-                          <Check
-                            className={cn('mr-2 h-4 w-4', isSelected ? 'opacity-100' : 'opacity-0')}
-                          />
+                          <div
+                            className={cn(
+                              'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                              isSelected
+                                ? 'bg-primary text-primary-foreground'
+                                : 'opacity-50 [&_svg]:invisible',
+                            )}
+                          >
+                            <Check className="h-4 w-4" />
+                          </div>
                           {f}
                         </CommandItem>
                       )
@@ -330,12 +372,16 @@ function IdentificationStep({ step, form, onNext }: any) {
                           clearErrors('fazenda')
                         }}
                       >
-                        <Check
+                        <div
                           className={cn(
-                            'mr-2 h-4 w-4',
-                            fazendaWatch.includes('Outra') ? 'opacity-100' : 'opacity-0',
+                            'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                            fazendaWatch.includes('Outra')
+                              ? 'bg-primary text-primary-foreground'
+                              : 'opacity-50 [&_svg]:invisible',
                           )}
-                        />
+                        >
+                          <Check className="h-4 w-4" />
+                        </div>
                         Outra (Não listada)
                       </CommandItem>
                     )}

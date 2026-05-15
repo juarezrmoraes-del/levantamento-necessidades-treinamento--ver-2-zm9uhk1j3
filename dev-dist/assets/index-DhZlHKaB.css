@@ -5070,6 +5070,10 @@ body{
   pointer-events: none;
 }
 
+.\[\&_svg\]\:invisible svg{
+  visibility: hidden;
+}
+
 .\[\&_svg\]\:size-4 svg{
   width: 1rem;
   height: 1rem;

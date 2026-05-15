@@ -43583,49 +43583,87 @@ function IdentificationStep({ step, form, onNext }) {
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandGroup, {
 										"data-uid": "src/components/survey/SurveyInputs.tsx:299:19",
 										"data-prohibitions": "[editContent]",
-										children: [fazendas.map((f) => {
-											const isSelected = fazendaWatch.includes(f);
-											return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandItem, {
-												"data-uid": "src/components/survey/SurveyInputs.tsx:303:25",
+										children: [
+											fazendas.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandItem, {
+												"data-uid": "src/components/survey/SurveyInputs.tsx:301:23",
 												"data-prohibitions": "[editContent]",
-												value: f,
+												value: "selecionar-todas",
 												onSelect: () => {
-													setValue("fazenda", isSelected ? fazendaWatch.filter((x) => x !== f) : [...fazendaWatch, f], { shouldValidate: true });
+													if (fazendas.every((f) => fazendaWatch.includes(f))) setValue("fazenda", fazendaWatch.filter((x) => x === "Outra"), { shouldValidate: true });
+													else setValue("fazenda", fazendaWatch.includes("Outra") ? [...fazendas, "Outra"] : [...fazendas], { shouldValidate: true });
 													clearErrors("fazenda");
 												},
-												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-													"data-uid": "src/components/survey/SurveyInputs.tsx:314:27",
+												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+													"data-uid": "src/components/survey/SurveyInputs.tsx:320:25",
 													"data-prohibitions": "[editContent]",
-													className: cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")
-												}), f]
-											}, f);
-										}), grupoWatch && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandItem, {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:322:23",
-											"data-prohibitions": "[editContent]",
-											value: "Outra",
-											onSelect: () => {
-												setValue("fazenda", fazendaWatch.includes("Outra") ? fazendaWatch.filter((x) => x !== "Outra") : [...fazendaWatch, "Outra"], { shouldValidate: true });
-												clearErrors("fazenda");
-											},
-											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-												"data-uid": "src/components/survey/SurveyInputs.tsx:333:25",
+													className: cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary", fazendas.length > 0 && fazendas.every((f) => fazendaWatch.includes(f)) ? "bg-primary text-primary-foreground" : "opacity-50 [&_svg]:invisible"),
+													children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+														"data-uid": "src/components/survey/SurveyInputs.tsx:328:27",
+														"data-prohibitions": "[editContent]",
+														className: "h-4 w-4"
+													})
+												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+													"data-uid": "src/components/survey/SurveyInputs.tsx:330:25",
+													"data-prohibitions": "[]",
+													className: "font-semibold text-primary",
+													children: "Selecionar todas as fazendas"
+												})]
+											}),
+											fazendas.map((f) => {
+												const isSelected = fazendaWatch.includes(f);
+												return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandItem, {
+													"data-uid": "src/components/survey/SurveyInputs.tsx:338:25",
+													"data-prohibitions": "[editContent]",
+													value: f,
+													onSelect: () => {
+														setValue("fazenda", isSelected ? fazendaWatch.filter((x) => x !== f) : [...fazendaWatch, f], { shouldValidate: true });
+														clearErrors("fazenda");
+													},
+													children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+														"data-uid": "src/components/survey/SurveyInputs.tsx:349:27",
+														"data-prohibitions": "[editContent]",
+														className: cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary", isSelected ? "bg-primary text-primary-foreground" : "opacity-50 [&_svg]:invisible"),
+														children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+															"data-uid": "src/components/survey/SurveyInputs.tsx:357:29",
+															"data-prohibitions": "[editContent]",
+															className: "h-4 w-4"
+														})
+													}), f]
+												}, f);
+											}),
+											grupoWatch && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandItem, {
+												"data-uid": "src/components/survey/SurveyInputs.tsx:364:23",
 												"data-prohibitions": "[editContent]",
-												className: cn("mr-2 h-4 w-4", fazendaWatch.includes("Outra") ? "opacity-100" : "opacity-0")
-											}), "Outra (Não listada)"]
-										})]
+												value: "Outra",
+												onSelect: () => {
+													setValue("fazenda", fazendaWatch.includes("Outra") ? fazendaWatch.filter((x) => x !== "Outra") : [...fazendaWatch, "Outra"], { shouldValidate: true });
+													clearErrors("fazenda");
+												},
+												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+													"data-uid": "src/components/survey/SurveyInputs.tsx:375:25",
+													"data-prohibitions": "[editContent]",
+													className: cn("mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary", fazendaWatch.includes("Outra") ? "bg-primary text-primary-foreground" : "opacity-50 [&_svg]:invisible"),
+													children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+														"data-uid": "src/components/survey/SurveyInputs.tsx:383:27",
+														"data-prohibitions": "[editContent]",
+														className: "h-4 w-4"
+													})
+												}), "Outra (Não listada)"]
+											})
+										]
 									})]
 								})]
 							})
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:348:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:394:11",
 						"data-prohibitions": "[editContent]",
 						type: "hidden",
 						...register("fazenda", { validate: (v) => v && v.length > 0 || "Selecione ao menos uma fazenda" })
 					}),
 					errors.fazenda && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:356:13",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:402:13",
 						"data-prohibitions": "[editContent]",
 						className: "text-red-500 text-sm block",
 						children: errors.fazenda.message
@@ -43633,30 +43671,30 @@ function IdentificationStep({ step, form, onNext }) {
 				]
 			}),
 			fazendaWatch.includes("Outra") && grupoWatch !== "Outro" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/survey/SurveyInputs.tsx:362:9",
+				"data-uid": "src/components/survey/SurveyInputs.tsx:408:9",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-2 animate-in fade-in slide-in-from-top-2 pt-2",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$2, {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:363:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:409:11",
 						"data-prohibitions": "[]",
 						className: "text-base text-slate-600 font-semibold",
 						children: ["Nome da(s) Fazenda(s) Não Listada(s) ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:364:50",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:410:50",
 							"data-prohibitions": "[]",
 							className: "text-red-500",
 							children: "*"
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:366:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:412:11",
 						"data-prohibitions": "[editContent]",
 						className: cn("h-14 text-lg rounded-xl border-slate-300 focus-visible:ring-primary/50 bg-white", errors.fazenda_custom && "border-red-500"),
 						placeholder: "Digite o nome (separe por vírgula se mais de uma)",
 						...register("fazenda_custom", { validate: (v) => !watch("fazenda")?.includes("Outra") || !!v || "Nome da fazenda é obrigatório" })
 					}),
 					errors.fazenda_custom && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:378:13",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:424:13",
 						"data-prohibitions": "[editContent]",
 						className: "text-red-500 text-sm block",
 						children: errors.fazenda_custom.message
@@ -43664,11 +43702,11 @@ function IdentificationStep({ step, form, onNext }) {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/survey/SurveyInputs.tsx:385:7",
+				"data-uid": "src/components/survey/SurveyInputs.tsx:431:7",
 				"data-prohibitions": "[]",
 				className: "pt-4",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/components/survey/SurveyInputs.tsx:386:9",
+					"data-uid": "src/components/survey/SurveyInputs.tsx:432:9",
 					"data-prohibitions": "[]",
 					size: "lg",
 					onClick: onNext,
@@ -43685,11 +43723,11 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 	if (step.type === "single") {
 		const options = step.dynamicOptions ? step.dynamicOptions(watch()) : step.options;
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/survey/SurveyInputs.tsx:411:7",
+			"data-uid": "src/components/survey/SurveyInputs.tsx:457:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex flex-col gap-3 sm:gap-4 pb-6",
 			children: options.map((opt) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-				"data-uid": "src/components/survey/SurveyInputs.tsx:413:11",
+				"data-uid": "src/components/survey/SurveyInputs.tsx:459:11",
 				"data-prohibitions": "[editContent]",
 				onClick: () => {
 					setValue(step.id, opt);
@@ -43730,7 +43768,7 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 			});
 		};
 		const renderOptions = (opts) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/survey/SurveyInputs.tsx:474:7",
+			"data-uid": "src/components/survey/SurveyInputs.tsx:520:7",
 			"data-prohibitions": "[editContent]",
 			className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
 			children: opts.map((opt) => {
@@ -43739,59 +43777,59 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 				const marcasForCurso = (watch("curso_marcas") || {})[opt] || [];
 				const vagasForCurso = (watch("curso_vagas") || {})[opt] || "";
 				return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/survey/SurveyInputs.tsx:482:13",
+					"data-uid": "src/components/survey/SurveyInputs.tsx:528:13",
 					"data-prohibitions": "[editContent]",
 					className: cn("flex flex-col gap-2 rounded-xl border-2 transition-all duration-200", isSelected ? "border-primary bg-primary/5" : "border-slate-200 bg-white"),
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:489:15",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:535:15",
 						"data-prohibitions": "[editContent]",
 						type: "button",
 						onClick: () => toggle(opt),
 						className: "flex items-start sm:items-center justify-between px-5 py-4 text-left text-base sm:text-lg font-medium active:scale-[0.98] w-full",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:494:17",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:540:17",
 							"data-prohibitions": "[editContent]",
 							className: cn("pr-4 leading-tight", isSelected ? "text-primary" : "text-slate-700"),
 							children: opt
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:502:17",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:548:17",
 							"data-prohibitions": "[editContent]",
 							className: cn("w-6 h-6 rounded-md border flex items-center justify-center shrink-0 mt-0.5 sm:mt-0", isSelected ? "bg-primary border-primary text-primary-foreground" : "border-slate-300"),
 							children: isSelected && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:510:34",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:556:34",
 								"data-prohibitions": "[editContent]",
 								className: "w-4 h-4"
 							})
 						})]
 					}), isSelected && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:515:17",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:561:17",
 						"data-prohibitions": "[editContent]",
 						className: "px-5 pb-4 pt-1 animate-in slide-in-from-top-2 fade-in duration-300 space-y-4",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:516:19",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:562:19",
 							"data-prohibitions": "[]",
 							className: "flex flex-col gap-3",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$2, {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:517:21",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:563:21",
 								"data-prohibitions": "[]",
 								className: "text-sm font-semibold text-slate-600",
 								children: "Nº de vagas e distribuição:"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:520:21",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:566:21",
 								"data-prohibitions": "[]",
 								className: "flex flex-wrap items-center gap-3 sm:gap-6",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/survey/SurveyInputs.tsx:521:23",
+										"data-uid": "src/components/survey/SurveyInputs.tsx:567:23",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:522:25",
+											"data-uid": "src/components/survey/SurveyInputs.tsx:568:25",
 											"data-prohibitions": "[]",
 											className: "text-sm text-slate-500 font-medium",
 											children: "Total:"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:523:25",
+											"data-uid": "src/components/survey/SurveyInputs.tsx:569:25",
 											"data-prohibitions": "[editContent]",
 											type: "number",
 											min: "1",
@@ -43803,16 +43841,16 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/survey/SurveyInputs.tsx:533:23",
+										"data-uid": "src/components/survey/SurveyInputs.tsx:579:23",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:534:25",
+											"data-uid": "src/components/survey/SurveyInputs.tsx:580:25",
 											"data-prohibitions": "[]",
 											className: "text-sm text-slate-500 font-medium",
 											children: "Homens:"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:535:25",
+											"data-uid": "src/components/survey/SurveyInputs.tsx:581:25",
 											"data-prohibitions": "[editContent]",
 											type: "number",
 											min: "0",
@@ -43835,16 +43873,16 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/components/survey/SurveyInputs.tsx:555:23",
+										"data-uid": "src/components/survey/SurveyInputs.tsx:601:23",
 										"data-prohibitions": "[]",
 										className: "flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:556:25",
+											"data-uid": "src/components/survey/SurveyInputs.tsx:602:25",
 											"data-prohibitions": "[]",
 											className: "text-sm text-slate-500 font-medium",
 											children: "Mulheres:"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/components/survey/SurveyInputs.tsx:557:25",
+											"data-uid": "src/components/survey/SurveyInputs.tsx:603:25",
 											"data-prohibitions": "[editContent]",
 											type: "number",
 											min: "0",
@@ -43869,21 +43907,21 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 								]
 							})]
 						}), isMachine && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:581:21",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:627:21",
 							"data-prohibitions": "[editContent]",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:582:23",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:628:23",
 								"data-prohibitions": "[]",
 								className: "text-sm font-semibold text-slate-600 mb-2",
 								children: "Selecione as marcas predominantes:"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:585:23",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:631:23",
 								"data-prohibitions": "[editContent]",
 								className: "flex flex-wrap gap-2",
 								children: getMarcasForCourse(opt).map((marca) => {
 									const isMarcaSelected = marcasForCurso.includes(marca);
 									return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
-										"data-uid": "src/components/survey/SurveyInputs.tsx:589:29",
+										"data-uid": "src/components/survey/SurveyInputs.tsx:635:29",
 										"data-prohibitions": "[editContent]",
 										type: "button",
 										onClick: (e) => {
@@ -43901,11 +43939,11 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 			})
 		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyInputs.tsx:619:7",
+			"data-uid": "src/components/survey/SurveyInputs.tsx:665:7",
 			"data-prohibitions": "[editContent]",
 			className: "space-y-8 flex flex-col pb-6",
 			children: [step.type === "multiple-categories" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Accordion, {
-				"data-uid": "src/components/survey/SurveyInputs.tsx:621:11",
+				"data-uid": "src/components/survey/SurveyInputs.tsx:667:11",
 				"data-prohibitions": "[editContent]",
 				type: "multiple",
 				defaultValue: ["item-0"],
@@ -43913,25 +43951,25 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 				children: getCursosCategory(watch("cultura"), watch("setor")).map((cat, i) => {
 					const selectedCount = cat.options.filter((opt) => current.includes(opt)).length;
 					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AccordionItem, {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:625:17",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:671:17",
 						"data-prohibitions": "[editContent]",
 						value: `item-${i}`,
 						className: "border-2 border-slate-200 rounded-xl px-2 bg-white data-[state=open]:border-primary/50 transition-colors",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccordionTrigger, {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:630:19",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:676:19",
 							"data-prohibitions": "[editContent]",
 							className: "hover:no-underline px-4 py-4 text-left font-bold text-slate-700",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:631:21",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:677:21",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-center gap-3",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:632:23",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:678:23",
 									"data-prohibitions": "[editContent]",
 									className: "text-lg",
 									children: cat.name
 								}), selectedCount > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:634:25",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:680:25",
 									"data-prohibitions": "[editContent]",
 									className: "bg-primary/10 text-primary text-xs px-2 py-1 rounded-full font-semibold",
 									children: [
@@ -43942,7 +43980,7 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 								})]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AccordionContent, {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:640:19",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:686:19",
 							"data-prohibitions": "[editContent]",
 							className: "px-4 pb-5 pt-2",
 							children: renderOptions(cat.options)
@@ -43950,7 +43988,7 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 					}, i);
 				})
 			}) : renderOptions(step.options), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/components/survey/SurveyInputs.tsx:650:9",
+				"data-uid": "src/components/survey/SurveyInputs.tsx:696:9",
 				"data-prohibitions": "[]",
 				size: "lg",
 				onClick: onNext,
@@ -43961,18 +43999,18 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 		});
 	}
 	if (step.type === "text") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyInputs.tsx:664:7",
+		"data-uid": "src/components/survey/SurveyInputs.tsx:710:7",
 		"data-prohibitions": "[]",
 		className: "space-y-6 pb-6",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-			"data-uid": "src/components/survey/SurveyInputs.tsx:665:9",
+			"data-uid": "src/components/survey/SurveyInputs.tsx:711:9",
 			"data-prohibitions": "[editContent]",
 			placeholder: "Digite aqui (opcional)...",
 			className: "min-h-[150px] text-lg p-5 rounded-xl resize-none border-slate-300 focus-visible:ring-primary/50",
 			value: value || "",
 			onChange: (e) => setValue(step.id, e.target.value)
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-			"data-uid": "src/components/survey/SurveyInputs.tsx:671:9",
+			"data-uid": "src/components/survey/SurveyInputs.tsx:717:9",
 			"data-prohibitions": "[]",
 			size: "lg",
 			onClick: onNext,
@@ -43986,37 +44024,37 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 		const modalidades = watch("modalidade") || "";
 		const infraestrutura = watch("infraestrutura") || "";
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyInputs.tsx:689:7",
+			"data-uid": "src/components/survey/SurveyInputs.tsx:735:7",
 			"data-prohibitions": "[editContent]",
 			className: "space-y-8 pb-6 animate-in fade-in slide-in-from-bottom-4 duration-500",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/survey/SurveyInputs.tsx:690:9",
+					"data-uid": "src/components/survey/SurveyInputs.tsx:736:9",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:691:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:737:11",
 						"data-prohibitions": "[]",
 						className: "text-xl font-bold text-slate-800 mb-4",
 						children: "Cursos Selecionados"
 					}), cursos.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:693:13",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:739:13",
 						"data-prohibitions": "[editContent]",
 						className: "grid gap-3",
 						children: cursos.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:695:17",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:741:17",
 							"data-prohibitions": "[editContent]",
 							className: "border-slate-200 shadow-sm",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:696:19",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:742:19",
 								"data-prohibitions": "[editContent]",
 								className: "p-4 flex justify-between items-center gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:697:21",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:743:21",
 									"data-prohibitions": "[editContent]",
 									className: "font-semibold text-slate-700 leading-tight",
 									children: c
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:698:21",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:744:21",
 									"data-prohibitions": "[editContent]",
 									className: "shrink-0 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold",
 									children: [vagas[c] || 0, " vagas"]
@@ -44024,54 +44062,54 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 							})
 						}, c))
 					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:706:13",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:752:13",
 						"data-prohibitions": "[]",
 						className: "text-slate-500 italic p-4 bg-slate-50 rounded-xl border border-slate-200",
 						children: "Nenhum curso selecionado."
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/survey/SurveyInputs.tsx:712:9",
+					"data-uid": "src/components/survey/SurveyInputs.tsx:758:9",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:713:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:759:11",
 						"data-prohibitions": "[]",
 						className: "text-xl font-bold text-slate-800 mb-4",
 						children: "Modalidade e Local"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:714:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:760:11",
 						"data-prohibitions": "[editContent]",
 						className: "border-slate-200 shadow-sm",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:715:13",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:761:13",
 							"data-prohibitions": "[editContent]",
 							className: "p-4 space-y-2",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:716:15",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:762:15",
 								"data-prohibitions": "[editContent]",
 								className: "flex justify-between items-start gap-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:717:17",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:763:17",
 									"data-prohibitions": "[]",
 									className: "text-slate-500",
 									children: "Modalidade:"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:718:17",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:764:17",
 									"data-prohibitions": "[editContent]",
 									className: "font-semibold text-slate-700 text-right",
 									children: modalidades || "Não definida"
 								})]
 							}), infraestrutura && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/survey/SurveyInputs.tsx:723:17",
+								"data-uid": "src/components/survey/SurveyInputs.tsx:769:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex justify-between items-start gap-4 pt-2 border-t border-slate-100",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:724:19",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:770:19",
 									"data-prohibitions": "[]",
 									className: "text-slate-500",
 									children: "Infraestrutura:"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/survey/SurveyInputs.tsx:725:19",
+									"data-uid": "src/components/survey/SurveyInputs.tsx:771:19",
 									"data-prohibitions": "[editContent]",
 									className: "font-semibold text-slate-700 text-right",
 									children: infraestrutura
@@ -44081,26 +44119,26 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/survey/SurveyInputs.tsx:732:9",
+					"data-uid": "src/components/survey/SurveyInputs.tsx:778:9",
 					"data-prohibitions": "[editContent]",
 					className: "pt-4 space-y-5",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:733:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:779:11",
 						"data-prohibitions": "[]",
 						className: "bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-600 flex items-center gap-3",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:734:13",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:780:13",
 							"data-prohibitions": "[]",
 							className: "text-xl",
 							children: "🔒"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/components/survey/SurveyInputs.tsx:735:13",
+							"data-uid": "src/components/survey/SurveyInputs.tsx:781:13",
 							"data-prohibitions": "[]",
 							className: "font-medium",
 							children: "As informações prestadas são protegidas pela LGPD."
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/survey/SurveyInputs.tsx:737:11",
+						"data-uid": "src/components/survey/SurveyInputs.tsx:783:11",
 						"data-prohibitions": "[editContent]",
 						size: "lg",
 						onClick: onNext,
@@ -44113,7 +44151,7 @@ function SurveyInputs({ step, form, onNext, onSubmit, isSubmitting }) {
 		});
 	}
 	if (step.type === "identification") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(IdentificationStep, {
-		"data-uid": "src/components/survey/SurveyInputs.tsx:751:12",
+		"data-uid": "src/components/survey/SurveyInputs.tsx:797:12",
 		"data-prohibitions": "[editContent]",
 		step,
 		form,
@@ -78055,4 +78093,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DS9xVFMy.js.map
+//# sourceMappingURL=index-CqsHGc-8.js.map
