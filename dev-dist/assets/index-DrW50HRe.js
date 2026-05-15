@@ -44585,21 +44585,70 @@ function Index() {
 						})]
 					})]
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/pages/Index.tsx:92:9",
+					"data-prohibitions": "[]",
+					className: "bg-blue-50 border-b border-blue-200 px-5 py-3 shrink-0 z-20",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/Index.tsx:93:11",
+						"data-prohibitions": "[]",
+						className: "max-w-3xl mx-auto flex items-start gap-3 text-sm text-blue-800",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Database, {
+							"data-uid": "src/pages/Index.tsx:94:13",
+							"data-prohibitions": "[editContent]",
+							className: "h-5 w-5 shrink-0 text-blue-600 mt-0.5"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/Index.tsx:95:13",
+							"data-prohibitions": "[]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									"data-uid": "src/pages/Index.tsx:96:15",
+									"data-prohibitions": "[]",
+									children: "Aviso de Atualização da Base de Dados:"
+								}),
+								" Por restrições de segurança do sistema, os dados da nova planilha não podem ser injetados automaticamente no código ou no banco. Para descartar os dados antigos e usar os novos da planilha, por favor, acesse o ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+									"data-uid": "src/pages/Index.tsx:99:24",
+									"data-prohibitions": "[]",
+									children: "Table Editor do seu painel do Supabase"
+								}),
+								", selecione a tabela",
+								" ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
+									"data-uid": "src/pages/Index.tsx:100:15",
+									"data-prohibitions": "[]",
+									children: "fazendas"
+								}),
+								", exclua todos os registros atuais e faça o upload da nova planilha usando a opção ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", {
+									"data-uid": "src/pages/Index.tsx:101:39",
+									"data-prohibitions": "[]",
+									children: [
+										"Insert ",
+										">",
+										" Import data from CSV"
+									]
+								}),
+								"."
+							]
+						})]
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
+					"data-uid": "src/pages/Index.tsx:107:9",
 					"data-prohibitions": "[]",
 					className: "flex-1 overflow-hidden relative",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyContainer, {
-						"data-uid": "src/pages/Index.tsx:93:11",
+						"data-uid": "src/pages/Index.tsx:108:11",
 						"data-prohibitions": "[editContent]"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
-					"data-uid": "src/pages/Index.tsx:97:9",
+					"data-uid": "src/pages/Index.tsx:112:9",
 					"data-prohibitions": "[]",
 					className: "bg-white border-t py-3 px-6 shrink-0 z-20",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/Index.tsx:98:11",
+						"data-uid": "src/pages/Index.tsx:113:11",
 						"data-prohibitions": "[]",
 						className: "text-xs text-slate-500 font-medium text-center",
 						children: "🔒 As informações prestadas são protegidas pela LGPD (Lei Geral de Proteção de Dados)."
@@ -78232,4 +78281,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-B0Pxd2GA.js.map
+//# sourceMappingURL=index-DrW50HRe.js.map

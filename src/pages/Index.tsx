@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Lock, LayoutDashboard } from 'lucide-react'
+import { Lock, LayoutDashboard, Database } from 'lucide-react'
 import { useAuth } from '@/stores/auth'
 import { SurveyContainer } from '@/components/survey/SurveyContainer'
 import abapaLogo from '@/assets/abapa-7ed0c.jpeg'
@@ -87,6 +87,21 @@ export default function Index() {
             </span>
           </Link>
         </header>
+
+        {/* Aviso sobre importação de dados */}
+        <div className="bg-blue-50 border-b border-blue-200 px-5 py-3 shrink-0 z-20">
+          <div className="max-w-3xl mx-auto flex items-start gap-3 text-sm text-blue-800">
+            <Database className="h-5 w-5 shrink-0 text-blue-600 mt-0.5" />
+            <div>
+              <strong>Aviso de Atualização da Base de Dados:</strong> Por restrições de segurança do
+              sistema, os dados da nova planilha não podem ser injetados automaticamente no código
+              ou no banco. Para descartar os dados antigos e usar os novos da planilha, por favor,
+              acesse o <strong>Table Editor do seu painel do Supabase</strong>, selecione a tabela{' '}
+              <code>fazendas</code>, exclua todos os registros atuais e faça o upload da nova
+              planilha usando a opção <strong>Insert {'>'} Import data from CSV</strong>.
+            </div>
+          </div>
+        </div>
 
         {/* Main Content Area - Form */}
         <main className="flex-1 overflow-hidden relative">
