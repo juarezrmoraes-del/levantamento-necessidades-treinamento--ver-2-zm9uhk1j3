@@ -87,6 +87,10 @@ function IdentificationStep({ step, form, onNext }: any) {
   const [newGroupName, setNewGroupName] = useState('')
   const [isCreatingGroup, setIsCreatingGroup] = useState(false)
 
+  const [openNewFazendaDialog, setOpenNewFazendaDialog] = useState(false)
+  const [newFazendaName, setNewFazendaName] = useState('')
+  const [isCreatingFazenda, setIsCreatingFazenda] = useState(false)
+
   const grupoWatch = watch('grupo')
   const fazendaWatch = watch('fazenda') || []
 
@@ -140,6 +144,59 @@ function IdentificationStep({ step, form, onNext }: any) {
       })
     } finally {
       setIsCreatingGroup(false)
+    }
+  }
+
+  const handleCreateFazenda = async () => {
+    if (!newFazendaName.trim() || !grupoWatch || grupoWatch === 'Outro') return
+    setIsCreatingFazenda(true)
+    try {
+      const name = newFazendaName.trim()
+
+      const exists = fazendas.some((f) => f.toUpperCase() === name.toUpperCase())
+      if (exists) {
+        toast({
+          title: 'Fazenda já existe',
+          description: 'Esta fazenda já está na lista deste grupo.',
+          variant: 'destructive',
+        })
+        setIsCreatingFazenda(false)
+        return
+      }
+
+      const { error } = await supabase.from('fazendas').insert([
+        {
+          grupo: grupoWatch,
+          fazenda: name,
+        },
+      ])
+
+      if (error) throw error
+
+      setFazendas((prev) => [...prev, name].sort((a, b) => a.localeCompare(b)))
+
+      const currentFazendas = watch('fazenda') || []
+      setValue('fazenda', [...currentFazendas, name], { shouldValidate: true })
+      clearErrors('fazenda')
+
+      if (cachedFazendasData) {
+        cachedFazendasData.push({ grupo: grupoWatch, fazenda: name })
+      }
+
+      setOpenNewFazendaDialog(false)
+      setNewFazendaName('')
+      toast({
+        title: 'Fazenda criada',
+        description: 'A nova fazenda foi adicionada com sucesso ao grupo.',
+      })
+    } catch (error: any) {
+      toast({
+        title: 'Erro ao criar fazenda',
+        description: error.message || 'Não foi possível adicionar a fazenda.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsCreatingFazenda(false)
     }
   }
 
@@ -239,7 +296,7 @@ function IdentificationStep({ step, form, onNext }: any) {
 
       <div className="space-y-2">
         <Label className="text-base text-slate-600 font-semibold">
-          Grupo <span className="text-red-500">*</span>
+          Grupo ou Associado <span className="text-red-500">*</span>
         </Label>
 
         <Popover open={openGrupo} onOpenChange={setOpenGrupo}>
@@ -260,13 +317,13 @@ function IdentificationStep({ step, form, onNext }: any) {
                   ? grupoWatch === 'Outro'
                     ? 'Outro (Não listado)'
                     : grupos.find((g) => g === grupoWatch) || grupoWatch
-                  : 'Selecione um Grupo...'}
+                  : 'Selecione um Grupo ou Associado...'}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
             <Command>
-              <CommandInput placeholder="Buscar grupo..." />
+              <CommandInput placeholder="Buscar grupo ou associado..." />
               <CommandList>
                 <CommandEmpty>Nenhum grupo encontrado.</CommandEmpty>
                 <CommandGroup>
@@ -318,7 +375,7 @@ function IdentificationStep({ step, form, onNext }: any) {
                     className="text-primary font-medium cursor-pointer flex items-center py-3"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Adicionar Novo Grupo
+                    Adicionar Novo Grupo ou Associado
                   </CommandItem>
                 </CommandGroup>
               </CommandList>
@@ -329,16 +386,16 @@ function IdentificationStep({ step, form, onNext }: any) {
         <Dialog open={openNewGroupDialog} onOpenChange={setOpenNewGroupDialog}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Criar Novo Grupo</DialogTitle>
+              <DialogTitle>Criar Novo Grupo ou Associado</DialogTitle>
             </DialogHeader>
             <div className="py-4">
               <div className="space-y-3">
                 <Label htmlFor="new-group-name" className="text-sm font-semibold text-slate-700">
-                  Nome do Grupo
+                  Nome do Grupo ou Associado
                 </Label>
                 <Input
                   id="new-group-name"
-                  placeholder="Ex: Grupo Agrícola São João"
+                  placeholder="Ex: Grupo Agrícola São João ou João da Silva"
                   value={newGroupName}
                   onChange={(e) => setNewGroupName(e.target.value)}
                   onKeyDown={(e) => {
@@ -529,10 +586,75 @@ function IdentificationStep({ step, form, onNext }: any) {
                       </CommandItem>
                     )}
                   </CommandGroup>
+                  {grupoWatch && grupoWatch !== 'Outro' && (
+                    <>
+                      <CommandSeparator />
+                      <CommandGroup>
+                        <CommandItem
+                          onSelect={() => {
+                            setOpenFazenda(false)
+                            setOpenNewFazendaDialog(true)
+                          }}
+                          className="text-primary font-medium cursor-pointer flex items-center py-3"
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Adicionar Nova Fazenda
+                        </CommandItem>
+                      </CommandGroup>
+                    </>
+                  )}
                 </CommandList>
               </Command>
             </PopoverContent>
           </Popover>
+
+          <Dialog open={openNewFazendaDialog} onOpenChange={setOpenNewFazendaDialog}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Criar Nova Fazenda</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="new-fazenda-name"
+                    className="text-sm font-semibold text-slate-700"
+                  >
+                    Nome da Fazenda (Grupo: {grupoWatch})
+                  </Label>
+                  <Input
+                    id="new-fazenda-name"
+                    placeholder="Ex: Fazenda Boa Vista"
+                    value={newFazendaName}
+                    onChange={(e) => setNewFazendaName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleCreateFazenda()
+                      }
+                    }}
+                    className="h-12"
+                    autoFocus
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setOpenNewFazendaDialog(false)}
+                  disabled={isCreatingFazenda}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleCreateFazenda}
+                  disabled={isCreatingFazenda || !newFazendaName.trim()}
+                >
+                  {isCreatingFazenda ? 'Salvando...' : 'Salvar Fazenda'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
           {/* Input escondido para manter o react-hook-form preenchido e poder fazer o hook das validações */}
           <input
             type="hidden"
