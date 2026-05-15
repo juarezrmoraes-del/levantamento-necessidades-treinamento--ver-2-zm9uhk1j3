@@ -90,12 +90,16 @@ export function SurveyContainer() {
       if (values.grupo && values.grupo !== 'Outro') {
         const { data: fazendasData } = await supabase
           .from('fazendas')
-          .select('email, fazenda')
-          .eq('grupo', values.grupo)
-          .in('fazenda', fazendas)
+          .select('grupo, email, fazenda')
 
         if (fazendasData && fazendasData.length > 0) {
-          const emails = fazendasData.map((f: any) => f.email).filter(Boolean)
+          const matchingData = fazendasData.filter(
+            (f) =>
+              f.grupo?.trim() === values.grupo.trim() &&
+              f.fazenda &&
+              fazendas.includes(f.fazenda.trim()),
+          )
+          const emails = matchingData.map((f: any) => f.email).filter(Boolean)
           const uniqueEmails = Array.from(new Set(emails))
 
           for (const email of uniqueEmails) {

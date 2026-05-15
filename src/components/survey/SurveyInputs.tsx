@@ -51,8 +51,8 @@ function IdentificationStep({ step, form, onNext }: any) {
         const { data, error } = await supabase.from('fazendas').select('grupo').order('grupo')
         if (data && !error) {
           const uniqueGrupos = Array.from(
-            new Set(data.map((d) => d.grupo).filter(Boolean)),
-          ) as string[]
+            new Set(data.map((d) => d.grupo?.trim()).filter(Boolean)),
+          ).sort((a, b) => a.localeCompare(b)) as string[]
           setGrupos(uniqueGrupos)
         } else {
           setGrupos([])
@@ -70,14 +70,15 @@ function IdentificationStep({ step, form, onNext }: any) {
     if (grupoWatch && grupoWatch !== 'Outro') {
       const fetchFazendas = async () => {
         try {
-          const { data, error } = await supabase
-            .from('fazendas')
-            .select('fazenda')
-            .eq('grupo', grupoWatch)
-            .order('fazenda')
+          const { data, error } = await supabase.from('fazendas').select('grupo, fazenda')
           if (data && !error) {
-            const uniqueFazendas = Array.from(
-              new Set(data.map((d) => d.fazenda).filter(Boolean)),
+            const matchingFazendas = data
+              .filter((d) => d.grupo?.trim() === grupoWatch.trim())
+              .map((d) => d.fazenda?.trim())
+              .filter(Boolean)
+
+            const uniqueFazendas = Array.from(new Set(matchingFazendas)).sort((a, b) =>
+              a.localeCompare(b),
             ) as string[]
             setFazendas(uniqueFazendas)
           } else {
