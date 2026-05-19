@@ -77,6 +77,7 @@ export function SurveyContainer() {
         epoca: values.epoca,
         inovacao: values.inovacao,
         detalhes_cursos: values.curso_marcas,
+        status: 'submitted',
       }
 
       const { data: leadData, error } = await supabase
@@ -165,6 +166,11 @@ export function SurveyContainer() {
           settingsErr,
         )
       }
+
+      toast({
+        title: 'Sucesso',
+        description: 'Mapeamento salvo com sucesso!',
+      })
 
       setIsSuccess(true)
     } catch (err: any) {

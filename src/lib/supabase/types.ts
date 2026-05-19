@@ -489,6 +489,8 @@ export const Constants = {
 
 // --- ROW LEVEL SECURITY POLICIES ---
 // Table: fazendas
+//   Policy "Enable insert access for all users" (INSERT, PERMISSIVE) roles={anon,authenticated}
+//     WITH CHECK: true
 //   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
 //     USING: true
 // Table: profiles

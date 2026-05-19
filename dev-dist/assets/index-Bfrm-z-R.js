@@ -44608,7 +44608,8 @@ function SurveyContainer() {
 				infraestrutura: values.infraestrutura,
 				epoca: values.epoca,
 				inovacao: values.inovacao,
-				detalhes_cursos: values.curso_marcas
+				detalhes_cursos: values.curso_marcas,
+				status: "submitted"
 			};
 			const { data: leadData, error } = await supabase$1.from("survey_leads").insert([insertData]).select().single();
 			if (error) throw error;
@@ -44657,6 +44658,10 @@ function SurveyContainer() {
 			} catch (settingsErr) {
 				console.warn("Tabela system_settings não encontrada ou erro ao buscar email de notificação", settingsErr);
 			}
+			toast({
+				title: "Sucesso",
+				description: "Mapeamento salvo com sucesso!"
+			});
 			setIsSuccess(true);
 		} catch (err) {
 			toast({
@@ -44669,34 +44674,34 @@ function SurveyContainer() {
 		}
 	};
 	if (isSuccess) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:183:7",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:189:7",
 		"data-prohibitions": "[]",
 		className: "flex flex-col items-center justify-center h-full p-8 text-center bg-white rounded-2xl shadow-sm animate-in fade-in zoom-in duration-500 max-w-2xl mx-auto my-8 border",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:184:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:190:9",
 				"data-prohibitions": "[]",
 				className: "w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:185:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:191:11",
 					"data-prohibitions": "[editContent]",
 					className: "w-10 h-10"
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:187:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:193:9",
 				"data-prohibitions": "[]",
 				className: "text-3xl font-bold text-slate-800 mb-3",
 				children: "Mapeamento Enviado!"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:188:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:194:9",
 				"data-prohibitions": "[]",
 				className: "text-slate-600 text-lg mb-8 max-w-md",
 				children: "Suas necessidades de treinamento foram registradas com sucesso. A equipe do Centro de Treinamento entrará em contato em breve."
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:192:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:198:9",
 				"data-prohibitions": "[]",
 				onClick: () => window.location.reload(),
 				size: "lg",
@@ -44706,35 +44711,35 @@ function SurveyContainer() {
 		]
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/survey/SurveyContainer.tsx:204:5",
+		"data-uid": "src/components/survey/SurveyContainer.tsx:210:5",
 		"data-prohibitions": "[editContent]",
 		className: "max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 h-full flex flex-col overflow-hidden",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyContainer.tsx:205:7",
+			"data-uid": "src/components/survey/SurveyContainer.tsx:211:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex items-center mb-8 shrink-0",
 			children: [
 				currentIdx > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:207:11",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:213:11",
 					"data-prohibitions": "[]",
 					onClick: handlePrev,
 					className: "flex items-center text-slate-500 hover:text-primary transition-colors font-medium mr-4 active:scale-95",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:211:13",
+						"data-uid": "src/components/survey/SurveyContainer.tsx:217:13",
 						"data-prohibitions": "[editContent]",
 						className: "w-5 h-5 mr-1"
 					}), "Voltar"]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:215:9",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:221:9",
 					"data-prohibitions": "[]",
 					className: "flex-1",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/survey/SurveyContainer.tsx:216:11",
+						"data-uid": "src/components/survey/SurveyContainer.tsx:222:11",
 						"data-prohibitions": "[]",
 						className: "h-2 w-full bg-slate-100 rounded-full overflow-hidden",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/components/survey/SurveyContainer.tsx:217:13",
+							"data-uid": "src/components/survey/SurveyContainer.tsx:223:13",
 							"data-prohibitions": "[editContent]",
 							className: "h-full bg-primary transition-all duration-500 ease-out",
 							style: { width: `${Math.max(5, currentIdx / (STEPS_CONFIG.length - 1) * 100)}%` }
@@ -44742,7 +44747,7 @@ function SurveyContainer() {
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-					"data-uid": "src/components/survey/SurveyContainer.tsx:223:9",
+					"data-uid": "src/components/survey/SurveyContainer.tsx:229:9",
 					"data-prohibitions": "[editContent]",
 					className: "ml-4 text-sm font-bold text-slate-400 w-12 text-right",
 					children: [
@@ -44753,16 +44758,16 @@ function SurveyContainer() {
 				})
 			]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/survey/SurveyContainer.tsx:228:7",
+			"data-uid": "src/components/survey/SurveyContainer.tsx:234:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex-1 overflow-y-auto no-scrollbar pb-20 px-1",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:229:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:235:9",
 				"data-prohibitions": "[editContent]",
 				className: "text-2xl sm:text-3xl font-bold text-slate-800 mb-8 leading-tight",
 				children: step.title
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SurveyInputs, {
-				"data-uid": "src/components/survey/SurveyContainer.tsx:233:9",
+				"data-uid": "src/components/survey/SurveyContainer.tsx:239:9",
 				"data-prohibitions": "[editContent]",
 				step,
 				form,
@@ -78490,4 +78495,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-ldik_2Zy.js.map
+//# sourceMappingURL=index-Bfrm-z-R.js.map
