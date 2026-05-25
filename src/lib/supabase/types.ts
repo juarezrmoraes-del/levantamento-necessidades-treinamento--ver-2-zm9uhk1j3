@@ -9,6 +9,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          details: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          user_email: string | null
+          user_name: string | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          details?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          user_email?: string | null
+          user_name?: string | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          details?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          user_email?: string | null
+          user_name?: string | null
+        }
+        Relationships: []
+      }
       fazendas: {
         Row: {
           cpf_cnpj: string | null
@@ -410,6 +443,15 @@ export const Constants = {
 // --- COLUMN TYPES (actual PostgreSQL types) ---
 // Use this to know the real database type when writing migrations.
 // "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
+// Table: audit_logs
+//   id: uuid (not null, default: gen_random_uuid())
+//   user_name: text (nullable)
+//   user_email: text (nullable)
+//   action: text (nullable)
+//   entity_type: text (nullable)
+//   entity_id: text (nullable)
+//   details: text (nullable)
+//   created_at: timestamp with time zone (nullable, default: now())
 // Table: fazendas
 //   id: uuid (not null, default: gen_random_uuid())
 //   grupo: text (nullable)
@@ -475,6 +517,8 @@ export const Constants = {
 //   updated_at: timestamp with time zone (nullable, default: now())
 
 // --- CONSTRAINTS ---
+// Table: audit_logs
+//   PRIMARY KEY audit_logs_pkey: PRIMARY KEY (id)
 // Table: fazendas
 //   PRIMARY KEY fazendas_pkey: PRIMARY KEY (id)
 // Table: profiles
@@ -488,6 +532,10 @@ export const Constants = {
 //   PRIMARY KEY system_settings_pkey: PRIMARY KEY (id)
 
 // --- ROW LEVEL SECURITY POLICIES ---
+// Table: audit_logs
+//   Policy "Enable all operations for authenticated on audit_logs" (ALL, PERMISSIVE) roles={authenticated}
+//     USING: true
+//     WITH CHECK: true
 // Table: fazendas
 //   Policy "Enable insert access for all users" (INSERT, PERMISSIVE) roles={anon,authenticated}
 //     WITH CHECK: true
@@ -505,6 +553,8 @@ export const Constants = {
 //   Policy "Enable all operations for everyone" (ALL, PERMISSIVE) roles={public}
 //     USING: true
 //     WITH CHECK: true
+//   Policy "Enable delete for authenticated on survey_leads" (DELETE, PERMISSIVE) roles={authenticated}
+//     USING: true
 // Table: system_settings
 //   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
 //     USING: true

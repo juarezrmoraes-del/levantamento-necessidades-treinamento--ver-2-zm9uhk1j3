@@ -37,10 +37,12 @@ import {
 } from '@/components/ui/alert-dialog'
 
 export default function Responses() {
-  const { surveys, updateSurvey, deleteSurvey } = useMainStore()
+  const mainStore = useMainStore() as any
+  const { surveys, updateSurvey } = mainStore
   const { addLog } = useAuditStore()
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set())
   const { user } = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [priorityFilter, setPriorityFilter] = useState('Todas')
@@ -52,16 +54,20 @@ export default function Responses() {
   const canDelete = isAdmin
 
   const filteredSurveys = useMemo(() => {
-    return surveys
-      .filter((s) => {
+    return (surveys || [])
+      .filter((s: any) => !deletedIds.has(s.id))
+      .filter((s: any) => {
         const matchSearch =
           s.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           s.fazenda_grupo?.toLowerCase().includes(searchTerm.toLowerCase())
         const matchPriority = priorityFilter === 'Todas' || s.prioridade === priorityFilter
         return matchSearch && matchPriority
       })
-      .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
-  }, [surveys, searchTerm, priorityFilter])
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime(),
+      )
+  }, [surveys, searchTerm, priorityFilter, deletedIds])
 
   const handleExport = () => {
     const exportData = filteredSurveys.map((s: any) => ({
@@ -139,7 +145,25 @@ export default function Responses() {
       const { error } = await supabase.from('survey_leads').delete().eq('id', deleteId)
       if (error) throw error
 
-      await deleteSurvey(deleteId)
+      setDeletedIds((prev) => {
+        const next = new Set(prev)
+        next.add(deleteId)
+        return next
+      })
+
+      if (typeof mainStore.deleteSurvey === 'function') {
+        try {
+          await mainStore.deleteSurvey(deleteId)
+        } catch (e) {
+          console.warn('Erro ao chamar deleteSurvey:', e)
+        }
+      } else if (typeof mainStore.fetchSurveys === 'function') {
+        try {
+          mainStore.fetchSurveys()
+        } catch (e) {
+          console.warn('Erro ao chamar fetchSurveys:', e)
+        }
+      }
 
       try {
         await addLog({
@@ -154,7 +178,7 @@ export default function Responses() {
         console.warn('Erro ao salvar log de auditoria', logErr)
       }
 
-      toast({ title: 'Solicitação removida com sucesso' })
+      toast({ title: 'Registro excluído com sucesso!' })
     } catch (error: any) {
       console.error('Erro ao deletar:', error)
       toast({
@@ -365,7 +389,7 @@ export default function Responses() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este levantamento? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
