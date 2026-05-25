@@ -24,10 +24,23 @@ import { useAuth } from '@/stores/auth'
 import { useAuditStore } from '@/stores/audit'
 import { exportToCSV } from '@/lib/export'
 import { toast } from '@/hooks/use-toast'
+import { supabase } from '@/lib/supabase/client'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 export default function Responses() {
   const { surveys, updateSurvey, deleteSurvey } = useMainStore()
   const { addLog } = useAuditStore()
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const { user } = useAuth()
   const [searchTerm, setSearchTerm] = useState('')
   const [priorityFilter, setPriorityFilter] = useState('Todas')
@@ -114,19 +127,34 @@ export default function Responses() {
     toast({ title: 'Prioridade Atualizada' })
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDeleteClick = (id: string) => {
     if (!canDelete) return
-    if (window.confirm('Tem certeza que deseja remover permanentemente esta solicitação?')) {
-      await deleteSurvey(id)
+    setDeleteId(id)
+  }
+
+  const confirmDelete = async () => {
+    if (!deleteId || !canDelete) return
+    setIsDeleting(true)
+    try {
+      const { error } = await supabase.from('survey_leads').delete().eq('id', deleteId)
+      if (error) throw error
+
+      await deleteSurvey(deleteId)
       await addLog({
         user_name: user?.name || '',
         user_email: user?.email || '',
         action: 'DELETE',
         entity_type: 'SURVEY',
-        entity_id: id,
+        entity_id: deleteId,
         details: `Removeu solicitação de treinamento`,
       })
-      toast({ title: 'Solicitação Removida' })
+      toast({ title: 'Solicitação Removida com sucesso' })
+    } catch (error) {
+      console.error('Erro ao deletar:', error)
+      toast({ title: 'Erro ao remover solicitação', variant: 'destructive' })
+    } finally {
+      setIsDeleting(false)
+      setDeleteId(null)
     }
   }
 
@@ -296,7 +324,11 @@ export default function Responses() {
                     </TableCell>
                     {canDelete && (
                       <TableCell>
-                        <Button variant="ghost" size="icon" onClick={() => handleDelete(req.id)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteClick(req.id)}
+                        >
                           <Trash2 className="h-4 w-4 text-rose-500" />
                         </Button>
                       </TableCell>
@@ -317,6 +349,30 @@ export default function Responses() {
           </Table>
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este levantamento? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault()
+                confirmDelete()
+              }}
+              disabled={isDeleting}
+              className="bg-rose-500 hover:bg-rose-600 text-white focus:ring-rose-500"
+            >
+              {isDeleting ? 'Excluindo...' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
