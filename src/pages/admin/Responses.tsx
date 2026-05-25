@@ -140,18 +140,28 @@ export default function Responses() {
       if (error) throw error
 
       await deleteSurvey(deleteId)
-      await addLog({
-        user_name: user?.name || '',
-        user_email: user?.email || '',
-        action: 'DELETE',
-        entity_type: 'SURVEY',
-        entity_id: deleteId,
-        details: `Removeu solicitação de treinamento`,
-      })
-      toast({ title: 'Solicitação Removida com sucesso' })
-    } catch (error) {
+
+      try {
+        await addLog({
+          user_name: user?.name || '',
+          user_email: user?.email || '',
+          action: 'DELETE',
+          entity_type: 'SURVEY',
+          entity_id: deleteId,
+          details: `Removeu solicitação de treinamento`,
+        })
+      } catch (logErr) {
+        console.warn('Erro ao salvar log de auditoria', logErr)
+      }
+
+      toast({ title: 'Solicitação removida com sucesso' })
+    } catch (error: any) {
       console.error('Erro ao deletar:', error)
-      toast({ title: 'Erro ao remover solicitação', variant: 'destructive' })
+      toast({
+        title: 'Erro ao remover solicitação',
+        description: error?.message || 'Falha na comunicação com o banco de dados.',
+        variant: 'destructive',
+      })
     } finally {
       setIsDeleting(false)
       setDeleteId(null)
@@ -368,7 +378,7 @@ export default function Responses() {
               disabled={isDeleting}
               className="bg-rose-500 hover:bg-rose-600 text-white focus:ring-rose-500"
             >
-              {isDeleting ? 'Excluindo...' : 'Excluir'}
+              {isDeleting ? 'Excluindo...' : 'Confirmar'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
