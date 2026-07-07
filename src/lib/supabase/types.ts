@@ -1,11 +1,17 @@
 // AVOID UPDATING THIS FILE DIRECTLY. It is automatically generated.
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: '14.5'
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -296,8 +302,8 @@ export type Database = {
           whatsapp: string | null
         }[]
         SetofOptions: {
-          from: '*'
-          to: 'survey_leads'
+          from: "*"
+          to: "survey_leads"
           isOneToOne: false
           isSetofReturn: true
         }
@@ -312,31 +318,33 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
-    ? (DefaultSchema['Tables'] & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -345,23 +353,23 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -370,23 +378,23 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema['Tables']
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
-    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -395,36 +403,36 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema['Enums']
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
-    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema['CompositeTypes']
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
@@ -433,157 +441,3 @@ export const Constants = {
   },
 } as const
 
-// ====== DATABASE EXTENDED CONTEXT (auto-generated) ======
-// This section contains actual PostgreSQL column types, constraints, RLS policies,
-// functions, triggers, indexes and materialized views not present in the type definitions above.
-// IMPORTANT: The TypeScript types above map UUID, TEXT, VARCHAR all to "string".
-// Use the COLUMN TYPES section below to know the real PostgreSQL type for each column.
-// Always use the correct PostgreSQL type when writing SQL migrations.
-
-// --- COLUMN TYPES (actual PostgreSQL types) ---
-// Use this to know the real database type when writing migrations.
-// "string" in TypeScript types above may be uuid, text, varchar, timestamptz, etc.
-// Table: audit_logs
-//   id: uuid (not null, default: gen_random_uuid())
-//   user_name: text (nullable)
-//   user_email: text (nullable)
-//   action: text (nullable)
-//   entity_type: text (nullable)
-//   entity_id: text (nullable)
-//   details: text (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: fazendas
-//   id: uuid (not null, default: gen_random_uuid())
-//   grupo: text (nullable)
-//   fazenda: text (nullable)
-//   proprietario: text (nullable)
-//   cpf_cnpj: text (nullable)
-//   inscricao_estadual: text (nullable)
-//   responsavel: text (nullable)
-//   endereco: text (nullable)
-//   municipio: text (nullable)
-//   estado: text (nullable)
-//   email: text (nullable)
-//   telefone: text (nullable)
-//   nucleo_agricola: text (nullable)
-//   linha_escoamento: text (nullable)
-//   created_at: timestamp with time zone (not null, default: now())
-// Table: profiles
-//   id: uuid (not null)
-//   email: text (not null)
-//   name: text (nullable)
-//   role: text (nullable, default: 'Viewer'::text)
-//   active: boolean (nullable, default: true)
-//   department: text (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-// Table: sent_emails
-//   id: uuid (not null, default: gen_random_uuid())
-//   created_at: timestamp with time zone (nullable, default: now())
-//   to: text (not null)
-//   subject: text (nullable)
-//   body: text (nullable)
-//   status: text (nullable, default: 'sent'::text)
-//   error_message: text (nullable)
-// Table: survey_leads
-//   id: uuid (not null, default: gen_random_uuid())
-//   nome: text (nullable)
-//   whatsapp: text (nullable)
-//   email: text (nullable)
-//   fazenda: text (nullable)
-//   status: text (nullable, default: 'in_progress'::text)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   grupo: text (nullable)
-//   funcao: text (nullable)
-//   localizacao: text (nullable)
-//   tamanho: text (nullable)
-//   cultura: text (nullable)
-//   sistema: text (nullable)
-//   gargalo: text (nullable)
-//   desafio: text (nullable)
-//   setor: text (nullable)
-//   cursos: jsonb (nullable)
-//   vagas: jsonb (nullable)
-//   vagas_homens: jsonb (nullable)
-//   vagas_mulheres: jsonb (nullable)
-//   modalidade: text (nullable)
-//   infraestrutura: text (nullable)
-//   epoca: text (nullable)
-//   inovacao: text (nullable)
-//   detalhes_cursos: jsonb (nullable)
-// Table: system_settings
-//   id: uuid (not null, default: gen_random_uuid())
-//   notification_email: text (nullable)
-//   created_at: timestamp with time zone (nullable, default: now())
-//   updated_at: timestamp with time zone (nullable, default: now())
-
-// --- CONSTRAINTS ---
-// Table: audit_logs
-//   PRIMARY KEY audit_logs_pkey: PRIMARY KEY (id)
-// Table: fazendas
-//   PRIMARY KEY fazendas_pkey: PRIMARY KEY (id)
-// Table: profiles
-//   FOREIGN KEY profiles_id_fkey: FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
-//   PRIMARY KEY profiles_pkey: PRIMARY KEY (id)
-// Table: sent_emails
-//   PRIMARY KEY sent_emails_pkey: PRIMARY KEY (id)
-// Table: survey_leads
-//   PRIMARY KEY survey_leads_pkey: PRIMARY KEY (id)
-// Table: system_settings
-//   PRIMARY KEY system_settings_pkey: PRIMARY KEY (id)
-
-// --- ROW LEVEL SECURITY POLICIES ---
-// Table: audit_logs
-//   Policy "Enable all operations for authenticated on audit_logs" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-// Table: fazendas
-//   Policy "Enable insert access for all users" (INSERT, PERMISSIVE) roles={anon,authenticated}
-//     WITH CHECK: true
-//   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: profiles
-//   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-// Table: sent_emails
-//   Policy "Anyone can insert sent_emails" (INSERT, PERMISSIVE) roles={anon,authenticated}
-//     WITH CHECK: true
-//   Policy "Authenticated can view sent_emails" (SELECT, PERMISSIVE) roles={authenticated}
-//     USING: true
-// Table: survey_leads
-//   Policy "Enable all operations for everyone" (ALL, PERMISSIVE) roles={public}
-//     USING: true
-//     WITH CHECK: true
-//   Policy "Enable delete for authenticated on survey_leads" (DELETE, PERMISSIVE) roles={authenticated}
-//     USING: true
-// Table: system_settings
-//   Policy "Enable read access for all users" (SELECT, PERMISSIVE) roles={public}
-//     USING: true
-//   Policy "Enable write access for authenticated" (ALL, PERMISSIVE) roles={authenticated}
-//     USING: true
-//     WITH CHECK: true
-
-// --- DATABASE FUNCTIONS ---
-// FUNCTION get_survey_by_id(uuid)
-//   CREATE OR REPLACE FUNCTION public.get_survey_by_id(search_id uuid)
-//    RETURNS SETOF survey_leads
-//    LANGUAGE plpgsql
-//    SECURITY DEFINER
-//   AS $function$
-//   BEGIN
-//     RETURN QUERY SELECT * FROM public.survey_leads WHERE id = search_id;
-//   END;
-//   $function$
-//
-// FUNCTION handle_new_user()
-//   CREATE OR REPLACE FUNCTION public.handle_new_user()
-//    RETURNS trigger
-//    LANGUAGE plpgsql
-//    SECURITY DEFINER
-//   AS $function$
-//   BEGIN
-//     INSERT INTO public.profiles (id, email, name, role, active)
-//     VALUES (NEW.id, NEW.email, COALESCE(NEW.raw_user_meta_data->>'name', 'Usuário'), 'Viewer', true);
-//     RETURN NEW;
-//   END;
-//   $function$
-//

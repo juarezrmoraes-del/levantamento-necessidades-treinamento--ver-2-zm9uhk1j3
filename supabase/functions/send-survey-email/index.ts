@@ -18,12 +18,11 @@ Deno.serve(async (req: Request) => {
     console.log('=== EMAIL NOTIFICATION REQUEST ===', JSON.stringify(data))
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || ''
-    const supabaseKey =
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || ''
-
-    let supabase: any = null
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || ''
+    
+    let supabase: any = null;
     if (supabaseUrl && supabaseKey) {
-      supabase = createClient(supabaseUrl, supabaseKey)
+        supabase = createClient(supabaseUrl, supabaseKey)
     }
 
     const targets: any[] = []
@@ -32,7 +31,7 @@ Deno.serve(async (req: Request) => {
     if (data.type === 'INSERT' && data.record) {
       const record = data.record
       const protocol = record.id ? record.id.split('-')[0].toUpperCase() : 'NO-ID'
-
+      
       // Submitter
       if (record.email) {
         targets.push({
@@ -54,7 +53,7 @@ Deno.serve(async (req: Request) => {
             .select('notification_email')
             .limit(1)
             .single()
-
+          
           if (settings && settings.notification_email) {
             targets.push({
               to: settings.notification_email,
@@ -82,17 +81,15 @@ Deno.serve(async (req: Request) => {
 
     for (const target of targets) {
       const { to, protocol, nome, grupo, fazenda, cursos, is_submitter } = target
-
+      
       if (!to) continue
 
       console.log(`Sending email to: ${to} (Submitter: ${is_submitter})`)
-
+      
       let subject = ''
       let html = ''
 
-      const cursosFormatados = Array.isArray(cursos)
-        ? cursos.join(', ')
-        : cursos || 'Nenhum curso especificado'
+      const cursosFormatados = Array.isArray(cursos) ? cursos.join(', ') : (cursos || 'Nenhum curso especificado')
 
       if (is_submitter) {
         subject = `Extrato da sua solicitação de Mapeamento - Protocolo: ${protocol}`
@@ -140,7 +137,7 @@ Deno.serve(async (req: Request) => {
             to: to,
             subject,
             body: html,
-            status: hasResend ? 'sent' : 'logged_only',
+            status: hasResend ? 'sent' : 'logged_only'
           })
           console.log('Registrado na tabela sent_emails')
         } catch (err: any) {
@@ -157,13 +154,13 @@ Deno.serve(async (req: Request) => {
               Authorization: `Bearer ${resendApiKey}`,
             },
             body: JSON.stringify({
-              from: 'Centro de Treinamento ABAPA <onboarding@resend.dev>',
+              from: 'Centro de Treinamento ABAPA <onboarding@resend.dev>', 
               to: [to],
               subject,
               html,
             }),
           })
-
+          
           const resData = await res.json()
           if (!res.ok) {
             console.error('Erro na API do Resend:', resData)
@@ -185,7 +182,7 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         success: true,
         message: 'Processamento de notificação de e-mail concluído',
-        results,
+        results
       }),
       {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
