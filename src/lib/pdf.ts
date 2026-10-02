@@ -140,9 +140,9 @@ export function generatePDF(data: SurveyRecord[], dateRange?: DateRange) {
               <td>${new Date(s.created_at || s.date || new Date()).toLocaleDateString('pt-BR')}</td>
               <td>${s.protocol || '-'}</td>
               <td>${s.nome || '-'}<br/><small>${s.email || '-'}</small></td>
-              <td>${s.celular || '-'}</td>
-              <td>${s.funcao || '-'}</td>
-              <td>${s.fazenda_grupo || '-'}</td>
+              <td>${s.celular || s.whatsapp || '-'}</td>
+              <td><strong>${s.funcao || '-'}</strong></td>
+              <td>${s.fazenda || s.fazenda_grupo || '-'}${s.proprietario ? `<br/><small>Prop: ${s.proprietario}</small>` : ''}</td>
               <td>${s.localizacao || '-'}<br/>${s.tamanho || '-'}</td>
               <td>${s.cultura || '-'}<br/>${s.sistema || '-'}</td>
               <td>${s.gargalo || '-'}</td>
@@ -217,9 +217,10 @@ export function generateHRBatchPDF(data: SurveyRecord[], dateRange?: DateRange) 
           </div>
           <div class="detail-row"><div class="detail-label">Solicitante:</div><div class="detail-value">${s.nome}</div></div>
           <div class="detail-row"><div class="detail-label">Email:</div><div class="detail-value">${s.email}</div></div>
-          <div class="detail-row"><div class="detail-label">Fazenda/Grupo:</div><div class="detail-value">${s.fazenda_grupo}</div></div>
-          <div class="detail-row"><div class="detail-label">Função:</div><div class="detail-value">${s.funcao || '-'}</div></div>
-          <div class="detail-row"><div class="detail-label">Localização:</div><div class="detail-value">${s.localizacao || '-'}</div></div>
+          <div class="detail-row"><div class="detail-label">Função:</div><div class="detail-value"><strong>${s.funcao || '-'}</strong></div></div>
+          <div class="detail-row"><div class="detail-label">Fazenda/Grupo:</div><div class="detail-value">${s.fazenda || s.fazenda_grupo}</div></div>
+          <div class="detail-row"><div class="detail-label">Proprietário / Resp.:</div><div class="detail-value">${s.proprietario || s.responsavel || '-'}</div></div>
+          <div class="detail-row"><div class="detail-label">Município / Estado:</div><div class="detail-value">${s.municipio || s.localizacao || '-'}${s.estado ? ` - ${s.estado}` : ''}</div></div>
           <div class="detail-row"><div class="detail-label">Tamanho:</div><div class="detail-value">${s.tamanho || '-'}</div></div>
           <div class="detail-row"><div class="detail-label">Celular:</div><div class="detail-value">${s.celular || '-'}</div></div>
           <div class="detail-row"><div class="detail-label">Cultura/Sistema:</div><div class="detail-value">${s.cultura || '-'} / ${s.sistema || '-'}</div></div>

@@ -35,13 +35,23 @@ export function SurveyAuditDialog({ survey }: { survey: SurveyRecord }) {
               </p>
             </div>
             <div>
+              <span className="text-zinc-500 font-medium">Função / Cargo:</span>
+              <p className="font-bold text-emerald-700">{survey.funcao || 'Não informada'}</p>
+            </div>
+            <div>
               <span className="text-zinc-500 font-medium">Email:</span>
               <p className="font-semibold text-zinc-900">{survey.email}</p>
             </div>
             <div>
-              <span className="text-zinc-500 font-medium">Celular:</span>
-              <p className="font-semibold text-zinc-900">{survey.celular}</p>
+              <span className="text-zinc-500 font-medium">WhatsApp / Celular:</span>
+              <p className="font-semibold text-zinc-900">{survey.whatsapp || survey.celular}</p>
             </div>
+            <div>
+              <span className="text-zinc-500 font-medium">Fazenda / Grupo:</span>
+              <p className="font-semibold text-zinc-900">
+                {survey.fazenda || survey.fazenda_grupo}
+              </p>
+            </div>{' '}
             <div>
               <span className="text-zinc-500 font-medium">Local Previsto:</span>
               <p className="font-semibold text-zinc-900">{survey.local_realizacao}</p>
