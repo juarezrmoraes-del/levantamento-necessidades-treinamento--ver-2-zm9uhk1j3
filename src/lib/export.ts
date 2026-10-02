@@ -23,7 +23,43 @@ export function exportToCSV(data: Record<string, any>[], filename: string) {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
+}
+
+export function formatSurveysForCSV(surveys: any[]): Record<string, any>[] {
+  return surveys.map((s: any) => ({
+    Protocolo: s.protocol || s.id,
+    'Data de Inscrição':
+      s.created_at || s.date ? new Date(s.created_at || s.date).toLocaleDateString('pt-BR') : '-',
+    Colaborador: s.nome || '-',
+    Função: s.funcao || 'Não informada',
+    Email: s.email || '-',
+    'WhatsApp / Celular': s.whatsapp || s.celular || '-',
+    'Grupo / Associado': s.grupo || s.fazenda_grupo || '-',
+    'Fazenda(s)': s.fazenda || s.fazenda_nome || '-',
+    Proprietário: s.proprietario || '-',
+    Responsável: s.responsavel || '-',
+    Município: s.municipio || s.localizacao || '-',
+    Estado: s.estado || '-',
+    'Tamanho Operação': s.tamanho || '-',
+    Cultura: s.cultura || '-',
+    Sistema: s.sistema || '-',
+    Gargalo: s.gargalo || '-',
+    'Desafio Estratégico': s.desafio_roi || s.desafio || '-',
+    'Setor / Área de Foco': s.area_foco || s.setor || '-',
+    'Treinamento Requerido': s.curso_solicitado || '-',
+    Marcas: s.marcas || '-',
+    'Vagas Totais': s.quantidade_colaboradores || '0',
+    'Vagas Homens': s.vagas_homens || '0',
+    'Vagas Mulheres': s.vagas_mulheres || '0',
+    Modalidade: s.modalidade || s.local_realizacao || '-',
+    'Época Ideal': s.epoca || s.mes_previsto || '-',
+    Infraestrutura: s.infraestrutura || '-',
+    Inovação: s.inovacao || '-',
+    Prioridade: s.prioridade || 'Média',
+    Status: s.status || 'Pendente',
+  }))
 }
 
 export function exportToExcel(data: Record<string, any>[], filename: string) {

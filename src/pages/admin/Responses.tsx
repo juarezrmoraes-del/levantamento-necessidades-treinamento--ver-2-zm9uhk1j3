@@ -41,7 +41,7 @@ import {
 import useMainStore, { SurveyStatus } from '@/stores/main'
 import { useAuth } from '@/stores/auth'
 import { useAuditStore } from '@/stores/audit'
-import { exportToCSV } from '@/lib/export'
+import { exportToCSV, formatSurveysForCSV } from '@/lib/export'
 import { toast } from '@/hooks/use-toast'
 import { supabase } from '@/lib/supabase/client'
 import {
@@ -116,39 +116,7 @@ export default function Responses() {
   }, [surveys, searchTerm, priorityFilter, funcaoFilter, deletedIds])
 
   const handleExport = () => {
-    const exportData = filteredSurveys.map((s: any) => ({
-      Protocolo: s.protocol || s.id,
-      'Data de Inscrição': new Date(s.created_at || s.date || new Date()).toLocaleDateString(
-        'pt-BR',
-      ),
-      Colaborador: s.nome || '-',
-      Função: s.funcao || 'Não informada',
-      Email: s.email || '-',
-      'WhatsApp / Celular': s.whatsapp || s.celular || '-',
-      'Grupo / Associado': s.grupo || s.fazenda_grupo || '-',
-      'Fazenda(s)': s.fazenda || s.fazenda_nome || '-',
-      Proprietário: s.proprietario || '-',
-      Responsável: s.responsavel || '-',
-      Município: s.municipio || s.localizacao || '-',
-      Estado: s.estado || '-',
-      'Tamanho Operação': s.tamanho || '-',
-      Cultura: s.cultura || '-',
-      Sistema: s.sistema || '-',
-      Gargalo: s.gargalo || '-',
-      'Desafio Estratégico': s.desafio_roi || s.desafio || '-',
-      'Setor / Área de Foco': s.area_foco || s.setor || '-',
-      'Treinamento Requerido': s.curso_solicitado || '-',
-      Marcas: s.marcas || '-',
-      'Vagas Totais': s.quantidade_colaboradores || '0',
-      'Vagas Homens': s.vagas_homens || '0',
-      'Vagas Mulheres': s.vagas_mulheres || '0',
-      Modalidade: s.modalidade || s.local_realizacao || '-',
-      'Época Ideal': s.epoca || s.mes_previsto || '-',
-      Infraestrutura: s.infraestrutura || '-',
-      Inovação: s.inovacao || '-',
-      Prioridade: s.prioridade || 'Média',
-      Status: s.status || 'Pendente',
-    }))
+    const exportData = formatSurveysForCSV(filteredSurveys)
     exportToCSV(
       exportData,
       `necessidades_treinamento_${new Date().toISOString().split('T')[0]}.csv`,
