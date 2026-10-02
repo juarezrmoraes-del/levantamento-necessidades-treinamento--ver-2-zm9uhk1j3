@@ -4,6 +4,7 @@ import { ClipboardList, BookOpen, Building2, Users, User } from 'lucide-react'
 
 interface RealtimeKPIsProps {
   total: number
+  totalSubmissoes?: number
   topCourse: string
   totalUnits: number
   totalVagas: number
@@ -13,6 +14,7 @@ interface RealtimeKPIsProps {
 
 export function RealtimeKPIs({
   total,
+  totalSubmissoes,
   topCourse,
   totalUnits,
   totalVagas,
@@ -28,7 +30,11 @@ export function RealtimeKPIs({
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold text-zinc-900">{total}</div>
-          <p className="text-xs text-zinc-500 mt-1">no período selecionado</p>
+          <p className="text-xs text-zinc-500 mt-1">
+            {totalSubmissoes !== undefined
+              ? `${totalSubmissoes} formulários (${total} cursos)`
+              : 'no período selecionado'}
+          </p>
         </CardContent>
       </Card>
 

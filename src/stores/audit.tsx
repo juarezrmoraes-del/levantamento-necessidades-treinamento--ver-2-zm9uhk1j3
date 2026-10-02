@@ -34,13 +34,28 @@ export function AuditProvider({ children }: { children: ReactNode }) {
 
   const fetchLogs = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('audit_logs')
-      .select('*')
-      .order('timestamp', { ascending: false })
-    if (!error && data) {
-      setLogs(data as AuditLog[])
+    let allLogs: AuditLog[] = []
+    let from = 0
+    const step = 1000
+    let hasMore = true
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .range(from, from + step - 1)
+
+      if (error || !data || data.length === 0) {
+        hasMore = false
+      } else {
+        allLogs = allLogs.concat(data as AuditLog[])
+        from += step
+        if (data.length < step) hasMore = false
+      }
     }
+
+    setLogs(allLogs)
     setLoading(false)
   }, [])
 

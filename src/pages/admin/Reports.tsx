@@ -94,11 +94,13 @@ export default function Reports() {
     }, 1500)
   }
 
-  const { total, mostRequested, deptsCount } = useMemo(() => {
+  const { total, totalSubmissoes, mostRequested, deptsCount } = useMemo(() => {
     const coursesCount: Record<string, number> = {}
     const depts: Record<string, number> = {}
+    const distinctSubmissions = new Set<string>()
 
     surveys.forEach((s) => {
+      if (s.lead_id) distinctSubmissions.add(s.lead_id)
       if (s.curso_solicitado)
         coursesCount[s.curso_solicitado] = (coursesCount[s.curso_solicitado] || 0) + 1
       const dept = s.fazenda_grupo || 'Outros'
@@ -108,6 +110,7 @@ export default function Reports() {
 
     return {
       total: surveys.length,
+      totalSubmissoes: distinctSubmissions.size,
       mostRequested: mostReq ? mostReq[0] : 'Nenhum',
       deptsCount: Object.keys(depts).length,
     }
@@ -226,6 +229,9 @@ export default function Reports() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-slate-900">{total}</div>
+            <p className="text-xs text-slate-500 mt-1">
+              {totalSubmissoes} formulários recebidos ({total} cursos demandados)
+            </p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-slate-200">

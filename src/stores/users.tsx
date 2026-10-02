@@ -37,10 +37,31 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase.from('profiles').select('*').order('name')
-    if (!error && data) {
-      setUsers(data as AdminUser[])
+    let allUsers: AdminUser[] = []
+    let from = 0
+    const step = 1000
+    let hasMore = true
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('name')
+        .range(from, from + step - 1)
+
+      if (error) {
+        console.error('Error fetching users:', error)
+        break
+      }
+      if (!data || data.length === 0) {
+        hasMore = false
+      } else {
+        allUsers = allUsers.concat(data as AdminUser[])
+        from += step
+        if (data.length < step) hasMore = false
+      }
     }
+    setUsers(allUsers)
     setLoading(false)
   }, [])
 

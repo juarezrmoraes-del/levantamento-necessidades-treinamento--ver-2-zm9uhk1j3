@@ -54,6 +54,7 @@ export default function RealtimeDashboard() {
 
   const kpis = useMemo(() => {
     const total = filteredSurveys.length
+    const distinctSubmissions = new Set<string>()
     const coursesCount: Record<string, number> = {}
     const units = new Set<string>()
     const categoriesCount: Record<string, number> = {}
@@ -63,6 +64,7 @@ export default function RealtimeDashboard() {
     const marcasCount: Record<string, number> = {}
 
     filteredSurveys.forEach((s) => {
+      if (s.lead_id) distinctSubmissions.add(s.lead_id)
       coursesCount[s.curso_solicitado] = (coursesCount[s.curso_solicitado] || 0) + 1
       categoriesCount[s.area_foco] = (categoriesCount[s.area_foco] || 0) + 1
       if (s.fazenda_grupo) units.add(s.fazenda_grupo)
@@ -98,6 +100,7 @@ export default function RealtimeDashboard() {
 
     return {
       total,
+      totalSubmissoes: distinctSubmissions.size,
       topCourse,
       totalUnits: units.size,
       totalVagas,
@@ -197,6 +200,7 @@ export default function RealtimeDashboard() {
 
         <RealtimeKPIs
           total={kpis.total}
+          totalSubmissoes={kpis.totalSubmissoes}
           topCourse={kpis.topCourse}
           totalUnits={kpis.totalUnits}
           totalVagas={kpis.totalVagas}

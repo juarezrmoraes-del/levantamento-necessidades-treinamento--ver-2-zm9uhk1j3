@@ -21,81 +21,91 @@ const COLORS = ['#00a884', '#0284c7', '#eab308', '#f59e0b', '#f43f5e']
 export default function Dashboard() {
   const { surveys } = useMainStore()
 
-  const { total, mostRequested, pendingDepts, totalVagas, vagasHomens, vagasMulheres, topMarcas } =
-    useMemo(() => {
-      const coursesCount: Record<string, number> = {}
-      const pendingSet = new Set<string>()
-      let vTotal = 0
-      let vHomens = 0
-      let vMulheres = 0
-      const marcasCount: Record<string, number> = {}
+  const {
+    total,
+    totalSubmissoes,
+    mostRequested,
+    pendingDepts,
+    totalVagas,
+    vagasHomens,
+    vagasMulheres,
+    topMarcas,
+  } = useMemo(() => {
+    const coursesCount: Record<string, number> = {}
+    const pendingSet = new Set<string>()
+    const distinctSubmissions = new Set<string>()
+    let vTotal = 0
+    let vHomens = 0
+    let vMulheres = 0
+    const marcasCount: Record<string, number> = {}
 
-      surveys.forEach((s: any) => {
-        const cursosList = Array.isArray(s.cursos)
-          ? s.cursos
-          : s.curso_solicitado
-            ? [s.curso_solicitado]
-            : []
-        cursosList.forEach((c: string) => {
-          coursesCount[c] = (coursesCount[c] || 0) + 1
-        })
-
-        const fazendaGrupo = s.grupo || s.fazenda_grupo || s.fazenda
-        if ((s.status === 'Pendente' || s.status === 'in_progress') && fazendaGrupo) {
-          pendingSet.add(fazendaGrupo)
-        }
-
-        if (s.vagas && typeof s.vagas === 'object') {
-          Object.values(s.vagas).forEach((v: any) => (vTotal += parseInt(v) || 0))
-        } else {
-          vTotal += parseInt(s.quantidade_colaboradores || '0') || 0
-        }
-
-        if (s.vagas_homens && typeof s.vagas_homens === 'object') {
-          Object.values(s.vagas_homens).forEach((v: any) => (vHomens += parseInt(v) || 0))
-        } else {
-          vHomens += parseInt(s.vagas_homens || '0') || 0
-        }
-
-        if (s.vagas_mulheres && typeof s.vagas_mulheres === 'object') {
-          Object.values(s.vagas_mulheres).forEach((v: any) => (vMulheres += parseInt(v) || 0))
-        } else {
-          vMulheres += parseInt(s.vagas_mulheres || '0') || 0
-        }
-
-        if (s.detalhes_cursos && typeof s.detalhes_cursos === 'object') {
-          Object.values(s.detalhes_cursos).forEach((marcasArr: any) => {
-            if (Array.isArray(marcasArr)) {
-              marcasArr.forEach((m: string) => {
-                marcasCount[m] = (marcasCount[m] || 0) + 1
-              })
-            }
-          })
-        }
+    surveys.forEach((s: any) => {
+      if (s.lead_id) distinctSubmissions.add(s.lead_id)
+      const cursosList = Array.isArray(s.cursos)
+        ? s.cursos
+        : s.curso_solicitado
+          ? [s.curso_solicitado]
+          : []
+      cursosList.forEach((c: string) => {
+        coursesCount[c] = (coursesCount[c] || 0) + 1
       })
 
-      const mostReq = Object.entries(coursesCount).sort((a, b) => b[1] - a[1])[0]
-
-      let sortedMarcas = Object.entries(marcasCount)
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-        .slice(0, 5)
-
-      if (sortedMarcas.length === 0) {
-        sortedMarcas = extractTopMarcas(surveys)
+      const fazendaGrupo = s.grupo || s.fazenda_grupo || s.fazenda
+      if ((s.status === 'Pendente' || s.status === 'in_progress') && fazendaGrupo) {
+        pendingSet.add(fazendaGrupo)
       }
 
-      return {
-        total: surveys.length,
-        mostRequested: mostReq ? mostReq[0] : 'Nenhum',
-        pendingDepts: pendingSet.size,
-        totalVagas: vTotal,
-        vagasHomens: vHomens,
-        vagasMulheres: vMulheres,
-        topMarcas: sortedMarcas,
+      if (s.vagas && typeof s.vagas === 'object') {
+        Object.values(s.vagas).forEach((v: any) => (vTotal += parseInt(v) || 0))
+      } else {
+        vTotal += parseInt(s.quantidade_colaboradores || '0') || 0
       }
-    }, [surveys])
 
+      if (s.vagas_homens && typeof s.vagas_homens === 'object') {
+        Object.values(s.vagas_homens).forEach((v: any) => (vHomens += parseInt(v) || 0))
+      } else {
+        vHomens += parseInt(s.vagas_homens || '0') || 0
+      }
+
+      if (s.vagas_mulheres && typeof s.vagas_mulheres === 'object') {
+        Object.values(s.vagas_mulheres).forEach((v: any) => (vMulheres += parseInt(v) || 0))
+      } else {
+        vMulheres += parseInt(s.vagas_mulheres || '0') || 0
+      }
+
+      if (s.detalhes_cursos && typeof s.detalhes_cursos === 'object') {
+        Object.values(s.detalhes_cursos).forEach((marcasArr: any) => {
+          if (Array.isArray(marcasArr)) {
+            marcasArr.forEach((m: string) => {
+              marcasCount[m] = (marcasCount[m] || 0) + 1
+            })
+          }
+        })
+      }
+    })
+
+    const mostReq = Object.entries(coursesCount).sort((a, b) => b[1] - a[1])[0]
+
+    let sortedMarcas = Object.entries(marcasCount)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5)
+
+    if (sortedMarcas.length === 0) {
+      sortedMarcas = extractTopMarcas(surveys)
+    }
+
+    return {
+      total: surveys.length,
+      totalSubmissoes: distinctSubmissions.size,
+      mostRequested: mostReq ? mostReq[0] : 'Nenhum',
+      pendingDepts: pendingSet.size,
+      totalVagas: vTotal,
+      vagasHomens: vHomens,
+      vagasMulheres: vMulheres,
+      topMarcas: sortedMarcas,
+    }
+  }, [surveys])
   const chartDataGender = useMemo(() => {
     return [
       { name: 'Homens', value: vagasHomens, fill: '#0284c7' },
@@ -145,7 +155,9 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-slate-900">{total}</div>
-            <p className="text-xs text-slate-500 mt-1">respostas recebidas</p>
+            <p className="text-xs text-slate-500 mt-1">
+              {totalSubmissoes} formulários ({total} demandas de curso)
+            </p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-slate-200">

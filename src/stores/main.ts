@@ -81,22 +81,33 @@ async function getFazendasMetaMap() {
   if (fazendasMetaMap) return fazendasMetaMap
   fazendasMetaMap = new Map()
   try {
-    const { data } = await supabase
-      .from('fazendas')
-      .select(
-        'grupo, fazenda, proprietario, responsavel, municipio, estado, cpf_cnpj, inscricao_estadual, endereco, email, telefone',
-      )
-      .limit(2000)
+    // Carrega TODOS os registros de fazendas paginando em blocos de 1000
+    const step = 1000
+    let from = 0
+    let hasMore = true
 
-    if (data) {
-      data.forEach((f) => {
-        if (f.fazenda) {
-          fazendasMetaMap!.set(f.fazenda.trim().toUpperCase(), f)
-        }
-        if (f.grupo && !fazendasMetaMap!.has(f.grupo.trim().toUpperCase())) {
-          fazendasMetaMap!.set(f.grupo.trim().toUpperCase(), f)
-        }
-      })
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('fazendas')
+        .select(
+          'grupo, fazenda, proprietario, responsavel, municipio, estado, cpf_cnpj, inscricao_estadual, endereco, email, telefone',
+        )
+        .range(from, from + step - 1)
+
+      if (error || !data || data.length === 0) {
+        hasMore = false
+      } else {
+        data.forEach((f: any) => {
+          if (f.fazenda) {
+            fazendasMetaMap!.set(f.fazenda.trim().toUpperCase(), f)
+          }
+          if (f.grupo && !fazendasMetaMap!.has(f.grupo.trim().toUpperCase())) {
+            fazendasMetaMap!.set(f.grupo.trim().toUpperCase(), f)
+          }
+        })
+        from += step
+        if (data.length < step) hasMore = false
+      }
     }
   } catch (e) {
     console.warn('Erro ao carregar metadados de fazendas', e)
@@ -111,13 +122,42 @@ export const useMainStore = create<MainStore>((set, get) => ({
   fetchSurveys: async () => {
     set({ loading: true })
     try {
-      const [leadsRes, metaMap] = await Promise.all([
-        supabase.from('survey_leads').select('*').order('created_at', { ascending: false }),
-        getFazendasMetaMap(),
-      ])
+      // Carrega a totalidade de survey_leads paginando em blocos de 1000 até esgotar todos os registros da base
+      const fetchAllSurveyLeads = async () => {
+        let allLeads: any[] = []
+        const step = 1000
+        let from = 0
+        let hasMore = true
 
-      if (leadsRes.error) throw leadsRes.error
-      const data = leadsRes.data || []
+        while (hasMore) {
+          const { data, error } = await supabase
+            .from('survey_leads')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .range(from, from + step - 1)
+
+          if (error) {
+            console.error('Erro ao consultar survey_leads:', error)
+            throw error
+          }
+
+          if (!data || data.length === 0) {
+            hasMore = false
+          } else {
+            allLeads = allLeads.concat(data)
+            from += step
+            if (data.length < step) {
+              hasMore = false
+            }
+          }
+        }
+
+        return allLeads
+      }
+
+      const [leadsData, metaMap] = await Promise.all([fetchAllSurveyLeads(), getFazendasMetaMap()])
+
+      const data = leadsData || []
 
       const formattedSurveys: SurveyRecord[] = []
 
